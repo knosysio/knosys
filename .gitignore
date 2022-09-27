@@ -1,0 +1,18 @@
+.DS_Store
+sh.exe.stackdump
+
+node_modules/
+
+.cache/
+.asset-cache/
+.sass-cache/
+
+_site/
+
+*.log
+
+# Hexo
+Thumbs.db
+db.json
+public/
+.deploy*/
