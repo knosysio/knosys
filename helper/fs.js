@@ -53,6 +53,10 @@ function scanAndSortByAsc(filePath) {
   return sortByName(readdirSync(filePath));
 }
 
+function getImageFileNames(dirPath) {
+  return isDirectory(dirPath) ? readdirSync(dirPath).filter(fileBaseName => /(jp(e)?g|png|gif|svg)\b/ig.test(fileBaseName)) : [];
+}
+
 function readDirDeeply(dirPath, paramArr, params, callback) {
   const paramKey = paramArr[0];
   const restParamArr = paramArr.slice(1);
@@ -175,6 +179,6 @@ function readMetadata(dirPath) {
 module.exports = {
   ensureDirExists, ensureFileExists,
   isDirectory, isLocalRelative,
-  scanAndSortByAsc, readDirDeeply,
+  scanAndSortByAsc, getImageFileNames, readDirDeeply,
   readData, saveData, readMetadata,
 };
