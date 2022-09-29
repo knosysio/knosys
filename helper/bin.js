@@ -1,4 +1,5 @@
 const { existsSync } = require('fs');
+const { isString, isPlainObject } = require('./util');
 const { readData } = require('./fs');
 
 function getConfig(cwd) {
@@ -22,9 +23,9 @@ function execute() {
 
   let scriptFile;
 
-  if (typeof commandConfig === 'string') {
+  if (isString(commandConfig)) {
     scriptFile = `${commandConfig}/${command}.js`;
-  } else if (typeof commandConfig === 'object' && typeof commandConfig[command] === 'string') {
+  } else if (isPlainObject(commandConfig) && isString(commandConfig[command])) {
     scriptFile = `${commandConfig[command].replace('.js', '')}.js`;
   }
 

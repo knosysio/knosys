@@ -130,6 +130,10 @@ function saveData(distPath, data) {
   }
 }
 
+function readReadMe(dirPath) {
+  return readData(`${dirPath}/readme.md`) || '';
+}
+
 function readMetadata(dirPath) {
   const metadata = readData(`${dirPath}/metadata.yml`) || readData(`${dirPath}/basic.yml`);
 
@@ -176,9 +180,39 @@ function readMetadata(dirPath) {
   return metadata;
 }
 
+function readLocalizedData(dataFilePath) {
+  let defaultData = readData(`${dataFilePath}/metadata.yml`);
+  let i18nData;
+
+  if (!defaultData) {
+    defaultData = readData(`${dataFilePath}/default.yml`);
+    i18nData = readData(`${dataFilePath}/zh-CN.yml`) || readData(`${dataFilePath}/zh-cn.yml`);
+  }
+
+  if (!defaultData) {
+    return i18nData;
+  }
+
+  if (!i18nData) {
+    return defaultData;
+  }
+
+  if (Array.isArray(defaultData)) {
+    const newData = defaultData.map((item, idx) => i18nData[idx] ? { ...item, ...i18nData[idx] } : item);
+
+    if (i18nData.length > defaultData.length) {
+      newData.push(...i18nData.slice(defaultData.length));
+    }
+
+    return newData;
+  }
+
+  return { ...defaultData, ...i18nData };
+}
+
 module.exports = {
   ensureDirExists, ensureFileExists,
   isDirectory, isLocalRelative,
   scanAndSortByAsc, getImageFileNames, readDirDeeply,
-  readData, saveData, readMetadata,
+  readData, saveData, readReadMe, readMetadata, readLocalizedData,
 };

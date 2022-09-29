@@ -6,4 +6,8 @@ function replaceRefDefsWith(content, replacer) {
   return content.replace(reRefDef, replacer);
 }
 
-module.exports = { replaceRefDefsWith };
+function downgradeHeadingLevel(copiedContent, step = 1) {
+  return copiedContent.replace(/\# .+/g, matched => `${'#'.repeat(step)}${matched}`)
+}
+
+module.exports = { replaceRefDefsWith, downgradeHeadingLevel };
