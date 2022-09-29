@@ -1,0 +1,35 @@
+{% assign seo_site_title = site.title | default: site.name %}
+
+{% ifhascontent special_title %}
+  {% capture temp_special_title %}{% contentblock special_title %}{% endcapture %}
+  {% assign seo_title = temp_special_title | markdownify | strip_html | strip_newlines | append: " - " | append: seo_site_title %}
+{% endifhascontent %}
+{% ifnothascontent special_title %}
+  {% if page.special_title %}
+    {% assign seo_title = page.special_title | append: " - " | append: seo_site_title %}
+  {% else %}
+    {% ifhascontent page_title %}
+      {% capture temp_page_title %}{% contentblock page_title %}{% endcapture %}
+      {% assign seo_title = temp_page_title | markdownify | strip_html | strip_newlines | append: " - " | append: seo_site_title %}
+    {% endifhascontent %}
+    {% ifnothascontent page_title %}
+      {% if page.title %}
+        {% assign seo_title = page.title | append: " - " | append: seo_site_title %}
+      {% else %}
+        {% if seo_site_title %}
+          {% assign seo_title = seo_site_title %}
+
+          {% if site.tagline %}
+            {% assign seo_title = seo_title | append: " - " | append: site.tagline %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endifnothascontent %}
+  {% endif %}
+{% endifnothascontent %}
+
+{% if seo_title %}
+  {% assign seo_title = seo_title | markdownify | strip_html | strip_newlines | escape_once %}
+{% endif %}
+
+<title>{{ seo_title }}</title>

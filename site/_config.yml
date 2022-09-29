@@ -1,0 +1,128 @@
+title: KnoSys
+description:
+keywords:
+tagline: 开放的个人知识库
+
+collections:
+  pages:
+    output: true
+    permalink: /:path/
+
+# Handling Reading
+exclude:
+  - .asset-cache
+  - .sass-cache
+  - .vscode
+  - node_modules
+  - build
+  - vendors
+  - src
+  - Rakefile
+  - Gemfile
+  - Gemfile.lock
+  - Gruntfile.coffee
+  - bower.json
+  - package.json
+  - package-lock.json
+  - CNAME
+encoding: utf-8
+
+# Plugins
+gems:
+  - jekyll-assets
+  - jekyll-archives
+  - jekyll-feed
+  - jekyll-contentblocks
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll/tagging
+  - jekyll-tagging-related_posts
+  - jekyll_version_plugin
+
+# Conversion
+markdown: kramdown
+highlighter: pygments
+
+# Serving
+baseurl: /knosys
+
+# Outputting
+permalink: /posts/:title/
+timezone: Asia/Shanghai
+
+# YAML frontmatter
+defaults:
+  # 默认
+  - scope:
+      path: ""
+    values:
+      layout: default
+  # 页面
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: page
+  # 文章
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      css:
+        - pages/post
+      js:
+        - initializers/time
+        - initializers/lazyload
+      author:
+        name: 欧雷
+        email: ourairyu@gmail.com
+        uri: https://ourai.ws/
+        slug: ourai
+        twitter: ourairyu
+      siblings: true
+
+
+
+# =====
+# Plugin-specific configurations
+# =====
+
+# Jekyll Archives
+# https://github.com/jekyll/jekyll-archives
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+    - year
+  layouts:
+    category: archive/category
+    tag: archive/tag
+    year: archive/year
+  permalinks:
+    category: "/categories/:name/"
+    tag: "/tags/:name/"
+    year: "/archives/:year/"
+
+# Jekyll Feed
+feed:
+  path: atom.xml
+name: KnoSys
+author:
+  name: 欧雷
+  email: ourairyu@gmail.com
+  uri: https://ourai.ws/
+  twitter: ourairyu
+github:
+  url: https://oss.ourai.ws/knosys
+
+
+
+# =====
+# Customized configurations
+# =====
+
+# Modules
+module:
+  comment: false
+  share: true

@@ -1,0 +1,19 @@
+{% assign start_year = "2022" %}
+{% assign current_year = site.time | date: "%Y" %}
+<footer class="Page-footer Footer">
+  <div class="container">
+    <div class="Footer-description">
+      <!-- 重要链接 -->
+      <nav class="Footer-navs">
+        <ul>
+          <li><a href="https://ourai.ws/?utm_source=oss.ourai.ws/knosys&utm_medium=common-footer" title="访问「欧雷流」" target="_blank" rel="external nofollow"><span>欧雷流</span></a></li>
+        </ul>
+      </nav>
+      <!-- 网站版权 -->
+      <div class="Footer-copyright">
+        <p>&copy; {% if start_year != current_year %}{{ start_year }}-{% endif %}{{ current_year }} <a href="https://ourai.ws/?utm_source=oss.ourai.ws&utm_medium=common-footer" target="_blank">欧雷流</a> 版权所有</p>
+        <p>由 <a href="https://ourai.ws/" title="访问「欧雷流」" target="_blank" rel="external nofollow">欧雷</a> 用 ♥ 设计与开发</p>
+      </div>
+    </div>
+  </div>
+</footer>

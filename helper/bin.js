@@ -3,7 +3,7 @@ const { isString, isPlainObject } = require('./util');
 const { readData } = require('./fs');
 
 function getConfig(cwd) {
-  const configFilePath = `${cwd}/.fsdmrc`;
+  const configFilePath = `${cwd}/.knosysrc`;
 
   let config = {};
 

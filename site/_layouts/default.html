@@ -1,0 +1,56 @@
+---
+layout: compress
+---
+<!DOCTYPE html>
+{% if page.layout_type == null or page.layout_type == blank %}
+  <html lang="zh-CN" dir="ltr">
+{% else %}
+  <html lang="zh-CN" dir="ltr" data-layout="{{ page.layout_type }}">
+{% endif %}
+  <head>
+    {% include head.html %}
+    <!-- 静态资源 -->
+    {% stylesheet global %}
+    {% if layout.css %}
+      {% for css in layout.css %}{{ css | stylesheet }}{% endfor %}
+    {% endif %}
+    {% if page.css %}
+      {% for css in page.css %}{{ css | stylesheet }}{% endfor %}
+    {% endif %}
+    {% if jekyll.environment == "production" and page.statistic != false %}
+      {% javascript statistic %}
+    {% endif %}
+    {% javascript global %}
+  </head>
+  {% assign body_class = "Page" %}
+  {% if layout.body-class %}
+    {% assign layout_body_class = layout.body-class | join: " " %}
+    {% assign body_class = body_class | append: " " | append: layout_body_class %}
+  {% endif %}
+  {% ifhascontent body-class %}
+    {% capture temp-body-class %}{% contentblock body-class %}{% endcapture %}
+    {% assign body_class = body_class | append: " " | append: temp-body-class | strip_html | strip_newlines %}
+  {% endifhascontent %}
+  {% ifnothascontent body-class %}
+    {% if page.body-class %}
+      {% assign page_body_class = page.body-class | join: " " %}
+      {% assign body_class = body_class | append: " " | append: page_body_class %}
+    {% endif %}
+  {% endifnothascontent %}
+  {% if page.banner %}
+    {% assign body_class = body_class | append: " " | append: "has-headerImage" %}
+  {% else %}
+    {% ifhascontent post_banner %}
+      {% assign body_class = body_class | append: " " | append: "has-headerImage" %}
+    {% endifhascontent %}
+  {% endif %}
+  <body class="{{ body_class }}" itemscope itemtype="http://schema.org/WebPage">
+    {{ content }}
+    {% if layout.js %}
+      {% for js in layout.js %}{{ js | javascript }}{% endfor %}
+    {% endif %}
+    {% if page.js %}
+      {% for js in page.js %}{{ js | javascript }}{% endfor %}
+    {% endif %}
+  </body>
+</html>

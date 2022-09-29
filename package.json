@@ -4,7 +4,12 @@
   "description": "Something about Personal Knowledge Base",
   "private": true,
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "clean:site": "rm -rf ./site/.asset-cache",
+    "start": "cd ./site && rake run",
+    "predeploy": "npm run clean:site",
+    "deploy": "cd ./site && rake deploy"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ourai/knosys.git"
@@ -21,5 +26,8 @@
     "js-yaml": "^3.14.0",
     "marked": "^2.0.0",
     "striptags": "^3.1.1"
+  },
+  "devDependencies": {
+    "handie": "^1.0.14"
   }
 }

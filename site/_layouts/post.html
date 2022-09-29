@@ -1,0 +1,25 @@
+---
+layout: page
+---
+
+{% assign author = site.data.authors[page.author.slug] %}
+{% assign tags = site.data.tags %}
+
+{{ content }}
+
+{% contentfor post_meta %}
+  <p class="Article-commentCount"><i class="fa fa-comments"></i><a href="#disqus_thread" data-disqus-identifier="{{ page.url }}">0 条评论</a></p>
+  {% if page.tags and page.tags.size > 0 %}
+  <p class="Article-tags hidden-xs"><i class="fa fa-tags"><span class="sr-only">标签：</span></i>{% capture _tags %}{% for tag in page.tags %}{% if tags[tag] == null %}<span class="Article-tag">{{ tag }}</span>{% else %}<a class="Article-tag" href="/tags/{{ tag }}/">{{ tags[tag].name }}</a>{% endif %}{% endfor %}{% endcapture %}{{ _tags }}</p>
+  {% endif %}
+{% endcontentfor %}
+
+{% contentfor footer %}
+  <div class="Widget Article-license">
+    <div class="Widget-body">
+      <p>本文采用知识共享<i class="fa fa-creative-commons"></i><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="external nofollow">署名-非商业性使用 4.0 国际</a>许可协议，可自由转载、引用，但需署名作者并注明文章出处且不能用于商业用途。</p>
+    </div>
+  </div>
+  {% include widgets/social.html %}
+  {% include widgets/toc.html %}
+{% endcontentfor %}

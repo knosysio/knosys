@@ -1,0 +1,190 @@
+@import "../helper";
+@import "../syntax-highlighting";
+
+
+
+.Article-header {
+  p {
+    float: left;
+    margin: {
+      top: .75em;
+      right: 1.2em;
+    }
+    font-size: 14px;
+    color: #999;
+  }
+}
+
+.Article-commentCount,
+.Article-tags {
+  a {
+    margin-left: .5em;
+  }
+}
+
+.Article-category .Widget-body {
+  > p {
+    margin-bottom: 10px;
+    color: #888;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  > div {
+    p {
+      margin-top: 10px;
+    }
+  }
+
+  .fa-pencil {
+    margin-right: .5em;
+    color: #333;
+  }
+}
+
+.Article-license {
+  a {
+    margin-right: .5em;
+  }
+
+  .fa {
+    margin: {
+      right: .15em;
+      left: .5em;
+    }
+  }
+}
+
+.Article-series {
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+
+  p {
+    &:first-child {
+      font: {
+        size: 12px;
+        weight: normal;
+      }
+
+      strong {
+        font-size: 16px;
+      }
+    }
+
+    + p {
+      font-size: 12px;
+      color: #888;
+      margin: {
+        top: 3px;
+        bottom: 10px;
+      }
+    }
+  }
+
+  ul {
+    list-style-position: inside;
+    margin-bottom: 0;
+    padding-left: 5px;
+  }
+
+  li span {
+    font-weight: normal;
+  }
+}
+
+.Widget--album .Widget-body {
+  p {
+    margin-bottom: 5px;
+    font-weight: 400;
+  }
+
+  a {
+    @include aspect_ratio(2, 1);
+    display: block;
+    background: {
+      repeat: no-repeat;
+      position: 50% 50%;
+      size: cover;
+    }
+    border-radius: 6px;
+
+    span {
+      font-size: 16px;
+      line-height: 1;
+      color: #fff;
+      text-shadow: 1px 1px #333;
+
+      &.Album-name--tl,
+      &.Album-name--tr {
+        top: 10px;
+        bottom: auto;
+      }
+
+      &.Album-name--bl,
+      &.Album-name--br {
+        top: auto;
+        bottom: 10px;
+      }
+
+      &.Album-name--tl,
+      &.Album-name--bl {
+        right: auto;
+        left: 10px;
+      }
+
+      &.Album-name--tr,
+      &.Album-name--br {
+        right: 10px;
+        left: auto;
+      }
+    }
+  }
+}
+
+.Widget--recommended .Widget-body {
+  ul {
+    list-style: none outside none;
+    margin: {
+      top: 15px;
+      bottom: 0;
+    }
+    padding-left: 0;
+  }
+
+  li {
+    overflow: hidden;
+
+    + li {
+      margin-top: 12px;
+    }
+
+    img {
+      float: left;
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    h3,
+    p {
+      overflow: hidden;
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 0 0 2px;
+      font-size: 14px;
+    }
+
+    p {
+      font-size: 12px;
+
+      a {
+        color: #666;
+      }
+    }
+  }
+}
