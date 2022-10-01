@@ -1,0 +1,11 @@
+<meta charset="UTF-8">
+<!-- SEO -->
+{% include metadata/seo.html %}
+<!-- 页面渲染兼容性 -->
+{% include metadata/render.html %}
+<!-- 订阅 -->
+{% feed_meta %}
+<meta name="theme-color" content="#0871ab">
+<link type="application/rss+xml" rel="alternate" href="//{{ site.ourairyu.site.domain }}/rss.xml" title="{{ site.title }}">
+<!-- 站点 icon -->
+<link rel="icon" href="{{ 'favicon.ico' | asset_path }}">

@@ -1,0 +1,180 @@
+@import "compass";
+
+// Unicode
+
+$UN-space: "\0020" !default;
+$UN-bullet: "\2022" !default;
+$UN-middle_dot: "\00B7" !default;
+$UN-wavy-overline: "\FE4B" !default;
+$UN-wavy-low_line: "\FE4F" !default;
+
+// CSS3
+
+@mixin keyframes( $name ) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+
+  @-o-keyframes #{$name} {
+    @content;
+  }
+
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@mixin animation( $args... ) {
+  @include experimental(animation, $args);
+}
+
+@mixin user-select( $args ) {
+  @include experimental(user-select, $args);
+}
+
+@mixin image-set( $args... ) {
+  background-image: -webkit-image-set($args);
+  background-image: image-set($args);
+}
+
+
+
+// Enhancement
+
+@mixin linear-gradient( $from, $to ) {
+  @include filter-gradient($from, $to);
+  @include background-image(linear-gradient($from, $to));
+}
+
+@mixin supports( $prop_name, $prop_val ) {
+  @supports ($prop_name: $prop_val) or
+            (-o-#{$prop_name}: $prop_val) or
+            (-ms-#{$prop_name}: $prop_val) or
+            (-moz-#{$prop_name}: $prop_val) or
+            (-webkit-#{$prop_name}: $prop_val) {
+    @content;
+  }
+}
+
+
+
+// Overwrite
+
+@mixin opacity( $opacity ) {
+  opacity: $opacity;
+}
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin text-hide {
+  color: transparent;
+  border: 0 none;
+  font: 0px/0 a;
+  @include text-shadow(none);
+}
+
+// Makes text's vertical alignment middle,
+// should invoked on parent node.
+@mixin text-middle( $target: "" ) {
+  &:before {
+    content: $UN-space;
+    @include inline-block;
+    width: 0;
+    height: 100%;
+  }
+
+  @if $target != "" {
+    #{$target} {
+      @include inline-block;
+    }
+  }
+}
+
+@mixin line_feed {
+  word-wrap: break-word;
+  word-wrap: normal\0;
+  word-break: break-all;
+  white-space: normal;
+}
+
+@mixin square( $size: 100% ) {
+  width: $size;
+  height: $size;
+}
+
+@mixin circle( $size: auto ) {
+  @if $size != auto {
+    @include square($size);
+  }
+
+  @include border-radius(50%);
+}
+
+@mixin fill_up {
+  @include square(100%);
+}
+
+// Keep the aspect ratio
+@mixin aspect_ratio( $width: auto, $height: auto, $target: "> *" ) {
+  position: relative;
+  overflow: hidden;
+
+  &:after {
+    content: $UN-space;
+    display: block;
+    position: relative;
+    z-index: -999999999;
+
+    @if $width != auto and $height != auto {
+      padding-top: 100% * $height / $width;
+    }
+  }
+
+  #{$target} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+// refer to http://nicolasgallagher.com/micro-clearfix-hack/
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: $UN-space;
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+// Covered Background Image
+@mixin covered_background( $url: none, $color: transparent ) {
+  @if $url != none {
+    $url: image-url($url);
+  }
+
+  background: $color $url no-repeat 50% 50%;
+  background-size: cover;
+}
+
+@mixin unstyled_list {
+  list-style-type: none;
+  padding-left: 0;
+}

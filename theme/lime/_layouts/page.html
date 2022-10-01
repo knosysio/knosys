@@ -1,0 +1,91 @@
+---
+layout: default
+css:
+  - share
+js:
+  - share.min
+  - components
+---
+
+{% include header.html %}
+<main class="Page-content">
+  {% assign banner = page.banner %}
+  {% if banner %}
+    <!-- 页面横幅 -->
+    <div class="Page-banner hidden-xs" style="background-image: url({{ banner.url | asset_path }});">
+      <figure class="sr-only">
+        <img src="{{ banner.url | asset_path }}" alt="{{ banner.description }}">
+        <figcaption>{{ banner.description }}</figcaption>
+      </figure>
+    </div>
+  {% else %}
+    {% ifhascontent post_banner %}
+      {% contentblock post_banner %}
+    {% endifhascontent %}
+  {% endif %}
+  <!-- 内容主体 -->
+  <div class="container">
+    <article class="Page-main Article">
+      <header class="Article-header">
+        {% ifhascontent header_content %}
+          {% contentblock header_content %}
+        {% endifhascontent %}
+
+        {% ifnothascontent header_content %}
+          {% ifhascontent post_title %}
+            <h1 class="Article-title">{% contentblock post_title %}</h1>
+          {% endifhascontent %}
+
+          {% ifnothascontent post_title %}
+            <h1 class="Article-title">{{ page.title }}</h1>
+          {% endifnothascontent %}
+
+          {% ifhascontent post_meta %}
+            {% contentblock post_meta %}
+          {% endifhascontent %}
+        {% endifnothascontent %}
+      </header>
+      <div class="Article-content col-md-9">{{ content }}</div>
+      {% ifhascontent footer %}
+        <footer class="Article-footer col-md-3">{% contentblock footer %}</footer>
+      {% endifhascontent %}
+      {% if page.siblings == true %}
+        <!-- 相邻文章 -->
+        <nav class="Article-siblings LightBox col-md-9">
+          {% assign siblings = "previous next" | split: " " %}
+          <ul>
+            {% for sibling_key in siblings %}
+              {% assign sibling = page[sibling_key] %}
+              {% assign class_name = "Sibling Sibling--" | append: sibling_key %}
+
+              {% if sibling.url %}
+                {% if sibling.banner %}
+                  {% assign sibling_image = sibling.banner.url | asset_path %}
+                  {% assign sibling_image = sibling_image | prepend: "url('" | append: "')" %}
+                {% else %}
+                  {% assign sibling_image = "none" %}
+                  {% assign class_name = class_name | append: " u-noCover " %}
+                {% endif %}
+
+                <li class="{{ class_name }}">
+                  <a href="{{ sibling.url }}" style="background-image: {{ sibling_image }};">
+                    <h3>{{ sibling.title }}</h3>
+                    <p>{{ sibling.excerpt | markdownify | strip_html | strip_newlines | escape_once | truncate: 100, "..." }}</p>
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+      {% if page.comments == true %}
+        <!-- 评论区 -->
+        <div class="Article-comments col-md-9">{% include partials/disqus.html %}</div>
+      {% endif %}
+    </article>
+    {% ifhascontent sidebar %}
+      <div class="Page-sidebar col-md-3">{% contentblock sidebar %}</div>
+    {% endifhascontent %}
+  </div>
+</main>
+{% include footer.html %}

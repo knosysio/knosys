@@ -1,0 +1,201 @@
+@import "./helper";
+
+@import "bootstrap-sprockets";
+@import "bootstrap-custom";
+
+@import "font-awesome-sprockets";
+@import "font-awesome";
+
+@import "./reset";
+
+@import "./components/utilities";
+@import "./components/icons";
+@import "./components/component";
+@import "./components/widget";
+@import "./components/page";
+@import "./components/article";
+
+
+
+.Page-banner {
+  height: 400px;
+  font: 0px/0 a;
+  @include covered_background;
+
+  &:before {
+    width: 100%;
+    height: 100%;
+    display: block;
+    content: $UN-space;
+    background-color: #000;
+    opacity: .35;
+  }
+
+  &.is-translucent:before {
+    opacity: .5;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    + .container {
+      .Article {
+        position: relative;
+        padding-top: 3em;
+      }
+
+      .Article-header {
+        position: absolute;
+        bottom: 100%;
+        width: 100%;
+        padding-bottom: 4em;
+
+        &,
+        * {
+          color: #fff !important;
+        }
+      }
+
+      .Article-title {
+        margin-bottom: 15px;
+        font-size: 3.5em;
+      }
+    }
+  }
+
+  @media (max-width: $screen-md-max) {
+    height: 340px;
+  }
+
+  @media (max-width: $screen-sm-max) {
+    height: 300px;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    height: 150px;
+  }
+}
+
+.Page.has-headerImage {
+  @media (min-width: $screen-sm-min) {
+    $link-hover-color: rgba(255, 255, 255, .9);
+
+    .Page-header {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      color: #fff;
+      background-color: transparent;
+      border-bottom-color: transparent;
+      
+      .navbar-brand {
+        text-shadow: none;
+  
+        &:hover {
+          color: $link-hover-color;
+        }
+      }
+    }
+  
+    .Page-navs > .nav > li > a {
+      color: inherit;
+  
+      &:hover,
+      &:focus {
+        color: $link-hover-color;
+      }
+    }
+  
+    .Page-content {
+      &:before {
+        display: none;
+      }
+    }
+  }
+}
+
+
+
+.Link--maihaoche {
+  color: transparent !important;
+  text-decoration: none !important;
+  background: #FFD600 image-url("maihaoche-text.png") no-repeat 50% 50%;
+  background-size: contain;
+}
+
+
+
+// 招聘广告
+
+.Page-header .container {
+  position: relative;
+
+  .Ad--hire {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: -1px;
+    width: 120px;
+    background-color: #FFD600;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 100%;
+      content: $UN-space;
+      border: 0 solid #FFD600;
+      border-bottom: 10px solid transparent;
+    }
+
+    &:before {
+      left: 0;
+      border-right-width: 60px;
+    }
+
+    &:after {
+      right: 0;
+      border-left-width: 60px;
+    }
+
+    a,
+    span {
+      display: block;
+      width: 100%;
+      text: {
+        align: center;
+        decoration: none;
+      }
+      font: {
+        size: 16px;
+        weight: normal;
+      }
+      color: #333;
+    }
+
+    a {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    span {
+      font-size: 12px;
+
+      &:first-child {
+        width: 72px;
+        height: 23.5px;
+        margin: 10px auto 2px;
+        font: 0px/0 a;
+        @include covered_background("maihaoche-text.png");
+      }
+    }
+
+    @media all and (max-width: $screen-xs-max) {
+      position: relative;
+      float: right;
+      height: 61px;
+      margin: {
+        right: 15px;
+        bottom: -1px;
+      }
+    }
+  }
+}

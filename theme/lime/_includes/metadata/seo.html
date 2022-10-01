@@ -1,0 +1,218 @@
+{% if site.url %}
+  {% assign seo_url = site.url | append: site.baseurl %}
+{% endif %}
+{% assign seo_url = seo_url | default: site.github.url %}
+{% assign seo_site_title = site.title | default: site.name %}
+
+{% if page.special_title %}
+  {% assign seo_title = page.special_title %}
+  {% assign seo_page_title = seo_title %}
+{% elsif page.title %}
+  {% assign seo_title = page.title %}
+
+  {% if page.type == "category" %}
+    {% assign data_key = "categories" %}
+    {% assign type_zh = "类别" %}
+  {% elsif page.type == "tag" %}
+    {% assign data_key = "tags" %}
+    {% assign type_zh = "标签" %}
+  {% endif %}
+
+  {% if data_key %}
+    {% assign seo_title = site.data[data_key][page.title].name | default: seo_title %}
+    {% assign suffix_text = "」" | append: type_zh | append: "的文章" %}
+    {% assign seo_title = seo_title | prepend: "「" | append: suffix_text %}
+  {% endif %}
+
+  {% assign seo_page_title = seo_title %}
+{% else %}
+  {% if page.type == "year" %}
+    {% assign seo_title = page.date | date: "%Y" | prepend: "发表于 " | append: " 年的文章" %}
+    {% assign seo_page_title = seo_title %}
+  {% elsif seo_site_title %}
+    {% assign seo_title = seo_site_title %}
+    {% assign seo_page_title = seo_site_title %}
+
+    {% if site.tagline %}
+      {% assign seo_title = seo_title | append: " - " | append: site.tagline %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% if seo_title %}
+  {% assign seo_title = seo_title | markdownify | strip_html | strip_newlines | escape_once %}
+{% endif %}
+
+{% if seo_site_title %}
+  {% assign seo_site_title = seo_site_title | markdownify | strip_html | strip_newlines | escape_once %}
+{% endif %}
+
+{% if seo_page_title %}
+  {% assign seo_page_title = seo_page_title | markdownify | strip_html | strip_newlines | escape_once %}
+{% endif %}
+
+{% if page.title %}
+  {% assign seo_description = page.description | default: page.excerpt | default: site.description %}
+{% else %}
+  {% assign seo_description = site.description %}
+{% endif %}
+
+{% assign sp_type = page.special_type %}
+{% assign site_master = site.data.social.persona[site.ourairyu.site.master] %}
+{% if sp_type == "posts" %}
+  {% assign posts = site.posts %}
+  {% assign first_post_year = posts.last.date | date: "%Y" %}
+  {% assign last_post_year = posts.first.date | date: "%Y" %}
+  {% assign year_diff = last_post_year | minus: first_post_year %}
+
+  {% assign seo_description = site_master.name | append: "是一个写作爱好者，从 " | append: first_post_year | append: " 年起 " | append: year_diff | append: " 年间共写了 " | append: posts.size | append: " 篇文章。" %}
+{% elsif sp_type == "dev" %}
+  {% assign seo_description = site_master.name | append: "是一个码农，写了 " | append: site.data.local.github.all.size | append: " 个托管于 GitHub 的开源项目，在 CodePen 上建立了 " | append: site.data.local.codepen.size | append: " 个代码演示。" %}
+{% endif %}
+
+{% if seo_description %}
+  {% assign seo_description = seo_description | markdownify | strip_html | strip_newlines | escape_once %}
+{% endif %}
+
+{% if page.author %}
+  {% assign seo_author_name = page.author.name | default: page.author %}
+  {% assign seo_author_twitter = page.author.twitter | default: page.author %}
+{% endif %}
+
+{% if seo_author_twitter %}
+  {% assign seo_author_twitter = seo_author_twitter | replace:"@","" | prepend:"@" %}
+{% endif %}
+
+{% if seo_title %}
+  <title>{{ seo_title }}</title>
+{% endif %}
+
+{% if seo_page_title %}
+  <meta property="og:title" content="{{ seo_page_title }}">
+{% endif %}
+
+{% if seo_description %}
+  <meta name="description" content="{{ seo_description }}">
+  <meta property="og:description" content="{{ seo_description }}">
+{% endif %}
+
+{% if page.keywords %}
+  {% assign keywords = page.keywords %}
+{% else %}
+  {% assign tag_data = site.data.taxonomy.tags %}
+  {% assign keywords = "" %}
+
+  {% for t in page.tags %}
+    {% unless keywords == "" %}
+      {% assign keywords = keywords | append: "," %}
+    {% endunless %}
+
+    {% assign keywords = keywords | append: tag_data[t].name %}
+  {% endfor %}
+
+  {% if keywords == "" %}
+    {% assign keywords = site.keywords %}
+  {% endif %}
+{% endif %}
+{% unless keywords == null or keywords == blank %}
+  <meta name="keywords" content="{{ keywords }}">
+{% endunless %}
+
+{% if seo_url %}
+  <link rel="canonical" href="{{ page.url | prepend: seo_url | replace:'/index.html','/' }}">
+  <meta property="og:url" content="{{ page.url | prepend: seo_url | replace:'/index.html','/' }}">
+{% endif %}
+
+{% if seo_site_title %}
+  <meta property="og:site_name" content="{{ seo_site_title }}">
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "WebSite",
+      "name" : {{ seo_site_title | jsonify }},
+      "url" : {{ seo_url | jsonify }}
+    }
+  </script>
+{% endif %}
+
+{% assign seo_page_image = page.image %}
+{% if seo_page_image %}
+  {% assign seo_page_image = seo_page_image | asset_path %}
+{% endif %}
+
+{% if seo_page_image %}
+  <meta property="og:image" content="{{ seo_page_image | prepend: seo_url | escape }}">
+{% endif %}
+
+{% if page.date %}
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+
+  {% if page.next.url %}
+    <link rel="next" href="{{ page.next.url | prepend: seo_url | replace:'/index.html','/' }}" title="{{ page.next.title | escape }}">
+  {% endif %}
+
+  {% if page.previous.url %}
+    <link rel="prev" href="{{ page.previous.url | prepend: seo_url | replace:'/index.html','/' }}" title="{{ page.previous.title | escape }}">
+  {% endif %}
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "NewsArticle",
+      "headline": {{ page.title | jsonify }},
+      "image": {{ seo_page_image | jsonify }},
+      "datePublished": {{ page.date | date_to_xmlschema | jsonify }},
+      "description": {{ seo_description | jsonify }}
+    }
+  </script>
+{% endif %}
+
+{% if site.twitter %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@{{ site.twitter.username | replace:'@','' }}">
+  <meta name="twitter:title" content="{{ seo_title }}">
+  <meta name="twitter:description" content="{{ seo_description }}">
+
+  {% if seo_page_image %}
+    <meta name="twitter:image" content="{{ seo_page_image | escape }}">
+  {% endif %}
+
+  {% if seo_author_twitter %}
+    <meta name="twitter:creator" content="{{ seo_author_twitter }}">
+  {% endif %}
+{% endif %}
+
+{% if site.facebook %}
+  <meta property="article:publisher" content="{{ site.facebook.publisher }}">
+  <meta property="fb:app_id" content="{{ site.facebook.app_id }}">
+{% endif %}
+
+{% if site.google_site_verification %}
+  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+{% endif %}
+
+{% if site.logo %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "url": {{ seo_url | jsonify }},
+      "logo": {{ site.logo | asset_path | prepend: seo_url | jsonify }}
+    }
+  </script>
+{% endif %}
+
+{% if site.social %}
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "{% if site.social.type %}{{ site.social.type }}{% else %}person{% endif %}",
+      "name" : "{% if site.social.name %}{{ site.social.name }}{% else %}{{ seo_site_title }}{% endif %}",
+      "url" : {{ seo_url | jsonify }},
+      "sameAs" : {{ site.social.links | jsonify }}
+    }
+  </script>
+{% endif %}
+
+<link rel="author" href="{{ seo_url }}">

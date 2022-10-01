@@ -98,20 +98,26 @@ function isLocalRelative(targetPath) {
   return /^(\.\.\/)+[a-z0-9\.\_\-]+/i.test(targetPath);
 }
 
-function readData(distPath) {
+function readData(distPath, raw) {
   if (!existsSync(distPath)) {
     return;
   }
 
+  const rawContent = readFileContentString(distPath);
+
+  if (raw === true) {
+    return rawContent;
+  }
+
   if (isJsonFile(distPath)) {
-    return JSON.parse(readFileContentString(distPath));
+    return JSON.parse(rawContent);
   }
 
   if (isYamlFile(distPath)) {
     return safeLoad(readFileContent(distPath));
   }
 
-  return readFileContentString(distPath);
+  return rawContent;
 }
 
 function saveData(distPath, data) {

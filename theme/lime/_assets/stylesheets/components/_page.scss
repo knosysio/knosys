@@ -1,0 +1,190 @@
+$headerHeight: 61px;
+$footerHeight: 180px;
+
+html,
+body {
+  height: 100%;
+}
+
+.Page-header {
+  margin-bottom: -($headerHeight);
+  border-bottom: 1px solid #dedede;
+  background-color: #F5F5F5;
+
+  .navbar {
+    margin-bottom: 0;
+    border-bottom-style: none;
+  }
+
+  .navbar-brand {
+    font: {
+      family: Georgia;
+      weight: bold;
+    }
+    color: inherit;
+    text-shadow: 1px 1px #fff;
+  }
+
+  .navbar-toggle {
+    &:hover {
+      background-color: #eee;
+      border-color: #eee;
+    }
+
+    .icon-bar {
+      background-color: #666;
+    }
+  }
+}
+
+.Page-navs {
+  > .nav {
+    > li {
+      > a {
+        font-weight: normal;
+        color: #888;
+
+        &:hover,
+        &:focus {
+          color: #333;
+          background-color: inherit;
+        }
+      }
+    }
+  }
+}
+
+.Page-content {
+  min-height: 100%;
+
+  &:before,
+  &:after {
+    position: relative;
+    z-index: -999999999;
+    content: $UN-space;
+    display: block;
+    visibility: hidden;
+    background: transparent none;
+  }
+
+  &:before {
+    height: $headerHeight;
+  }
+
+  &:after {
+    height: $footerHeight + 30px;
+  }
+}
+
+.Page-main {
+  @media all and (min-width: $screen-md-min) {
+    width: 100%;
+    float: left;
+    margin-right: -25%;
+  }
+}
+
+.Page-sidebar {
+  @media all and (min-width: $screen-md-min) {
+    float: right !important;
+    padding-right: 0;
+  }
+
+  @media all and (max-width: $screen-sm-max) {
+    margin-top: 0 !important;
+    padding: {
+      right: 0;
+      left: 0;
+    }
+  }
+}
+
+.Page-footer {
+  height: $footerHeight;
+  margin-top: -($footerHeight);
+  padding-top: 15px;
+  border-top: 1px solid #dedede;
+  background-color: #F5F5F5;
+  color: #666;
+  font-size: 12px;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: #444;
+  }
+
+  .Footer-navs,
+  .Footer-links {
+    ul {
+      list-style: none inside none;
+      margin-bottom: 0;
+      padding-left: 0;
+      @include pie-clearfix;
+    }
+
+    li {
+      float: left;
+    }
+  }
+
+  .Footer-navs {
+    margin-bottom: 20px;
+    font-size: 14px;
+
+    li {
+      span {
+        font-weight: 400;
+        @include inline-block;
+      }
+
+      + li {
+        &:before {
+          margin: 0 .5em;
+          content: "/";
+          color: #d6d6d6;
+          @include inline-block;
+        }
+      }
+    }
+  }
+
+  .Footer-copyright,
+  .Footer-licenses {
+    margin-top: 10px;
+    @include pie-clearfix;
+
+    @media all and (min-width: $screen-sm-min) {
+      p {
+        float: left;
+        line-height: 1.1;
+
+        + p {
+          margin-left: .75em;
+          padding-left: .75em;
+          border-left: 1px solid #d6d6d6;
+        }
+      }
+    }
+  }
+
+  .Footer-links {
+    margin-top: 30px;
+
+    li {
+      a {
+        display: block;
+      }
+
+      + li {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.Footer-description {
+  overflow: hidden;
+}
