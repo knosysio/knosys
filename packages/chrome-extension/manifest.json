@@ -1,0 +1,15 @@
+{
+  "name": "KnoSys",
+  "description": "Personal knowledge management in browser extension",
+  "version": "0.0.0",
+  "manifest_version": 3,
+  "permissions": ["tabs", "scripting", "activeTab"],
+  "host_permissions": ["http://localhost/*"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
+}

@@ -31,7 +31,9 @@ function execute() {
 
   try {
     require(`${cwd}/${scriptFile}`).execute(...params);
-  } catch (err) {}
+  } catch (err) {
+    console.log('[ERROR]', err);
+  }
 }
 
 module.exports = { execute };
