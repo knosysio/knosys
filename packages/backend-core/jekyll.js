@@ -1,8 +1,8 @@
 const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
 
-const { rm, cp } = require('./cmd');
-const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('./fs');
+const { rm, cp } = require('./wrappers/fs');
+const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('./utils');
 
 function readDirDeeply(dirPath, srcPath, distPath) {
   scanAndSortByAsc(dirPath).forEach(baseName => {

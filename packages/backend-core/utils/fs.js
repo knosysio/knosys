@@ -1,8 +1,8 @@
 const { existsSync, statSync, readdirSync, readFileSync, writeFileSync } = require('fs');
 const { safeLoad, safeDump } = require('js-yaml');
 
+const { rm, mkdir, touch } = require('../wrappers/fs');
 const { sortByName } = require('./util');
-const { rm, mkdir, touch } = require('./cmd');
 const { replaceRefDefsWith } = require('./md');
 
 function ensureDirOrFileExists(resolvedPath, type, removeWhenExists) {

@@ -1,6 +1,5 @@
 const { existsSync } = require('fs');
-const { isString, isPlainObject } = require('./util');
-const { readData } = require('./fs');
+const { isString, isPlainObject, readData } = require('./utils');
 
 function getConfig(cwd) {
   const configFilePath = `${cwd}/.knosysrc`;

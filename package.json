@@ -1,7 +1,7 @@
 {
   "name": "@ourai/knosys",
   "version": "0.0.0",
-  "description": "Something about Personal Knowledge Base",
+  "description": "Something about personal knowledge management",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/ourai/knosys/issues"
   },
-  "homepage": "https://github.com/ourai/knosys#readme",
+  "homepage": "https://ourai.github.io/knosys/",
   "dependencies": {
     "@ntks/toolbox": "0.0.6",
     "iniparser": "^1.0.5",
