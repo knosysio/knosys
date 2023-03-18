@@ -16,7 +16,7 @@ function getConfig(cwd) {
 }
 
 function execute() {
-  const cwd = process.env.INIT_CWD;
+  const cwd = process.env.INIT_CWD; // will be `undefined` when not called by npm scripts
   const [command, ...params] = process.argv.slice(2);
   const commandConfig = getConfig(cwd).command;
 
