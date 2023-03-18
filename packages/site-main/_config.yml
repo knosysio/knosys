@@ -1,7 +1,7 @@
 title: KnoSys
 description:
 keywords:
-tagline: 开放的个人知识库
+tagline: 开放的个人知识管理工具
 
 collections:
   pages:
@@ -114,7 +114,7 @@ author:
   uri: https://ourai.ws/
   twitter: ourairyu
 github:
-  url: https://oss.ourai.ws/knosys
+  url: https://ourai.github.io/knosys
 
 
 

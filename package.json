@@ -5,10 +5,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "clean:site": "rm -rf ./site/.asset-cache",
-    "start": "cd ./site && rake run",
+    "clean:site": "rm -rf ./packages/site-main/.asset-cache",
+    "start": "cd ./packages/site-main && rake run",
     "predeploy": "npm run clean:site",
-    "deploy": "cd ./site && rake deploy"
+    "deploy": "cd ./packages/site-main && rake deploy"
   },
   "repository": {
     "type": "git",
