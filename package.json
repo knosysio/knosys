@@ -1,7 +1,7 @@
 {
-  "name": "@ourai/knosys",
+  "name": "@knosys/mono",
   "version": "0.0.0",
-  "description": "Something about personal knowledge management",
+  "description": "Something about knowledge management",
   "private": true,
   "main": "index.js",
   "scripts": {

@@ -1,8 +1,9 @@
 const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
+const { execSync } = require('child_process');
 
-const { rm, cp } = require('./wrappers/fs');
-const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('./utils');
+const { rm, cp } = require('../wrappers/fs');
+const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('../utils');
 
 function readDirDeeply(dirPath, srcPath, distPath) {
   scanAndSortByAsc(dirPath).forEach(baseName => {
@@ -32,4 +33,32 @@ function copyTheme(nameOrSrcPath, distPath) {
   readDirDeeply(themeDirPath, themeDirPath, distPath);
 }
 
-module.exports = { copyTheme };
+function serveJekyllSite(srcPath) {
+  const flags = [
+    `--source ${srcPath}`,
+    `--config ${srcPath}/_config.yml`,
+    '--future',
+    '--drafts',
+    '--incremental',
+  ];
+
+  execSync(`bundle exec jekyll serve ${flags.join(' ')}`, { stdio: 'inherit' });
+}
+
+function generateJekyllSite(projPath, srcPath, distPath) {
+  const flags = [
+    `--source ${srcPath}`,
+    `--destination ${distPath}`,
+    `--config ${srcPath}/_config.yml`,
+  ];
+
+  execSync([
+    `cd ${projPath}`,
+    'bundle exec jekyll clean',
+    `JEKYLL_ENV=production bundle exec jekyll build ${flags.join(' ')}`,
+    `cd ${distPath}`,
+    'touch .nojekyll'
+  ].join(' && '), { stdio: 'inherit' });
+}
+
+module.exports = { copyTheme, serveJekyllSite, generateJekyllSite };

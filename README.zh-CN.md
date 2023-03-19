@@ -2,7 +2,7 @@
 
 # [KnoSys](https://ourai.github.io/knosys/)
 
-开放的个人知识管理工具。
+开放的知识管理工具。
 
 ## 特色
 
