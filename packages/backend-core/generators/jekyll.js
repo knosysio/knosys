@@ -5,34 +5,6 @@ const { execSync } = require('child_process');
 const { rm, cp } = require('../wrappers/fs');
 const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('../utils');
 
-function readDirDeeply(dirPath, srcPath, distPath) {
-  scanAndSortByAsc(dirPath).forEach(baseName => {
-    if (baseName.indexOf('.') === 0 || ['_config.yml', '_data'].indexOf(baseName) > -1) {
-      return;
-    }
-
-    const currentPath = `${dirPath}/${baseName}`;
-    const distFullPath = `${distPath}${currentPath.replace(srcPath, '')}`;
-
-    if (isDirectory(currentPath)) {
-      ensureDirExists(distFullPath);
-      readDirDeeply(currentPath, srcPath, distPath);
-    } else {
-      if (existsSync(distFullPath)) {
-        rm(distFullPath);
-      }
-
-      cp(currentPath, distFullPath);
-    }
-  });
-}
-
-function copyTheme(nameOrSrcPath, distPath) {
-  const themeDirPath = nameOrSrcPath.split('/').length > 1 ? nameOrSrcPath : resolvePath(__dirname, '../../tmpl/lime');
-
-  readDirDeeply(themeDirPath, themeDirPath, distPath);
-}
-
 function serveJekyllSite(srcPath) {
   const flags = [
     `--source ${srcPath}`,
@@ -61,4 +33,32 @@ function generateJekyllSite(projPath, srcPath, distPath) {
   ].join(' && '), { stdio: 'inherit' });
 }
 
-module.exports = { copyTheme, serveJekyllSite, generateJekyllSite };
+function readDirDeeply(dirPath, srcPath, distPath) {
+  scanAndSortByAsc(dirPath).forEach(baseName => {
+    if (baseName.indexOf('.') === 0 || ['_config.yml', '_data'].indexOf(baseName) > -1) {
+      return;
+    }
+
+    const currentPath = `${dirPath}/${baseName}`;
+    const distFullPath = `${distPath}${currentPath.replace(srcPath, '')}`;
+
+    if (isDirectory(currentPath)) {
+      ensureDirExists(distFullPath);
+      readDirDeeply(currentPath, srcPath, distPath);
+    } else {
+      if (existsSync(distFullPath)) {
+        rm(distFullPath);
+      }
+
+      cp(currentPath, distFullPath);
+    }
+  });
+}
+
+function copyTheme(nameOrSrcPath, distPath) {
+  const themeDirPath = nameOrSrcPath.split('/').length > 1 ? nameOrSrcPath : resolvePath(__dirname, '../../tmpl/lime');
+
+  readDirDeeply(themeDirPath, themeDirPath, distPath);
+}
+
+module.exports = { serveJekyllSite, generateJekyllSite, copyTheme };
