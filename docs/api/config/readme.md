@@ -18,6 +18,8 @@
 | 属性名 | 值类型/可选值 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `alias` | `string` | - | 站点别名，没指定时会取站点名称 |
+| `source` | `string` | - | 站点源码文件夹 |
+| `generator` | `string` | - | [静态站点生成器](https://jamstack.org/generators/) |
 | `git` | `GitConfig` | - | 要部署到的 Git 远程仓库及分支，详见下方 |
 | `cname` | `string` | - | 自定义域名 |
 

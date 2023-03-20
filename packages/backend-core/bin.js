@@ -1,35 +1,31 @@
+const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
-const { isString, isPlainObject, readData } = require('./utils');
 
-function getConfig(cwd) {
-  const configFilePath = `${cwd}/.knosysrc`;
-
-  let config = {};
-
-  if (existsSync(configFilePath)) {
-    try {
-      config = JSON.parse(readData(configFilePath));
-    } catch(err) {}
-  }
-
-  return config;
-}
+const { isString, isPlainObject, resolveRootPath, getConfig } = require('./utils');
 
 function execute() {
-  const cwd = process.env.INIT_CWD; // will be `undefined` when not called by npm scripts
   const [command, ...params] = process.argv.slice(2);
-  const commandConfig = getConfig(cwd).command;
+  const commandFileName = `${command}.js`;
+  const commandConfig = getConfig('command');
 
   let scriptFile;
 
   if (isString(commandConfig)) {
-    scriptFile = `${commandConfig}/${command}.js`;
+    scriptFile = `${commandConfig}/${commandFileName}`;
   } else if (isPlainObject(commandConfig) && isString(commandConfig[command])) {
     scriptFile = `${commandConfig[command].replace('.js', '')}.js`;
   }
 
   try {
-    require(`${cwd}/${scriptFile}`).execute(...params);
+    const defaultCommandPath = resolvePath(__dirname, `./commands/${commandFileName}`);
+
+    let scriptFilePath = resolvePath(resolveRootPath(), scriptFile);
+
+    if (!existsSync(scriptFilePath) && existsSync(defaultCommandPath)) {
+      scriptFilePath = defaultCommandPath;
+    }
+
+    require(scriptFilePath).execute(...params);
   } catch (err) {
     console.log('[ERROR]', err);
   }

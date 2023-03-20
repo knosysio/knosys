@@ -2,6 +2,7 @@ const { existsSync } = require('fs');
 const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
 
+const { GLOBAL_DIR_NAME } = require('../constants');
 const { isFunction } = require('./util');
 const { ensureDirExists } = require('./fs');
 
@@ -24,7 +25,7 @@ function deploySite(siteName, config, generator) {
     return;
   }
 
-  const globalConfigDirPath = resolvePath(process.env.HOME || process.env.USERPROFILE, '.knosys');
+  const globalConfigDirPath = resolvePath(process.env.HOME || process.env.USERPROFILE, GLOBAL_DIR_NAME);
   const siteTempPath = `${globalConfigDirPath}/sites`;
 
   ensureDirExists(globalConfigDirPath);

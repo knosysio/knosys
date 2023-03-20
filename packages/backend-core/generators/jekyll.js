@@ -3,7 +3,7 @@ const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 
 const { rm, cp } = require('../wrappers/fs');
-const { scanAndSortByAsc, isDirectory, ensureDirExists } = require('../utils');
+const { scanAndSortByAsc, isDirectory, ensureDirExists, resolveRootPath } = require('../utils');
 
 function serveJekyllSite(srcPath) {
   const flags = [
@@ -17,7 +17,7 @@ function serveJekyllSite(srcPath) {
   execSync(`bundle exec jekyll serve ${flags.join(' ')}`, { stdio: 'inherit' });
 }
 
-function generateJekyllSite(projPath, srcPath, distPath) {
+function generateJekyllSite(srcPath, distPath) {
   const flags = [
     `--source ${srcPath}`,
     `--destination ${distPath}`,
@@ -25,7 +25,7 @@ function generateJekyllSite(projPath, srcPath, distPath) {
   ];
 
   execSync([
-    `cd ${projPath}`,
+    `cd ${resolveRootPath()}`,
     'bundle exec jekyll clean',
     `JEKYLL_ENV=production bundle exec jekyll build ${flags.join(' ')}`,
     `cd ${distPath}`,

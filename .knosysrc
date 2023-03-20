@@ -1,8 +1,10 @@
 {
-  "path": ".",
+  "$path": ".",
   "command": "./scripts/bin",
   "site": {
     "default": {
+      "alias": "knosys",
+      "source": "./sites/homepage",
       "git": {
         "url": "https://github.com/ourai/knosys.git",
         "branch": "gh-pages"
