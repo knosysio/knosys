@@ -1,0 +1,130 @@
+@import "../helper";
+@import "../components/brand";
+
+$headerHeight: 60px;
+$headerBorderWidth: 1px;
+$headerOuterHeight: $headerHeight + $headerBorderWidth;
+$footerHeight: 180px;
+
+.Page {
+  $asideWidth: 280px;
+
+  &-header {
+    position: relative;
+    z-index: 1;
+  }
+
+  &-content {
+    height: 100%;
+    min-height: 0;
+
+    &:after {
+      display: table;
+      height: 0;
+      clear: both;
+    }
+  }
+
+  &-aside {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $asideWidth;
+    border-right: 1px solid #dedede;
+  }
+
+  &-main {
+    position: relative;
+    width: calc(100% - #{$asideWidth}) !important;
+    min-height: calc(100% - #{$headerOuterHeight});
+    margin-right: 0;
+    margin-left: $asideWidth;
+
+    &:after {
+      position: relative;
+      z-index: -999999999;
+      content: $UN-space;
+      display: block;
+      visibility: hidden;
+      background: transparent none;
+      height: $footerHeight + 30px;
+      clear: both;
+    }
+  }
+
+  &-footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.Article {
+  float: left;
+  width: 100%;
+}
+
+.AsideBrand {
+  padding-left: 15px;
+  font-size: 20px;
+  line-height: $headerHeight;
+  border-bottom: $headerBorderWidth solid #dedede;
+  background-color: #f5f5f5;
+  @include brand-rules;
+}
+
+.AsideNav {
+  height: calc(100% - #{$headerOuterHeight});
+  padding: 8px;
+  overflow: auto;
+  font-size: 14px;
+
+  ul {
+    list-style: none inside none;
+    padding-left: 0;
+  }
+
+  li {
+    padding: 3px 0;
+  }
+
+  span,
+  a {
+    display: block;
+    padding: 5px 8px;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: #f5f5f5;
+      text-decoration: none;
+    }
+  }
+
+  a {
+    color: inherit !important;
+
+    &.is-selected {
+      font-weight: 400;
+      background-color: #f5f5f5;
+      cursor: default;
+    }
+  }
+
+  > ul > li > ul > li {
+    $gap: 1.5em;
+
+    > span,
+    > a {
+      padding-left: $gap;
+    }
+
+    > ul > li {
+      > span,
+      > a {
+        padding-left: $gap * 2;
+      }
+    }
+  }
+}

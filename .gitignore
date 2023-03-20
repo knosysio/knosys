@@ -8,6 +8,8 @@ node_modules/
 .sass-cache/
 
 _site/
+sites/homepage/_data/*.yml
+sites/homepage/_apis/
 
 *.log
 

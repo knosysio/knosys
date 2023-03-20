@@ -1,8 +1,9 @@
 const { existsSync, statSync, readdirSync, readFileSync, writeFileSync } = require('fs');
 const { safeLoad, safeDump } = require('js-yaml');
 
+const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME } = require('../constants');
 const { rm, mkdir, touch } = require('../wrappers/fs');
-const { sortByName } = require('./util');
+const { isPlainObject, omit, sortByName } = require('./util');
 const { replaceRefDefsWith } = require('./md');
 
 function ensureDirOrFileExists(resolvedPath, type, removeWhenExists) {
@@ -86,6 +87,10 @@ function readFileContentString(filePath) {
   return readFileContent(filePath).toString().trim();
 }
 
+function isMarkdownFile(distPath) {
+  return /.+\.md$/i.test(distPath);
+}
+
 function isJsonFile(distPath) {
   return /.+\.json$/i.test(distPath);
 }
@@ -120,11 +125,19 @@ function readData(distPath, raw) {
   return rawContent;
 }
 
-function saveData(distPath, data) {
+function saveData(distPath, data, ...others) {
   ensureFileExists(distPath);
 
   if (typeof data === 'string') {
-    return writeFileSync(distPath, data);
+    let resolved;
+
+    if (isMarkdownFile(distPath) && isPlainObject(others[0])) {
+      resolved = `---\n${safeDump(omit(others[0], ['content'])).trim()}\n---\n\n${data || others[0].content || ''}`;
+    } else {
+      resolved = data;
+    }
+
+    return writeFileSync(distPath, resolved);
   }
 
   if (isJsonFile(distPath)) {
@@ -137,57 +150,82 @@ function saveData(distPath, data) {
 }
 
 function readReadMe(dirPath) {
-  return readData(`${dirPath}/readme.md`) || '';
+  return readData(`${dirPath}/${ENTITY_CONTENT_NAME}`) || '';
 }
 
-function readMetadata(dirPath) {
-  const metadata = readData(`${dirPath}/metadata.yml`) || readData(`${dirPath}/basic.yml`);
+/**
+ * @see https://qiidb.github.io/guides/spec/
+ */
+function readMetadata(dirPath, inMetaDir = false) {
+  const dataFromMain = readData(`${dirPath}/${ENTITY_MAIN_NAME}`);
+
+  let extensible = false;
+  let metadata;
+
+  if (inMetaDir) {
+    metadata = dataFromMain;
+  } else {
+    metadata = readData(`${dirPath}/${ENTITY_MONO_NAME}`) || readData(`${dirPath}/${LEGACY_ENTITY_NAME}`);
+
+    if (!metadata) {
+      metadata = dataFromMain;
+      extensible = true;
+    }
+  }
+
+  const contentData = readReadMe(dirPath);
+
+  if (contentData) {
+    metadata = { ...(metadata || {}), content: contentData };
+  }
 
   if (!metadata) {
     return;
   }
 
-  scanAndSortByAsc(dirPath)
-    .filter(baseName => {
-      if (baseName.indexOf('.') === 0) {
-        return false;
-      }
-
-      return isDirectory(`${dirPath}/${baseName}`)
-        ? true
-        : ['yml', 'md'].includes(baseName.split('.').slice(-1)[0]) && !['metadata.yml', 'basic.yml', 'readme.md'].includes(baseName);
-    })
-    .forEach(baseName => {
-      let extendDataFullPath = `${dirPath}/${baseName}`;
-
-      if (isDirectory(extendDataFullPath)) {
-        for (let fileName of ['readme.md', 'metadata.yml']) {
-          if (existsSync(`${extendDataFullPath}/${fileName}`)) {
-            const extendData = readData(`${extendDataFullPath}/${fileName}`);
-
-            metadata[baseName] = typeof extendData === 'string'
-              ? replaceRefDefsWith(extendData, (matched, _, ref) => {
-                if (isLocalRelative(ref)) {
-                  return matched.replace(ref, ref.split('../').slice(1).join('../'));
-                } else {
-                  return matched
-                }
-              })
-              : extendData;
-
-            break;
-          }
+  if (extensible) {
+    scanAndSortByAsc(dirPath)
+      .filter(baseName => {
+        if (baseName.indexOf('.') === 0) {
+          return false;
         }
-      } else {
-        metadata[baseName.split('.').slice(0, -1).join('.')] = readData(extendDataFullPath);
-      }
-    });
+
+        return isDirectory(`${dirPath}/${baseName}`)
+          ? true
+          : ['yml', 'md'].includes(baseName.split('.').slice(-1)[0]) && ![LEGACY_ENTITY_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME].includes(baseName);
+      })
+      .forEach(baseName => {
+        let extendDataFullPath = `${dirPath}/${baseName}`;
+
+        if (isDirectory(extendDataFullPath)) {
+          for (let fileName of [ENTITY_CONTENT_NAME, LEGACY_ENTITY_NAME]) {
+            if (existsSync(`${extendDataFullPath}/${fileName}`)) {
+              const extendData = readData(`${extendDataFullPath}/${fileName}`);
+
+              metadata[baseName] = typeof extendData === 'string'
+                ? replaceRefDefsWith(extendData, (matched, _, ref) => {
+                  if (isLocalRelative(ref)) {
+                    return matched.replace(ref, ref.split('../').slice(1).join('../'));
+                  } else {
+                    return matched
+                  }
+                })
+                : extendData;
+
+              break;
+            }
+          }
+        } else {
+          metadata[baseName.split('.').slice(0, -1).join('.')] = readData(extendDataFullPath);
+        }
+      });
+  }
 
   return metadata;
 }
 
 function readLocalizedData(dataFilePath) {
-  let defaultData = readData(`${dataFilePath}/metadata.yml`);
+  let defaultData = readData(`${dataFilePath}/${LEGACY_ENTITY_NAME}`);
   let i18nData;
 
   if (!defaultData) {

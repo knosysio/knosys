@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "build": "node scripts/bin generate",
     "clean": "rm -rf sites/*/.asset-cache",
     "start": "node scripts/bin serve",
     "predeploy": "npm run clean",

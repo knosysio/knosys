@@ -1,0 +1,37 @@
+@mixin brand-rules {
+  font: {
+    family: Georgia;
+    weight: bold;
+  }
+  text-shadow: 1px 1px #fff;
+
+  &,
+  a {
+    color: inherit;
+  }
+
+  a {
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    + a {
+      position: relative;
+      margin-left: 1.4em;
+      font: {
+        family: Sans-serif;
+        weight: normal;
+      }
+
+      &:before {
+        content: $UN-space;
+        position: absolute;
+        top: 7px;
+        bottom: 7px;
+        left: -.7em;
+        border-left: 1px solid currentColor;
+      }
+    }
+  }
+}

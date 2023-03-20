@@ -1,5 +1,5 @@
 <footer class="Page-footer Footer">
-  <div class="container">
+  <div class="{% if site.data.local.repos[page.repo] %}container-fluid{% else %}container{% endif %}">
     <div class="Footer-description">
       <!-- 重要链接 -->
       <nav class="Footer-navs">

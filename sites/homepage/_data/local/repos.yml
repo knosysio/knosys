@@ -1,0 +1,6 @@
+cookbook:
+  name: API 参考
+  collection: apis
+  toc:
+    - slug: config
+    - slug: cli

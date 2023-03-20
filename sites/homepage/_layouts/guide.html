@@ -1,0 +1,39 @@
+---
+layout: default
+
+css:
+  - share
+js:
+  - share.min
+  - components
+---
+
+{% include header.html %}
+<div class="Page-content">
+  {% assign repo = site.data.local.repos[page.repo] %}
+  {% assign url_parts = page.id | split: "/" %}
+
+  {% if repo and repo.toc %}
+  <aside class="Page-aside">
+    <div class="AsideBrand"><a href="{{ '/' | prepend: site.baseurl | prepend: site.url }}" title="回到首页">{{ site.title }}</a></div>
+    <nav class="AsideNav">
+      {% include doc-toc.html repo=page.repo items=repo.toc collection=repo.collection %}
+    </nav>
+  </aside>
+  {% endif %}
+  <main class="Page-main">
+    <article class="Article container-fluid">
+      <header class="Article-header">
+        <h1 class="Article-title">{{ page.title }}</h1>
+      </header>
+      <div class="Article-content col-md-9">{{ content }}</div>
+      <footer class="Article-footer col-md-3">
+        {% include widgets/social.html %}
+        {% include widgets/toc.html %}
+      </footer>
+    </article>
+    {% include footer.html %}
+  </main>
+</div>
+
+<script>$('table').addClass('table table-bordered')</script>

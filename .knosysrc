@@ -5,6 +5,7 @@
     "default": {
       "alias": "knosys",
       "source": "./sites/homepage",
+      "data": "./docs/cookbook",
       "git": {
         "url": "https://github.com/ourai/knosys.git",
         "branch": "gh-pages"
