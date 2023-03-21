@@ -20,13 +20,17 @@ function execute() {
   try {
     const defaultCommandPath = resolvePath(__dirname, `./commands/${commandFileName}`);
 
-    let scriptFilePath = resolvePath(resolveRootPath(), scriptFile);
+    let scriptFilePath;
 
-    if (!existsSync(scriptFilePath) && existsSync(defaultCommandPath)) {
-      scriptFilePath = defaultCommandPath;
+    if (scriptFile) {
+      scriptFilePath = resolvePath(resolveRootPath(), scriptFile);
+
+      if (!existsSync(scriptFilePath) && existsSync(defaultCommandPath)) {
+        scriptFilePath = defaultCommandPath;
+      }
     }
 
-    require(scriptFilePath).execute(...params);
+    require(scriptFilePath || defaultCommandPath).execute(...params);
   } catch (err) {
     console.log('[ERROR]', err);
   }
