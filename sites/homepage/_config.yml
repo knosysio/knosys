@@ -48,9 +48,6 @@ gems:
 markdown: kramdown
 highlighter: pygments
 
-# Serving
-baseurl: /knosys
-
 # Outputting
 permalink: /posts/:title/
 timezone: Asia/Shanghai
@@ -131,7 +128,7 @@ author:
   uri: https://ourai.ws/
   twitter: ourairyu
 github:
-  url: https://ourai.github.io/knosys
+  url: https://knosysio.github.io
 
 
 

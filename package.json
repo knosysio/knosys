@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/ourai/knosys/issues"
   },
-  "homepage": "https://ourai.github.io/knosys/",
+  "homepage": "https://knosysio.github.io/",
   "dependencies": {
     "@ntks/toolbox": "0.0.6",
     "iniparser": "^1.0.5",

@@ -49,8 +49,15 @@ function deploySite(siteName, config, generator) {
       'git init',
       `git remote add origin ${deployRepo}`,
       'git fetch',
-      `git checkout ${deployBranch}`
     ]);
+
+    const branches = execSync('git branch -a', { cwd: deployDir }).toString('utf-8').trim();
+
+    console.log(`\r\n[INFO] Git 分支：${branches}\r\n`, );
+
+    if (branches) {
+      exec([`git checkout ${deployBranch}`]);
+    }
   }
 
   setTimeout(() => {

@@ -1,6 +1,6 @@
 [English](./README.md) | 简体中文
 
-# [KnoSys](https://ourai.github.io/knosys/)
+# [KnoSys](https://knosysio.github.io/)
 
 开放的知识管理工具。
 

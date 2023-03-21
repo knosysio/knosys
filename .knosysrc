@@ -7,8 +7,7 @@
       "source": "./sites/homepage",
       "data": "./docs",
       "git": {
-        "url": "https://github.com/ourai/knosys.git",
-        "branch": "gh-pages"
+        "url": "https://github.com/knosysio/knosysio.github.io.git"
       }
     }
   }

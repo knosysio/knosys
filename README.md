@@ -1,6 +1,6 @@
 English | [简体中文](./README.zh-CN.md)
 
-# [KnoSys](https://ourai.github.io/knosys/)
+# [KnoSys](https://knosysio.github.io/)
 
 An open tool for knowledge management.
 
