@@ -3,7 +3,7 @@
   {% for _inc_item in include.items %}
     <li>
       {% assign _inc_collection = _inc_item.collection | default: include.collection %}
-      {% assign _inc_docs = site.data[_inc_collection].items %}
+      {% assign _inc_docs = site.data.knosys[include.repo][_inc_collection].items %}
       {% assign _inc_url_parts = page.id | split: "/" %}
       {% if _inc_item.items %}
         <span>{{ _inc_item.text }}</span>

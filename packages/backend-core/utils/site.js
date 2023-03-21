@@ -1,9 +1,9 @@
 const { existsSync } = require('fs');
 const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
+const { isFunction } = require('@ntks/toolbox');
 
 const { GLOBAL_DIR_NAME } = require('../constants');
-const { isFunction } = require('./util');
 const { ensureDirExists } = require('./fs');
 
 function deploySite(siteName, config, generator) {

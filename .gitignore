@@ -7,9 +7,9 @@ node_modules/
 .asset-cache/
 .sass-cache/
 
-_site/
-sites/homepage/_data/*.yml
-sites/homepage/_apis/
+sites/homepage/_data/knosys/
+sites/homepage/_knosys/
+sites/homepage/_site/
 
 *.log
 

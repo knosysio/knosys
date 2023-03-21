@@ -3,4 +3,5 @@ cookbook:
   collection: apis
   toc:
     - slug: config
+    - slug: meta
     - slug: cli

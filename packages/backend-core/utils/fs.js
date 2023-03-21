@@ -1,9 +1,10 @@
 const { existsSync, statSync, readdirSync, readFileSync, writeFileSync } = require('fs');
 const { safeLoad, safeDump } = require('js-yaml');
+const { isPlainObject, omit } = require('@ntks/toolbox');
 
-const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME } = require('../constants');
+const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME, META_DIR_NAME } = require('../constants');
 const { rm, mkdir, touch } = require('../wrappers/fs');
-const { isPlainObject, omit, sortByName } = require('./util');
+const { sortByName } = require('./util');
 const { replaceRefDefsWith } = require('./md');
 
 function ensureDirOrFileExists(resolvedPath, type, removeWhenExists) {
@@ -155,8 +156,10 @@ function readReadMe(dirPath) {
 
 /**
  * @see https://qiidb.github.io/guides/spec/
+ * @deprecated use `readMeta` and `readEntity` instead, will be removed in next major release
  */
-function readMetadata(dirPath, inMetaDir = false) {
+function readMetadata(dirPath) {
+  const inMetaDir = dirPath.split('/').slice(-1)[0] === META_DIR_NAME;
   const dataFromMain = readData(`${dirPath}/${ENTITY_MAIN_NAME}`);
 
   let extensible = false;
@@ -254,9 +257,23 @@ function readLocalizedData(dataFilePath) {
   return { ...defaultData, ...i18nData };
 }
 
+/**
+ * @see https://qiidb.github.io/guides/spec/
+ */
+function readMeta(dirPath) {
+  return readMetadata(`${dirPath}/${META_DIR_NAME}`);
+}
+
+/**
+ * @see https://qiidb.github.io/guides/spec/
+ */
+function readEntity(dirPath) {
+  return readMetadata(dirPath);
+}
+
 module.exports = {
   ensureDirExists, ensureFileExists,
   isDirectory, isLocalRelative,
   scanAndSortByAsc, getImageFileNames, readDirDeeply,
-  readData, saveData, readReadMe, readMetadata, readLocalizedData,
+  readData, saveData, readReadMe, readMetadata, readLocalizedData, readMeta, readEntity,
 };

@@ -9,9 +9,9 @@ collections:
   pages:
     output: true
     permalink: /:path/
-  apis:
+  knosys:
     output: true
-    permalink: /:collection/:path/
+    permalink: /:path/
 
 # Handling Reading
 exclude:
@@ -88,7 +88,7 @@ defaults:
       siblings: true
   - scope:
       path: ""
-      type: apis
+      type: knosys
     values:
       layout: guide
       css:

@@ -1,7 +1,8 @@
 const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
+const { isString, isPlainObject } = require('@ntks/toolbox');
 
-const { isString, isPlainObject, resolveRootPath, getConfig } = require('./utils');
+const { resolveRootPath, getConfig } = require('./utils');
 
 function execute() {
   const [command, ...params] = process.argv.slice(2);

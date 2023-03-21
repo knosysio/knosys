@@ -19,6 +19,7 @@
 | --- | --- | --- | --- |
 | `alias` | `string` | - | 站点别名，没指定时会取站点名称 |
 | `source` | `string` | - | 站点源码文件夹 |
+| `data` | `string` | - | 数据源文件夹 |
 | `generator` | `string` | `'jekyll'` | [静态站点生成器](https://jamstack.org/generators/) |
 | `git` | `GitConfig` | - | 要部署到的 Git 远程仓库及分支，详见下方 |
 | `cname` | `string` | - | 自定义域名 |

@@ -15,7 +15,6 @@ function convertDateFormat(date, zone) {
 }
 
 module.exports = {
-  ...require('@ntks/toolbox'),
   sortByName,
   sortByDate,
   convertDateFormat,
