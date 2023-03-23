@@ -5,11 +5,12 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "copy": "node scripts/bin site copy",
     "build": "node scripts/bin generate",
     "clean": "rm -rf sites/*/.asset-cache",
-    "start": "node scripts/bin serve",
+    "start": "node scripts/bin site serve",
     "predeploy": "npm run clean",
-    "deploy": "node scripts/bin deploy"
+    "deploy": "node scripts/bin site deploy"
   },
   "repository": {
     "type": "git",

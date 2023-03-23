@@ -1,7 +1,6 @@
 title: KnoSys
-description:
+description: 开放的知识管理工具
 keywords:
-tagline: 开放的知识管理工具
 
 port: 10226
 
@@ -58,24 +57,24 @@ defaults:
   - scope:
       path: ""
     values:
-      layout: default
+      layout: ksio/default
   # 页面
   - scope:
       path: ""
       type: pages
     values:
-      layout: page
+      layout: ksio/page
   # 文章
   - scope:
       path: ""
       type: posts
     values:
-      layout: post
+      layout: ksio/post
       css:
-        - pages/post
+        - ksio/pages/post
       js:
-        - initializers/time
-        - initializers/lazyload
+        - ksio/initializers/time
+        - ksio/initializers/lazyload
       author:
         name: 欧雷
         email: ourairyu@gmail.com
@@ -87,13 +86,13 @@ defaults:
       path: ""
       type: knosys
     values:
-      layout: guide
+      layout: ksio/doc
       css:
-        - pages/post
-        - pages/doc
+        - ksio/pages/post
+        - ksio/pages/doc
       js:
-        - initializers/time
-        - initializers/lazyload
+        - ksio/initializers/time
+        - ksio/initializers/lazyload
       repo: cookbook
 
 
@@ -136,7 +135,23 @@ github:
 # Customized configurations
 # =====
 
-# Modules
-module:
-  comment: false
-  share: true
+ksio:
+  brand:
+    color: "#0871ab"
+  navs:
+    - text: API
+      url: /apis/config/
+    - text: 关于
+      children:
+        - text: 作者
+          url: https://linxoid.com/ourai/
+        - text: GitHub
+          url: https://github.com/ourai/knosys
+  links:
+    - text: OOSS
+      url: https://oss.ourai.ws/
+    - text: QiiDB
+      url: https://qiidb.github.io/
+  modules:
+    social:
+      share: true

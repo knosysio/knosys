@@ -1,0 +1,13 @@
+{% assign _inc_navs = include.navs %}
+{% if _inc_navs and _inc_navs.size > 0 %}
+  {% for _inc_nav in _inc_navs %}
+    {% if _inc_nav.children %}
+      <li class="dropdown">
+        <a class="dropdown-toggle" href="javascript:void(0);" data-toggle="dropdown">{{ _inc_nav.text }} <span class="caret"></span></a>
+        <ul class="dropdown-menu">{% include ksio/components/nav-list.html navs=_inc_nav.children %}</ul>
+      </li>
+    {% else %}
+      <li>{% include ksio/components/link.html link=_inc_nav utm="utm_source=ourai.github.io/lime&utm_medium=common-header" %}</li>
+    {% endif %}
+  {% endfor %}
+{% endif %}

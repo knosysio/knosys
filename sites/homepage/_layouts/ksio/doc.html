@@ -1,0 +1,37 @@
+---
+layout: ksio/default
+
+css:
+  - ksio/vendors/share
+js:
+  - ksio/vendors/share.min
+  - ksio/components
+---
+
+{% include ksio/header.html %}
+<div class="Page-content">
+  {% assign repo = site.data.local.repos[page.repo] %}
+  {% assign url_parts = page.id | split: "/" %}
+
+  {% if repo and repo.toc %}
+  <aside class="Page-aside">
+    <div class="AsideBrand">{% include ksio/components/brand-link.html %}</div>
+    <nav class="AsideNav">{% include ksio/components/doc-toc.html repo=page.repo items=repo.toc collection=repo.collection %}</nav>
+  </aside>
+  {% endif %}
+  <main class="Page-main">
+    <article class="Article container-fluid">
+      <header class="Article-header">
+        <h1 class="Article-title">{{ page.title }}</h1>
+      </header>
+      <div class="Article-content col-md-9">{{ content }}</div>
+      <footer class="Article-footer col-md-3">
+        {% include ksio/widgets/share.html %}
+        {% include ksio/widgets/toc.html %}
+      </footer>
+    </article>
+    {% include ksio/footer.html %}
+  </main>
+</div>
+
+<script>$('table').addClass('table table-bordered')</script>

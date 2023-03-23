@@ -1,8 +1,48 @@
+const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 const { saveData: cacheData } = require('@ntks/toolbox');
 
 const { DEFAULT_PATH_SCHEMA } = require('../constants');
-const { ensureDirExists, readDirDeeply, readMeta, readEntity, saveData, resolvePathFromParams, resolveRootPath } = require('../utils');
+const { ensureDirExists, isDirectory, scanAndSortByAsc, readDirDeeply, readMeta, readEntity, saveData, resolvePathFromParams, resolveRootPath } = require('../utils');
+const { rm, cp } = require('../wrappers/fs');
+
+function copyThemeFilesDeeply(dirPath, distPath) {
+  scanAndSortByAsc(dirPath).forEach(baseName => {
+    if (baseName.indexOf('.') === 0) {
+      return;
+    }
+
+    const currentPath = `${dirPath}/${baseName}`;
+    const distFullPath = `${distPath}/${baseName}`;
+
+    if (isDirectory(currentPath)) {
+      ensureDirExists(distFullPath);
+      copyThemeFilesDeeply(currentPath, distFullPath);
+    } else {
+      if (existsSync(distFullPath)) {
+        rm(distFullPath);
+      }
+
+      cp(currentPath, distFullPath);
+    }
+  });
+}
+
+function copyJekyllTheme(srcPath, themePath) {
+  // only copy resources for now (pages are not included)
+  [
+    ...['fonts', 'images', 'javascripts', 'stylesheets'].map(assetDir => `_assets/${assetDir}`),
+    '_includes',
+    '_layouts'
+  ].forEach(dirPath => {
+    const srcDir = `${dirPath}/ksio`;
+    const distPath = `${srcPath}/${srcDir}`;
+
+    ensureDirExists(distPath, true);
+
+    copyThemeFilesDeeply(`${themePath}/${srcDir}`, distPath);
+  });
+}
 
 function resolvePermalink(schema, params) {
   return schema.split('/').map(seg => {
@@ -93,7 +133,7 @@ function generateJekyllData(srcPath, dataSourcePath) {
     }
 
     ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
-    saveData(`${generatedCollectionDirPath}/${slug}.md`, frontMatter.content, frontMatter);
+    saveData(`${generatedCollectionDirPath}/${slug}.md`, frontMatter.content || '', frontMatter);
   });
 
   if (categorized) {
@@ -139,32 +179,4 @@ function generateJekyllSite(srcPath, distPath) {
   ].join(' && '), { stdio: 'inherit' });
 }
 
-// function readDirDeeply(dirPath, srcPath, distPath) {
-//   scanAndSortByAsc(dirPath).forEach(baseName => {
-//     if (baseName.indexOf('.') === 0 || ['_config.yml', '_data'].indexOf(baseName) > -1) {
-//       return;
-//     }
-
-//     const currentPath = `${dirPath}/${baseName}`;
-//     const distFullPath = `${distPath}${currentPath.replace(srcPath, '')}`;
-
-//     if (isDirectory(currentPath)) {
-//       ensureDirExists(distFullPath);
-//       readDirDeeply(currentPath, srcPath, distPath);
-//     } else {
-//       if (existsSync(distFullPath)) {
-//         rm(distFullPath);
-//       }
-
-//       cp(currentPath, distFullPath);
-//     }
-//   });
-// }
-
-// function copyTheme(nameOrSrcPath, distPath) {
-//   const themeDirPath = nameOrSrcPath.split('/').length > 1 ? nameOrSrcPath : resolvePath(__dirname, '../../tmpl/lime');
-
-//   readDirDeeply(themeDirPath, themeDirPath, distPath);
-// }
-
-module.exports = { generateJekyllData, serveJekyllSite, generateJekyllSite/*, copyTheme*/ };
+module.exports = { copyJekyllTheme, generateJekyllData, serveJekyllSite, generateJekyllSite };

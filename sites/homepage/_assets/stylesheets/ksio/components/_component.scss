@@ -1,0 +1,77 @@
+.LightBox {
+  font-size: 14px;
+
+  ul,
+  li {
+    @include display-flex;
+  }
+
+  ul {
+    list-style-type: none;
+    margin-bottom: 0;
+    padding-left: 0;
+    @include align-items(stretch);
+  }
+
+  li {
+    @include flex-grow(1);
+  }
+
+  a,
+  h3,
+  p {
+    position: relative;
+  }
+
+  a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: rgba(255, 255, 255, .8);
+    @include covered_background(none, #222);
+
+    &:after {
+      @include stretch;
+      z-index: 1;
+      content: $UN-space;
+      background-color: rgba(0, 0, 0, .2);
+      @include transition(background-color 0.2s ease);
+    }
+
+    &:hover:after {
+      background-color: rgba(0, 0, 0, .5);
+    }
+  }
+
+  h3,
+  p {
+    z-index: 2;
+  }
+
+  h3 {
+    margin: 0 0 10px;
+    font-size: 1.4em;
+    line-height: 1.25;
+    color: #fff;
+  }
+
+  p {
+    margin-bottom: 0 !important;
+    line-height: 1.5 !important;
+  }
+
+  @media all and (max-width: $screen-xs-max) {
+    ul {
+      @include flex-direction(column);
+    }
+
+    h3 {
+      margin-bottom: 0;
+      text-align: center;
+    }
+
+    p {
+      display: none;
+    }
+  }
+}

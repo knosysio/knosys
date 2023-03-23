@@ -41,6 +41,10 @@ function deploySite(siteName, config, generator) {
     return execSync(cmdStr, { stdio: 'inherit', cwd: deployDir });
   }
 
+  function execInTarget(cmd) {
+    return execSync(cmd, { cwd: deployDir }).toString('utf-8').trim();
+  }
+
   if (existsSync(deployDir)) {
     exec([`git pull origin ${deployBranch}`]);
   } else {
@@ -51,13 +55,9 @@ function deploySite(siteName, config, generator) {
       'git fetch',
     ]);
 
-    const branches = execSync('git branch -a', { cwd: deployDir }).toString('utf-8').trim();
+    const branchExists = !!execInTarget(`git branch -a | grep remotes/origin/${deployBranch}`);
 
-    console.log(`\r\n[INFO] Git 分支：${branches}\r\n`, );
-
-    if (branches) {
-      exec([`git checkout ${deployBranch}`]);
-    }
+    exec([`git checkout ${branchExists ? '' : '-b '}${deployBranch}`]);
   }
 
   setTimeout(() => {

@@ -1,0 +1,5 @@
+<ul class="ArticleList">
+  {% for post in include.posts %}
+    <li class="ArticleList-item"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%F" }}</time><i class="fa fa-pencil"></i><a href="{{ post.url }}">{{ post.title }}</a>{% if post.album %}<i class="fa fa-camera"></i>{% endif %}{% if post.tags contains 'vlog' %}<i class="fa fa-video-camera"></i>{% endif %}</li>
+  {% endfor %}
+</ul>

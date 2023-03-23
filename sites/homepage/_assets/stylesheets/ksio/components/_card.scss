@@ -1,0 +1,55 @@
+.Card {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+  background-color: #FFF;
+  @include border-radius(6px);
+  @include box-shadow(0 1px 2px 0 rgba(0, 0, 0, 0.22));
+
+  &-link,
+  &-thumbnail {
+    @include stretch;
+  }
+
+  &-link {
+    z-index: 3;
+    padding: 15px;
+    text-decoration: none !important;
+    font-size: 14px;
+    line-height: 1.2;
+
+    &,
+    &:hover {
+      color: #555;
+    }
+  }
+
+  &-thumbnail {
+    z-index: 2;
+    background: {
+      position: 50% 50%;
+      repeat: no-repeat;
+      size: cover;
+    }
+    opacity: .15;
+    border-radius: 6px;
+
+    img {
+      display: none;
+    }
+  }
+
+  &-name {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  &-description {
+    margin: {
+      top: 10px;
+      bottom: 0;
+    }
+    line-height: 1.5;
+  }
+}

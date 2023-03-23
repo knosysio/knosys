@@ -1,0 +1,6 @@
+{% assign feed_config = site.ksio.modules.social.feed %}
+{% if feed_config %}
+<!-- 订阅 -->
+{% if feed_config.atom %}{% feed_meta %}{% endif %}
+{% if feed_config.rss %}<link type="application/rss+xml" rel="alternate" href="//{{ site.ourairyu.site.domain }}/rss.xml" title="{{ site.title }}">{% endif %}
+{% endif %}

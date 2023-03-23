@@ -1,0 +1,44 @@
+{% assign comment_config = site.ksio.modules.social.comment.disqus %}
+{% if comment_config %}
+  {% if jekyll.environment == "production" %}
+    {% assign disqus_shortname = comment_config.shortname %}
+  {% else %}
+    {% assign disqus_shortname = "" %}
+  {% endif %}
+  <div id="disqus_thread"></div>
+  {% if comment_config.proxy %}
+    {% javascript ksio/vendors/disqusjs.min %}
+    <script>
+      var dsqjs = new DisqusJS({
+          shortname: '{{ disqus_shortname }}',
+          siteName: '{{ site.ourairyu.site.name }}',
+          identifier: '{{ page.url }}',
+          url: 'http://' + location.host + '{{ page.url }}',
+          title: '{{ page.title }}',
+          api: '{{ comment_config.api.endpoint }}',
+          apikey: '{{ comment_config.api.key }}',
+          admin: '{{ comment_config.username }}',
+          adminLabel: '鹳狸猿'
+      });
+    </script>
+  {% else %}
+    <script>
+      var disqus_config = function () {
+        this.page.url = "http://" + location.host + "{{ page.url }}";
+        this.page.identifier = "{{ page.url }}";
+        this.page.title = "{{ page.title }}";
+      };
+
+      (function() {
+        var d = document, s = d.createElement('script');
+
+        s.src = '//{{ disqus_shortname }}.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="external nofollow">comments powered by Disqus.</a></noscript>
+    <script id="dsq-count-scr" src="//{{ disqus_shortname }}.disqus.com/count.js" async></script>
+  {% endif %}
+{% endif %}
