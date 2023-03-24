@@ -1,13 +1,20 @@
 <!-- SEO -->
+{% assign ksio_seo = site.ksio.seo %}
+{% assign ksio_meta = site.ksio.meta %}
+{% assign ksio_master = site.ksio.master %}
 {% if site.url %}
   {% assign seo_url = site.url | append: site.baseurl %}
 {% endif %}
-{% assign seo_url = seo_url | default: site.github.url %}
+{% assign seo_url = seo_url | default: ksio_meta.url %}
 {% assign seo_site_title = site.title | default: site.name %}
+{% assign seo_title_suffix = " - " | append: seo_site_title %}
 
-{% if page.special_title %}
-  {% assign seo_title = page.special_title %}
+{% if page.ksio_seo_title %}
+  {% assign seo_title = page.ksio_seo_title %}
   {% assign seo_page_title = seo_title %}
+  {% if ksio_seo.suffix != false %}
+    {% assign seo_title = seo_title | append: seo_title_suffix %}
+  {% endif %}
 {% elsif page.title %}
   {% assign seo_title = page.title %}
 
@@ -26,6 +33,10 @@
   {% endif %}
 
   {% assign seo_page_title = seo_title %}
+
+  {% if ksio_seo.suffix != false %}
+    {% assign seo_title = seo_title | append: seo_title_suffix %}
+  {% endif %}
 {% else %}
   {% if page.type == "year" %}
     {% assign seo_title = page.date | date: "%Y" | prepend: "发表于 " | append: " 年的文章" %}
@@ -58,17 +69,17 @@
   {% assign seo_description = site.description %}
 {% endif %}
 
-{% assign sp_type = page.special_type %}
-{% assign site_master = site.data.social.persona[site.ourairyu.site.master] %}
-{% if sp_type == "posts" %}
+{% assign role_type = page.ksio_seo_role %}
+{% assign master_name = ksio_master.name | default: site.author.name %}
+{% if role_type == "author" %}
   {% assign posts = site.posts %}
   {% assign first_post_year = posts.last.date | date: "%Y" %}
   {% assign last_post_year = posts.first.date | date: "%Y" %}
   {% assign year_diff = last_post_year | minus: first_post_year %}
 
-  {% assign seo_description = site_master.name | append: "是一个写作爱好者，从 " | append: first_post_year | append: " 年起 " | append: year_diff | append: " 年间共写了 " | append: posts.size | append: " 篇文章。" %}
-{% elsif sp_type == "dev" %}
-  {% assign seo_description = site_master.name | append: "是一个码农，写了 " | append: site.data.local.github.all.size | append: " 个托管于 GitHub 的开源项目，在 CodePen 上建立了 " | append: site.data.local.codepen.size | append: " 个代码演示。" %}
+  {% assign seo_description = master_name | append: "是一个写作爱好者，从 " | append: first_post_year | append: " 年起 " | append: year_diff | append: " 年间共写了 " | append: posts.size | append: " 篇文章。" %}
+{% elsif role_type == "developer" %}
+  {% assign seo_description = master_name | append: "是一个码农，写了 " | append: site.data.local.github.all.size | append: " 个托管于 GitHub 的开源项目，在 CodePen 上建立了 " | append: site.data.local.codepen.size | append: " 个代码演示。" %}
 {% endif %}
 
 {% if seo_description %}
@@ -169,9 +180,9 @@
   </script>
 {% endif %}
 
-{% if site.twitter %}
+{% if ksio_master.sns.twitter %}
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:site" content="@{{ site.twitter.username | replace:'@','' }}">
+  <meta name="twitter:site" content="@{{ ksio_master.sns.twitter.username | replace:'@','' }}">
   <meta name="twitter:title" content="{{ seo_title }}">
   <meta name="twitter:description" content="{{ seo_description }}">
 
@@ -184,22 +195,23 @@
   {% endif %}
 {% endif %}
 
-{% if site.facebook %}
-  <meta property="article:publisher" content="{{ site.facebook.publisher }}">
-  <meta property="fb:app_id" content="{{ site.facebook.app_id }}">
+{% if ksio_master.sns.facebook %}
+  <meta property="article:publisher" content="{{ ksio_master.sns.facebook.publisher }}">
+  <meta property="fb:app_id" content="{{ ksio_master.sns.facebook.app_id }}">
 {% endif %}
 
 {% if site.google_site_verification %}
   <meta name="google-site-verification" content="{{ site.google_site_verification }}">
 {% endif %}
 
-{% if site.logo %}
+{% assign site_logo = site.ksio.brand.icon | default: "ksio/favicon" %}
+{% if site_logo %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
       "@type": "Organization",
       "url": {{ seo_url | jsonify }},
-      "logo": {{ site.logo | asset_path | prepend: seo_url | jsonify }}
+      "logo": {{ site_logo | asset_path | replace: site.baseurl, '' | prepend: seo_url | jsonify }}
     }
   </script>
 {% endif %}

@@ -35,11 +35,11 @@ layout: ksio/page
   </div>
   {% include ksio/components/author.html author=page.author.slug %}
   {% assign translation_metadata = page.translation %}
-  {% assign site_master = site.ourairyu.site.master %}
+  {% assign site_master = site.ksio.master | default: site.author %}
   {% if translation_metadata %}
   <div class="Widget">
     <div class="Widget-body">
-      <p><a href="{{ translation_metadata.original.url }}" title="查看原文《{{ translation_metadata.original.title }}》" target="_blank" rel="external nofollow">原文</a>作者是 <a href="{{ translation_metadata.author.homepage }}" target="_blank" rel="external nofollow">{{ translation_metadata.author.name }}</a>。本文由<a href="/people/{{ translation_metadata.translator }}/">{{ site.data.social.persona[translation_metadata.translator].name }}</a>翻译，<a href="https://linxoid.com/{{ site_master }}/" target="_blank" rel="external nofollow">{{ site.data.social.persona[site_master].name }}</a>负责校对与润色。</p>
+      <p><a href="{{ translation_metadata.original.url }}" title="查看原文《{{ translation_metadata.original.title }}》" target="_blank" rel="external nofollow">原文</a>作者是 <a href="{{ translation_metadata.author.homepage }}" target="_blank" rel="external nofollow">{{ translation_metadata.author.name }}</a>。本文由<a href="/people/{{ translation_metadata.translator }}/">{{ site.data.social.persona[translation_metadata.translator].name }}</a>翻译，<a {% if site_master.sns.linxoid %}href="https://linxoid.com/{{ site_master.sns.linxoid }}/" target="_blank" rel="external nofollow"{% else %}href="javascript:void(0);"{% endif %}>{{ site_master.name }}</a>负责校对与润色。</p>
     </div>
   </div>
   {% endif %}

@@ -132,6 +132,12 @@ function generateJekyllData(srcPath, dataSourcePath) {
       frontMatter.permalink = resolvePermalink(permalinkSchema, params);
     }
 
+    if (frontMatter.content) {
+      const langs = { typescript: 'js', vue: 'html' };
+
+      frontMatter.content = frontMatter.content.replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}`).replace(/\`{3}/g, '{% endhighlight %}');
+    }
+
     ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
     saveData(`${generatedCollectionDirPath}/${slug}.md`, frontMatter.content || '', frontMatter);
   });

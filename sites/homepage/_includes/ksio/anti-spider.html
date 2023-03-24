@@ -2,5 +2,5 @@
 {% assign author = page.author %}
 <!-- 爬虫抓取的文章中显示来源 -->
 <blockquote class="sr-only">
-  <p>本文首发于<a href="{{ admin.uri }}">{{ site.title }}</a>，作者是<a href="{{ author.uri | default: admin.uri }}" title="访问{{ author.name | default: admin.name }}的网站">{{ author.name | default: admin.name }}</a>。由于会时不时对文章进行补充、修正或润色，为了保证你所看到的是最新版本，<strong>请阅读<a href="{{ page.url | prepend: site.ourairyu.site.url }}" title="阅读《{{ page.title }}》原文">原文</a></strong>。</p>
+  <p>本文首发于<a href="{{ admin.uri }}">{{ site.title }}</a>，作者是<a href="{{ author.uri | default: admin.uri }}" title="访问{{ author.name | default: admin.name }}的网站">{{ author.name | default: admin.name }}</a>。由于会时不时对文章进行补充、修正或润色，为了保证你所看到的是最新版本，<strong>请阅读<a href="{{ page.url | prepend: site.ksio.meta.url }}" title="阅读《{{ page.title }}》原文">原文</a></strong>。</p>
 </blockquote>

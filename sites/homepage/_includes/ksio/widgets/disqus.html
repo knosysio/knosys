@@ -11,14 +11,14 @@
     <script>
       var dsqjs = new DisqusJS({
           shortname: '{{ disqus_shortname }}',
-          siteName: '{{ site.ourairyu.site.name }}',
+          siteName: '{{ site.title | default: site.name }}',
           identifier: '{{ page.url }}',
           url: 'http://' + location.host + '{{ page.url }}',
           title: '{{ page.title }}',
           api: '{{ comment_config.api.endpoint }}',
           apikey: '{{ comment_config.api.key }}',
           admin: '{{ comment_config.username }}',
-          adminLabel: '鹳狸猿'
+          adminLabel: '{{ comment_config.label | default: "鹳狸猿" }}'
       });
     </script>
   {% else %}

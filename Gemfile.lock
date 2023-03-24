@@ -187,7 +187,6 @@ DEPENDENCIES
   jekyll-assets
   jekyll-contentblocks
   jekyll-feed
-  jekyll-seo-tag
   jekyll-sitemap
   jekyll-tagging
   jekyll-tagging-related_posts

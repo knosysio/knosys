@@ -2,5 +2,5 @@
 {% if feed_config %}
 <!-- 订阅 -->
 {% if feed_config.atom %}{% feed_meta %}{% endif %}
-{% if feed_config.rss %}<link type="application/rss+xml" rel="alternate" href="//{{ site.ourairyu.site.domain }}/rss.xml" title="{{ site.title }}">{% endif %}
+{% if feed_config.rss %}<link type="application/rss+xml" rel="alternate" href="//{{ site.ksio.meta.url | replace: 'https://', '' | replace: 'http://', '' }}/rss.xml" title="{{ site.title }}">{% endif %}
 {% endif %}

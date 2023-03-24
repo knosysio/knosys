@@ -8,11 +8,14 @@
           <ul>{% for link in site.ksio.footer.links %}<li>{% include ksio/components/link.html link=link wrap=true utm=utm_params %}</li>{% endfor %}</ul>
         </nav>
       {% endif %}
-      <!-- Copyright -->
-      <div class="Footer-copyright">
-        <p>{% include ksio/components/copyright.html utm=utm_params %}</p>
-        {{ site.ksio.copyright.fragments }}
-      </div>
+      {% if site.ksio.copyright %}
+        <!-- Copyright -->
+        <div class="Footer-copyright">
+          <p>{% include ksio/components/copyright.html utm=utm_params %}</p>
+          {% if site.ksio.copyright.provider != false %}<p>本站主题 <a href="https://ourai.github.io/lime/?{{ utm_params }}" target="_blank" rel="external nofollow">Lime</a> 由 <a href="https://linxoid.com/ourai/?{{ utm_params }}" target="_blank" rel="external nofollow">欧雷</a> 提供</p>{% endif %}
+          {{ site.ksio.copyright.fragments }}
+        </div>
+      {% endif %}
     </div>
   </div>
 </footer>
