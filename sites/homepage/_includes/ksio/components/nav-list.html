@@ -7,7 +7,8 @@
         <ul class="dropdown-menu">{% include ksio/components/nav-list.html navs=_inc_nav.children %}</ul>
       </li>
     {% else %}
-      <li>{% include ksio/components/link.html link=_inc_nav utm="utm_source=ourai.github.io/lime&utm_medium=common-header" %}</li>
+      {% assign _inc_utm = "utm_source=" | append: site.ksio.meta.url | append: "&utm_medium=common-header" %}
+      <li>{% include ksio/components/link.html link=_inc_nav utm=_inc_utm %}</li>
     {% endif %}
   {% endfor %}
 {% endif %}

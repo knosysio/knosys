@@ -1,7 +1,7 @@
 <header class="Page-header">
   <div class="navbar navbar-static-top">
     <div class="{% if site.data.local.repos[page.repo] %}container-fluid{% else %}container{% endif %}">
-      {% assign site_navs = site.ksio.navs %}
+      {% assign site_navs = site.ksio.header.navs %}
       <div class="navbar-header">
         {% if site_navs and site_navs.size > 0 %}
           <button class="navbar-toggle collapsed" type="button" data-target=".Page-navs" data-toggle="collapse">
@@ -19,7 +19,7 @@
       </div>
       <!-- Nav menus -->
       <nav class="Page-navs navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav{% if site.ksio.header.navbar.placement == 'right' %} navbar-right{% endif %}">
           {% include ksio/components/nav-list.html navs=site_navs %}
         </ul>
       </nav>

@@ -1,0 +1,8 @@
+{% assign _inc_cr = site.ksio.copyright %}{% if _inc_cr %}{% assign _inc_current = site.time | date: "%Y" %}{% assign _inc_start = _inc_cr.period.start | default: _inc_current %}{% assign _inc_site_url = "/" | prepend: site.baseurl | prepend: site.url %}{% assign _inc_url = _inc_cr.owner.url | default: _inc_site_url %}{% if _inc_url contains "http" %}
+{% assign _inc_external = true %}{% if include.utm %}
+    {% assign _inc_url = _inc_url | append: "?" | append: include.utm %}
+  {% endif %}
+{% else %}
+  {% assign _inc_external = false %}
+{% endif %}&copy; {% if _inc_start != _inc_current %}{{ _inc_start }}-{% endif %}{{ _inc_current }} <a href="{{ _inc_url }}"{% if _inc_external %} target="_blank" rel="external nofollow"{% endif %}>{{ _inc_cr.owner.text | default: site.title }}</a> 版权所有
+{% endif %}

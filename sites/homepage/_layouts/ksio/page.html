@@ -7,7 +7,7 @@ js:
   - ksio/components
 ---
 
-{% include ksio/header.html %}
+{% include {{ site.ksio.header.partial | default: "ksio/header.html" }} %}
 <main class="Page-content">
   {% assign banner = page.banner %}
   {% if banner %}
@@ -88,4 +88,4 @@ js:
     {% endifhascontent %}
   </div>
 </main>
-{% include ksio/footer.html %}
+{% include {{ site.ksio.footer.partial | default: "ksio/footer.html" }} %}

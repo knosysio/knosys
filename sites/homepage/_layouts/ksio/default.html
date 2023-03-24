@@ -10,7 +10,7 @@ layout: ksio/compress
   <head>
     {% include ksio/head.html %}
     <!-- 静态资源 -->
-    {% stylesheet ksio/vendors/disqusjs.min %}
+    {% if site.ksio.social.comment.disqus.proxy %}{% stylesheet ksio/vendors/disqusjs.min %}{% endif %}
     {% stylesheet global %}
     {% if layout.css %}
       {% for css in layout.css %}{{ css | stylesheet }}{% endfor %}

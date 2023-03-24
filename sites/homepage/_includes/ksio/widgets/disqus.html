@@ -1,4 +1,4 @@
-{% assign comment_config = site.ksio.modules.social.comment.disqus %}
+{% assign comment_config = site.ksio.social.comment.disqus %}
 {% if comment_config %}
   {% if jekyll.environment == "production" %}
     {% assign disqus_shortname = comment_config.shortname %}

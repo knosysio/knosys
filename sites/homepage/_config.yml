@@ -136,22 +136,35 @@ github:
 # =====
 
 ksio:
+  meta:
+    url: https://knosysio.github.io
   brand:
     color: "#0871ab"
-  navs:
-    - text: API
-      url: /apis/config/
-    - text: 关于
-      children:
-        - text: 作者
-          url: https://linxoid.com/ourai/
-        - text: GitHub
-          url: https://github.com/ourai/knosys
-  links:
-    - text: OOSS
-      url: https://oss.ourai.ws/
-    - text: QiiDB
-      url: https://qiidb.github.io/
-  modules:
-    social:
-      share: true
+  copyright:
+    owner:
+      text: 欧雷流
+      url: https://ourai.ws/
+    period:
+      start: 2022
+    fragments: >
+      <p>由 <a href="https://linxoid.com/ourai/?utm_source=https://knosysio.github.io&utm_medium=common-footer" target="_blank" rel="external nofollow">欧雷</a> 用 ♥ 设计与开发</p>
+  header:
+    navs:
+      - text: API
+        url: /apis/config/
+      - text: 关于
+        children:
+          - text: 作者
+            url: https://linxoid.com/ourai/
+          - text: GitHub
+            url: https://github.com/ourai/knosys
+    navbar:
+      placement: right
+  footer:
+    links:
+      - text: OOSS
+        url: https://oss.ourai.ws/
+      - text: QiiDB
+        url: https://qiidb.github.io/
+  social:
+    share: true

@@ -2,7 +2,7 @@
 {% assign _inc_brand_url = '/' | prepend: site.baseurl | prepend: site.url %}
 {% assign _inc_brand_text = site.ksio.brand.text | default: site.title %}
 {% if _inc_parent_brand %}
-  <a href="{{ _inc_parent_brand.url }}?utm_source=ourai.github.io/lime&utm_medium=brand" target="_blank" rel="external nofollow">{{ _inc_parent_brand.text }}</a><a href="{{ _inc_brand_url }}">{{ _inc_brand_text }}</a>
+  <a href="{{ _inc_parent_brand.url }}?utm_source={{ site.ksio.meta.url }}&utm_medium=brand" target="_blank" rel="external nofollow">{{ _inc_parent_brand.text }}</a><a href="{{ _inc_brand_url }}">{{ _inc_brand_text }}</a>
 {% else %}
   <a {% if include.class %}class="{{ include.class }}" {% endif %}href="{{ _inc_brand_url }}">{{ _inc_brand_text }}</a>
 {% endif %}
