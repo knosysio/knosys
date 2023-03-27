@@ -4,8 +4,8 @@ const { isString, isPlainObject } = require('@ntks/toolbox');
 
 const { resolveRootPath, getConfig } = require('./utils');
 
-function execute() {
-  const [command, ...params] = process.argv.slice(2);
+function execute(...args) {
+  const [command, ...params] = args.length > 0 ? args : process.argv.slice(2);
   const commandFileName = `${command}.js`;
   const commandConfig = getConfig('command');
 

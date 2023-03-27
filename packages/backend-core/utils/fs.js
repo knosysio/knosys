@@ -3,7 +3,7 @@ const { safeLoad, safeDump } = require('js-yaml');
 const { isPlainObject, omit } = require('@ntks/toolbox');
 
 const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME, META_DIR_NAME } = require('../constants');
-const { rm, mkdir, touch } = require('../wrappers/fs');
+const { rm, cp, mkdir, touch } = require('../wrappers/fs');
 const { sortByName } = require('./util');
 const { replaceRefDefsWith } = require('./md');
 
@@ -76,6 +76,28 @@ function readDirDeeply(dirPath, paramArr, params, callback) {
       readDirDeeply(distPath, restParamArr, newParams, callback);
     } else {
       callback(baseName, newParams);
+    }
+  });
+}
+
+function copyFileDeeply(dirPath, distPath, skipNames = []) {
+  scanAndSortByAsc(dirPath).forEach(baseName => {
+    if (baseName.indexOf('.') === 0 || skipNames.includes(baseName)) {
+      return;
+    }
+
+    const currentPath = `${dirPath}/${baseName}`;
+    const distFullPath = `${distPath}/${baseName}`;
+
+    if (isDirectory(currentPath)) {
+      ensureDirExists(distFullPath);
+      copyFileDeeply(currentPath, distFullPath, skipNames);
+    } else {
+      if (existsSync(distFullPath)) {
+        rm(distFullPath);
+      }
+
+      cp(currentPath, distFullPath);
     }
   });
 }
@@ -274,6 +296,6 @@ function readEntity(dirPath) {
 module.exports = {
   ensureDirExists, ensureFileExists,
   isDirectory, isLocalRelative,
-  scanAndSortByAsc, getImageFileNames, readDirDeeply,
+  scanAndSortByAsc, getImageFileNames, readDirDeeply, copyFileDeeply,
   readData, saveData, readReadMe, readMetadata, readLocalizedData, readMeta, readEntity,
 };

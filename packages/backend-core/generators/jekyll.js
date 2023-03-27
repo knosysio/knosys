@@ -3,30 +3,7 @@ const { execSync } = require('child_process');
 const { saveData: cacheData } = require('@ntks/toolbox');
 
 const { DEFAULT_PATH_SCHEMA } = require('../constants');
-const { ensureDirExists, isDirectory, scanAndSortByAsc, readDirDeeply, readMeta, readEntity, saveData, resolvePathFromParams, resolveRootPath } = require('../utils');
-const { rm, cp } = require('../wrappers/fs');
-
-function copyThemeFilesDeeply(dirPath, distPath) {
-  scanAndSortByAsc(dirPath).forEach(baseName => {
-    if (baseName.indexOf('.') === 0) {
-      return;
-    }
-
-    const currentPath = `${dirPath}/${baseName}`;
-    const distFullPath = `${distPath}/${baseName}`;
-
-    if (isDirectory(currentPath)) {
-      ensureDirExists(distFullPath);
-      copyThemeFilesDeeply(currentPath, distFullPath);
-    } else {
-      if (existsSync(distFullPath)) {
-        rm(distFullPath);
-      }
-
-      cp(currentPath, distFullPath);
-    }
-  });
-}
+const { ensureDirExists, readDirDeeply, copyFileDeeply, readMeta, readEntity, saveData, resolvePathFromParams, resolveRootPath } = require('../utils');
 
 function copyJekyllTheme(srcPath, themePath) {
   // only copy resources for now (pages are not included)
@@ -40,7 +17,7 @@ function copyJekyllTheme(srcPath, themePath) {
 
     ensureDirExists(distPath, true);
 
-    copyThemeFilesDeeply(`${themePath}/${srcDir}`, distPath);
+    copyFileDeeply(`${themePath}/${srcDir}`, distPath);
   });
 }
 
@@ -133,7 +110,7 @@ function generateJekyllData(srcPath, dataSourcePath) {
     }
 
     if (frontMatter.content) {
-      const langs = { typescript: 'js', vue: 'html' };
+      const langs = { vue: 'html' };
 
       frontMatter.content = frontMatter.content.replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}`).replace(/\`{3}/g, '{% endhighlight %}');
     }
@@ -166,7 +143,7 @@ function serveJekyllSite(srcPath) {
     '--incremental',
   ];
 
-  execSync(`bundle exec jekyll serve ${flags.join(' ')}`, { stdio: 'inherit' });
+  execSync(`bundle exec jekyll serve ${flags.join(' ')}`, { stdio: 'inherit', cwd: srcPath });
 }
 
 function generateJekyllSite(srcPath, distPath) {
@@ -177,12 +154,10 @@ function generateJekyllSite(srcPath, distPath) {
   ];
 
   execSync([
-    `cd ${resolveRootPath()}`,
     'bundle exec jekyll clean',
     `JEKYLL_ENV=production bundle exec jekyll build ${flags.join(' ')}`,
-    `cd ${distPath}`,
-    'touch .nojekyll'
-  ].join(' && '), { stdio: 'inherit' });
+  ].join(' && '), { stdio: 'inherit', cwd: srcPath });
+  execSync('touch .nojekyll', { stdio: 'inherit', cwd: distPath });
 }
 
 module.exports = { copyJekyllTheme, generateJekyllData, serveJekyllSite, generateJekyllSite };
