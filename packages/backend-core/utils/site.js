@@ -1,10 +1,123 @@
 const { existsSync } = require('fs');
 const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
-const { isFunction } = require('@ntks/toolbox');
+const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
 
-const { GLOBAL_DIR_NAME } = require('../constants');
-const { ensureDirExists } = require('./fs');
+const { GLOBAL_DIR_NAME, DEFAULT_PATH_SCHEMA } = require('../constants');
+const { resolvePathFromParams } = require('./path');
+const { ensureDirExists, readDirDeeply, readMeta, readEntity, saveData } = require('./fs');
+
+function resolvePermalink(schema, params) {
+  return schema.split('/').map(seg => {
+    if (seg === '') {
+      return seg;
+    }
+
+    const param = seg.slice(1);
+
+    return params[param === 'path' ? 'slug' : param];
+  }).join('/')
+}
+
+function saveCollectionData(dirPath, collectionMap) {
+  Object.entries(collectionMap).forEach(([collection, data]) => {
+    delete data.__meta;
+
+    saveData(`${dirPath}/${collection}.yml`, data);
+  });
+}
+
+function generateSiteData(srcPath, dataSourcePath, options = {}) {
+  const { path = DEFAULT_PATH_SCHEMA, permalink } = readMeta(dataSourcePath) || {};
+  const paramArr = path.split('/').map(part => part.slice(1));
+
+  if (!['category', 'collection'].includes(paramArr[0])) {
+    return;
+  }
+
+  const categorized = paramArr[0] === 'category';
+  const siteDataMap = {};
+
+  const { dataDir, docDir, formatter } = options;
+
+  const siteDataRootPath = `${srcPath}/${dataDir}`;
+  const generatedDataDirPath = `${siteDataRootPath}/knosys`;
+  const generatedFileDirPath = `${srcPath}/${docDir}`;
+
+  ensureDirExists(siteDataRootPath);
+  ensureDirExists(generatedDataDirPath, true);
+  ensureDirExists(generatedFileDirPath, true);
+
+  readDirDeeply(dataSourcePath, paramArr, {}, (_, params) => {
+    const entity = readEntity(`${dataSourcePath}/${resolvePathFromParams(paramArr.join('/'), params)}`);
+
+    if (!entity) {
+      return;
+    }
+
+    const { category = '__uncategorized', collection, slug } = params;
+
+    let generatedCollectionDirPath;
+
+    if (categorized) {
+      const generatedCategoryDirPath = `${generatedFileDirPath}/${category}`;
+
+      generatedCollectionDirPath = `${generatedCategoryDirPath}/${collection}`;
+
+      ensureDirExists(generatedCategoryDirPath);
+    } else {
+      generatedCollectionDirPath = `${generatedFileDirPath}/${collection}`;
+    }
+
+    cacheData(siteDataMap, `${category}.${collection}.items.${slug}`, entity, true);
+    cacheData(siteDataMap, `${category}.${collection}.sequence`, [...(siteDataMap[category][collection].sequence || []), slug]);
+
+    let collectionSourceDirPath;
+
+    if (categorized) {
+      const categorySourceDirPath = `${dataSourcePath}/${category}`;
+
+      collectionSourceDirPath = `${categorySourceDirPath}/${collection}`;
+
+      if (!siteDataMap[category].__meta) {
+        siteDataMap[category].__meta = readMeta(categorySourceDirPath) || {};
+      }
+    } else {
+      collectionSourceDirPath = `${dataSourcePath}/${collection}`;
+    }
+
+    if (!siteDataMap[category][collection].__meta) {
+      siteDataMap[category][collection].__meta = readMeta(collectionSourceDirPath) || {};
+    }
+
+    const permalinkSchema = siteDataMap[category][collection].__meta.permalink || (siteDataMap[category].__meta || {}).permalink || permalink;
+    const frontMatter = { ...entity };
+
+    if (permalinkSchema && !frontMatter.permalink) {
+      frontMatter.permalink = resolvePermalink(permalinkSchema, params);
+    }
+
+    if (frontMatter.content && isFunction(formatter)) {
+      frontMatter.content = formatter(frontMatter.content);
+    }
+
+    ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
+    saveData(`${generatedCollectionDirPath}/${slug}.md`, frontMatter.content || '', frontMatter);
+  });
+
+  if (categorized) {
+    Object.entries(siteDataMap).forEach(([category, collectionMap]) => {
+      const categoryDataDirPath = `${generatedDataDirPath}/${category}`;
+
+      delete collectionMap.__meta;
+
+      ensureDirExists(categoryDataDirPath);
+      saveCollectionData(categoryDataDirPath, collectionMap);
+    });
+  } else {
+    saveCollectionData(generatedDataDirPath, siteDataMap.__uncategorized);
+  }
+}
 
 function deploySite(siteName, config, generator) {
   if (!isFunction(generator)) {
@@ -79,4 +192,4 @@ function deploySite(siteName, config, generator) {
   }, 0);
 }
 
-module.exports = { deploySite };
+module.exports = { generateSiteData, deploySite };
