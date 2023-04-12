@@ -12,6 +12,7 @@ function copyJekyllTheme(srcPath, themePath) {
     const srcDir = `${dirPath}/ksio`;
     const distPath = `${srcPath}/${srcDir}`;
 
+    ensureDirExists(`${srcPath}/${dirPath}`);
     ensureDirExists(distPath, true);
 
     copyFileDeeply(`${themePath}/${srcDir}`, distPath);
@@ -19,14 +20,14 @@ function copyJekyllTheme(srcPath, themePath) {
 }
 
 function generateJekyllData(srcPath, dataSourcePath) {
-  const langs = { vue: 'html' };
+  const langs = { vue: 'html', yml: 'yaml' };
 
   generateSiteData(srcPath, dataSourcePath, {
     dataDir: '_data',
     docDir: '_knosys',
     formatter: content => content
-      .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}`)
-      .replace(/\`{3}/g, '{% endhighlight %}'),
+      .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}{% raw %}`)
+      .replace(/\`{3}/g, '{% endraw %}{% endhighlight %}'),
   });
 }
 

@@ -2,7 +2,7 @@ const GLOBAL_DIR_NAME = '.knosys';
 const CONFIG_FILE_NAME = '.knosysrc';
 
 /**
- * @see https://qiidb.github.io/guides/spec/
+ * @see https://qiidb.github.io/zh/meta/guides/spec/
  */
 const LEGACY_ENTITY_NAME = 'metadata.yml';
 const ENTITY_MONO_NAME = 'entity.yml';

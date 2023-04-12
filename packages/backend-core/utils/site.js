@@ -9,7 +9,7 @@ const { ensureDirExists, readDirDeeply, readMeta, readEntity, saveData } = requi
 
 function resolvePermalink(schema, params) {
   return schema.split('/').map(seg => {
-    if (seg === '') {
+    if (seg === '' || !/^\:[0-9a-z-_]+$/i.test(seg)) {
       return seg;
     }
 
@@ -168,7 +168,13 @@ function deploySite(siteName, config, generator) {
       'git fetch',
     ]);
 
-    const branchExists = !!execInTarget(`git branch -a | grep remotes/origin/${deployBranch}`);
+    let branchExists;
+
+    try {
+      branchExists = !!execInTarget(`git branch -a | grep remotes/origin/${deployBranch}`);
+    } catch (err) {
+      branchExists = false;
+    }
 
     exec([`git checkout ${branchExists ? '' : '-b '}${deployBranch}`]);
   }
