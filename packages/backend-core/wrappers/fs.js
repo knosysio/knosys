@@ -9,7 +9,7 @@ function rm(fileOrDirPath) {
 }
 
 function mkdir(dirPath) {
-  execSync(`mkdir ${dirPath}`, { stdio: 'inherit' });
+  execSync(`mkdir -p ${dirPath}`, { stdio: 'inherit' });
 }
 
 function touch(filePath) {

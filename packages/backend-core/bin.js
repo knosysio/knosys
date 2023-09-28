@@ -25,8 +25,12 @@ function execute(...args) {
     if (scriptFile) {
       scriptFilePath = resolvePath(resolveRootPath(), scriptFile);
 
-      if (!existsSync(scriptFilePath) && existsSync(defaultCommandPath)) {
-        scriptFilePath = defaultCommandPath;
+      if (!existsSync(scriptFilePath)) {
+        scriptFilePath = `${scriptFilePath.replace('.js', '')}/index.js`;
+
+        if (!existsSync(scriptFilePath) && existsSync(defaultCommandPath)) {
+          scriptFilePath = defaultCommandPath;
+        }
       }
     }
 
