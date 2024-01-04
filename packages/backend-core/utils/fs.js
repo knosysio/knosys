@@ -177,7 +177,7 @@ function readReadMe(dirPath) {
 }
 
 /**
- * @see https://qiidb.github.io/zh/meta/guides/spec/
+ * @see https://qiidb.github.io/meta/zh/guides/spec/
  * @deprecated use `readMeta` and `readEntity` instead, will be removed in next major release
  */
 function readMetadata(dirPath) {
@@ -280,14 +280,14 @@ function readLocalizedData(dataFilePath) {
 }
 
 /**
- * @see https://qiidb.github.io/zh/meta/guides/spec/
+ * @see https://qiidb.github.io/meta/zh/guides/spec/
  */
 function readMeta(dirPath) {
   return readMetadata(`${dirPath}/${META_DIR_NAME}`);
 }
 
 /**
- * @see https://qiidb.github.io/zh/meta/guides/spec/
+ * @see https://qiidb.github.io/meta/zh/guides/spec/
  */
 function readEntity(dirPath) {
   return readMetadata(dirPath);
