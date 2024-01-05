@@ -1,11 +1,11 @@
 const { existsSync } = require('fs');
-const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
 const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
 
-const { GLOBAL_DIR_NAME, DEFAULT_PATH_SCHEMA } = require('../constants');
+const { DEFAULT_PATH_SCHEMA } = require('../constants');
 const { resolvePathFromParams } = require('./path');
 const { ensureDirExists, readDirDeeply, readMeta, readEntity, saveData } = require('./fs');
+const { getGlobalConfigDirPath } = require('./cwd');
 
 function resolvePermalink(schema, params) {
   return schema.split('/').map(seg => {
@@ -138,7 +138,7 @@ function deploySite(siteName, config, generator) {
     return;
   }
 
-  const globalConfigDirPath = resolvePath(process.env.HOME || process.env.USERPROFILE, GLOBAL_DIR_NAME);
+  const globalConfigDirPath = getGlobalConfigDirPath();
   const siteTempPath = `${globalConfigDirPath}/sites`;
 
   ensureDirExists(globalConfigDirPath);

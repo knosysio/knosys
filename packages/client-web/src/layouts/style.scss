@@ -1,0 +1,13 @@
+.AppLayout {
+  &-logo {
+    height: 40px;
+    margin: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, .2);
+  }
+}
