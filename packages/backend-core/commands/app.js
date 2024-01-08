@@ -4,7 +4,11 @@ const { execSync } = require('child_process');
 const { isPlainObject, isString, isFunction, capitalize } = require('@ntks/toolbox');
 
 const { META_DIR_NAME, DEFAULT_PATH_SCHEMA, DEFAULT_APP_TITLE } = require('../constants');
-const { resolvePathFromRootRelative, getConfig, readDirDeeply, readData, readMeta, getGlobalConfigDirPath, ensureDirExists, saveData } = require('../utils')
+const {
+  resolvePathFromRootRelative, resolvePathFromParams,
+  getConfig, getGlobalConfigDirPath,
+  readDirDeeply, readMeta, readEntity, readData, saveData, ensureDirExists,
+} = require('../utils')
 
 const appTempPath = `${getGlobalConfigDirPath()}/apps`;
 
@@ -120,6 +124,23 @@ function orderRoutes(routeMap, specificOrder, categorized, dataSourcePath, level
   return [].concat(ordered, orderRoutesAlphabetically(routeMap));
 }
 
+function resolveParamPathParts(pathSchema) {
+  return pathSchema.split('/').map(part => part.slice(1));
+}
+
+function resolveRecords(collectionPath, paramArr, parentParams) {
+  const records = [];
+
+  readDirDeeply(collectionPath, paramArr, parentParams, (_, params) => {
+    const recordPath = resolvePathFromParams(paramArr.join('/'), params);
+    const { content, ...others } = readEntity(`${collectionPath}/${recordPath}`) || {};
+
+    records.push({ ...others, path: recordPath });
+  });
+
+  return records;
+}
+
 function resolveAppInfo(config) {
   const dataSourcePath = resolvePathFromRootRelative(config.data || './data');
   const { path = DEFAULT_PATH_SCHEMA, app: appSpecific = {}, ...others } = resolveMeta(dataSourcePath) || {};
@@ -128,17 +149,19 @@ function resolveAppInfo(config) {
     return false;
   }
 
-  const paramArr = path.split('/').map(part => part.slice(1));
+  const paramArr = resolveParamPathParts(path);
 
   if (!['category', 'collection'].includes(paramArr[0])) {
     return false;
   }
 
-  const app = { name: config.name, title: config.title || DEFAULT_APP_TITLE };
+  const app = { name: config.name, title: config.title || DEFAULT_APP_TITLE, source: dataSourcePath };
 
   const categorized = paramArr[0] === 'category';
+  const recordParamPathArr = paramArr.splice(categorized ? 2 : 1);
+
   const routeMap = {};
-  const collectionMap = {}
+  const collectionMap = {};
 
   readDirDeeply(dataSourcePath, paramArr, {}, (_, params) => {
     const meta = resolveAppMeta(params, categorized, dataSourcePath);
@@ -147,18 +170,30 @@ function resolveAppInfo(config) {
       return;
     }
 
-    const mapKey = categorized ? `${params.category}${capitalize(params.collection)}` : params.collection;
+    let mapKey;
+    let collectionPath;
 
-    if (!collectionMap[mapKey]) {
-      resolveRoute(params, meta, routeMap, categorized);
-
-      collectionMap[mapKey] = true;
+    if (categorized) {
+      mapKey = `${params.category}${capitalize(params.collection)}`;
+      collectionPath = `${params.category}/${params.collection}`
+    } else {
+      mapKey = collectionPath = params.collection;
     }
+
+    resolveRoute(params, meta, routeMap, categorized);
+
+    const resolvedRecordParamPathArr = meta.collection && meta.collection.path ? resolveParamPathParts(meta.collection.path) : recordParamPathArr;
+
+    collectionMap[mapKey] = {
+      title: meta.collection && meta.collection.title,
+      path: collectionPath,
+      records: resolveRecords(`${dataSourcePath}/${collectionPath}`, resolvedRecordParamPathArr, params),
+    };
   });
 
   app.routes = orderRoutes(routeMap, appSpecific.order || others.order || [], categorized, dataSourcePath);
 
-  return { app };
+  return { app, db: collectionMap };
 }
 
 function initApp(config, callback) {
