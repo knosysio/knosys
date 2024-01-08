@@ -2,13 +2,14 @@ import { defineConfig } from 'umi';
 
 import routes from './src/entry/routes';
 
-const appTitle = process.env.KNOSYS_APP_TITLE;
+const appConfig = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`);
 
 export default defineConfig({
-  title: appTitle,
-  routes,
-  define: {
-    'process.env.KNOSYS_APP_TITLE': appTitle,
-  },
+  title: appConfig.title,
+  define: { 'process.env.KNOSYS_APP': appConfig },
   npmClient: 'npm',
+  routes,
+  // chainWebpack: memo => {
+  //   memo.module.rule('json').test(/\.json$/).type('json');
+  // },
 });

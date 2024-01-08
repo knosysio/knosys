@@ -1,17 +1,15 @@
-const { getGlobalConfigDirPath } = require('../../../backend-core/utils');
-
 function resolveRouteBase(route: any) {
-  const resolved: any = { name: route.name, path: route.path };
+  const resolved: any = { name: route.name, path: `/${route.path}` };
 
-  if (route.meta && route.meta.title) {
-    resolved.meta = { text: route.meta.title };
+  if (route.meta) {
+    resolved.meta = route.meta;
   }
 
   return resolved;
 }
 
 function resolveRoutes() {
-  const generated = require(`${getGlobalConfigDirPath()}/apps/${process.env.KNOSYS_APP_NAME}/routes.json`);
+  const generated = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`).routes;
 
   return generated.map((route: any) => {
     const resolved: any = resolveRouteBase(route);

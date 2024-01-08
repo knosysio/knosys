@@ -35,14 +35,14 @@ export default function AppLayout() {
   const [menuKeys, setMenuKeys] = useState(['home']);
 
   const { clientRoutes } = useAppData();
-  const appTitle = process.env.KNOSYS_APP_TITLE;
+  const { title } = process.env.KNOSYS_APP as any;
 
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className={style['AppLayout-logo']}>{ collapsed ? appTitle?.slice(0, 2) : appTitle }</div>
+        <div className={style['AppLayout-logo']}>{ collapsed ? title.slice(0, 2) : title }</div>
         <Menu
           theme="dark"
           selectedKeys={menuKeys}
