@@ -85,7 +85,6 @@ function resolveRoute(params, meta, routeMap, categorized) {
   routeMap[cateName].children.push(route);
 }
 
-
 function orderRoutesAlphabetically(routeMap) {
   return Object.values(routeMap).sort((a, b) => a.name > b.name ? 1 : -1);
 }
@@ -219,8 +218,9 @@ function initApp(config, callback) {
 
 function serveApp({ name }) {
   const encodedPath = encodeURIComponent(`${appTempPath}/${name}`);
+  const cmds = ['"npm run serve"', `"KNOSYS_APP_PATH=${encodedPath} npm run dev"`];
 
-  execSync(`KNOSYS_APP_PATH=${encodedPath} npm run dev`, { stdio: 'inherit', cwd: resolvePath(__dirname, '../../client-web') });
+  execSync(`npm run corun ${cmds.join(' ')}`, { stdio: 'inherit', cwd: resolvePath(__dirname, '../../web-app') });
 }
 
 module.exports = {

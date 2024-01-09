@@ -2,20 +2,24 @@
   "private": true,
   "author": "Ourai Lin <ourairyu@gmail.com> (https://ourai.ws/)",
   "scripts": {
+    "serve": "node ./server",
     "dev": "umi dev",
     "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "corun": "concurrently"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "antd": "^5.12.7",
+    "koa": "^2.15.0",
     "umi": "^4.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "concurrently": "^8.2.2",
     "typescript": "^5.0.3"
   }
 }
