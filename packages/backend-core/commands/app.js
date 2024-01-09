@@ -1,10 +1,11 @@
 const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
 
-const { isPlainObject, isString, isFunction, capitalize } = require('@ntks/toolbox');
+const { isPlainObject, isString, isFunction, capitalize, pick } = require('@ntks/toolbox');
 
 const { META_DIR_NAME, DEFAULT_PATH_SCHEMA, DEFAULT_APP_TITLE } = require('../constants');
 const {
+  generateIdFromDate,
   resolvePathFromRootRelative, resolvePathFromParams,
   getConfig, getGlobalConfigDirPath,
   readDirDeeply, readMeta, readEntity, readData, saveData, ensureDirExists,
@@ -127,6 +128,12 @@ function resolveParamPathParts(pathSchema) {
   return pathSchema.split('/').map(part => part.slice(1));
 }
 
+function generateRecordId(date) {
+  const randomStr = Array.from(new Array(8)).map(() => (Math.ceil(Math.random() * 36) - 1).toString(36)).join('');
+
+  return `${generateIdFromDate(date)}-${randomStr}`;
+}
+
 function resolveRecords(collectionPath, paramArr, parentParams) {
   const records = [];
 
@@ -134,7 +141,11 @@ function resolveRecords(collectionPath, paramArr, parentParams) {
     const recordPath = resolvePathFromParams(paramArr.join('/'), params);
     const { content, ...others } = readEntity(`${collectionPath}/${recordPath}`) || {};
 
-    records.push({ ...others, path: recordPath });
+    records.push({
+      id: generateRecordId(others.date),
+      path: recordPath,
+      ...pick(others, ['title', 'description', 'date', 'tags']),
+    });
   });
 
   return records;

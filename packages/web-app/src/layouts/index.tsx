@@ -10,7 +10,7 @@ function resolveMenuItems(routes = []) {
   const items = [];
 
   routes.forEach(route => {
-    if (route.redirect || !route.name) {
+    if (route.redirect || !route.name || route.meta && route.meta.hide) {
       return;
     }
 

@@ -1,3 +1,7 @@
+function generateIdFromDate(date = new Date) {
+  return (typeof date === 'string' ? new Date(date) : date).getTime().toString(36);
+}
+
 function sortByName(data) {
   return data.slice().sort((a, b)=> parseFloat(a) > parseFloat(b) ? 1 : -1);
 }
@@ -15,6 +19,7 @@ function convertDateFormat(date, zone) {
 }
 
 module.exports = {
+  generateIdFromDate,
   sortByName,
   sortByDate,
   convertDateFormat,
