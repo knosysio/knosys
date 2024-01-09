@@ -8,6 +8,7 @@ export default defineConfig({
   title: appConfig.title,
   define: { 'process.env.KNOSYS_APP': appConfig },
   npmClient: 'npm',
+  conventionLayout: false,
   routes,
   proxy: {
     '/api': {

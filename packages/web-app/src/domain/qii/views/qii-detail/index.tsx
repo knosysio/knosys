@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouteProps, useParams } from 'umi';
+
+import httpClient from '@/shared/utils/http';
 
 export default function Qii() {
   const [fetched, setFetched] = useState(false);
@@ -14,8 +15,7 @@ export default function Qii() {
       return;
     }
 
-    axios.get('/api/qii/get', {
-      headers: { 'X-Knosys-App': (process.env.KNOSYS_APP as any).name },
+    httpClient.get('/api/qii/get', {
       params: { collection: meta.collection, id }
     }).then(res => {
       setEntity(res.data);

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios'
 import { useRouteProps, history } from 'umi';
 import { Flex, Table, Row, Col, Card, Pagination } from 'antd';
+
+import httpClient from '@/shared/utils/http';
 
 export default function PersonalKnowledgeBase() {
   const [list, setList] = useState([]);
@@ -11,8 +12,7 @@ export default function PersonalKnowledgeBase() {
   const columns = [{ title: '标题', dataIndex: 'title', key: 'title' }];
 
   useEffect(() => {
-    axios.get('/api/qii/query', {
-      headers: { 'X-Knosys-App': (process.env.KNOSYS_APP as any).name },
+    httpClient.get('/api/qii/query', {
       params: { collection: routeProps.name, pageSize: pagination.pageSize, pageNum: pagination.current },
     }).then(({ data }) => {
       setList(data.list.map((item: any) => ({ id: item.id, key: item.path, title: item.title || item.path, description: item.description })));

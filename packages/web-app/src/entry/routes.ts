@@ -26,11 +26,11 @@ function resolveCollectionRoutes(route: any) {
   const baseRoute = resolveRouteBase(route);
 
   return [
-    { ...baseRoute, component: 'pkb' },
+    { ...baseRoute, component: '@/domain/qii/views/qii-list' },
     ...['create', 'update', 'read'].map(action => ({
       name: `${baseRoute.name}${capitalize(action)}`,
       path: `${baseRoute.path}/${resolveActionRoutePathPart(action)}`,
-      component: 'qii',
+      component: '@/domain/qii/views/qii-detail',
       meta: { hide: true, collection: baseRoute.name },
     })),
   ];
@@ -58,12 +58,24 @@ function resolveRoutes() {
 }
 
 export default [
-  { name: 'root', path: '/', component: 'index' },
-  ...resolveRoutes(),
   {
-    name: 'settings',
-    path: '/settings',
-    component: 'settings',
-    meta: { text: '设置' },
+    name: 'root',
+    path: '/',
+    component: '@/entry/layouts/default',
+    routes: [
+      {
+        name: 'home',
+        path: '',
+        component: '@/domain/index',
+        meta: { text: '首页' },
+      },
+      ...resolveRoutes(),
+      {
+        name: 'settings',
+        path: '/settings',
+        component: '@/domain/settings/views/config',
+        meta: { text: '设置' },
+      },
+    ],
   },
 ];

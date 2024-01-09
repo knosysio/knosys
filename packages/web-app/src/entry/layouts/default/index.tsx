@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAppData, history, Link, Outlet } from 'umi';
 import { Layout, Menu, theme } from 'antd';
 
-import style from './style.scss'
+import style from './style.scss';
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -15,8 +15,8 @@ function resolveMenuItems(routes = []) {
     }
 
     const resolved = {
-      label: route.path === '/' ? '首页' : (route.meta && route.meta.text || route.name),
-      key: route.path,
+      label: route.meta && route.meta.text || route.name,
+      key: ['/', ''].includes(route.path) ? '/' : route.path,
     };
     const children = resolveMenuItems(route.routes);
 
