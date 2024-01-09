@@ -2,7 +2,7 @@
   "private": true,
   "author": "Ourai Lin <ourairyu@gmail.com> (https://ourai.ws/)",
   "scripts": {
-    "serve": "node ./server",
+    "serve": "nodemon ./server",
     "dev": "umi dev",
     "build": "umi build",
     "postinstall": "umi setup",
@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@koa/router": "^12.0.1",
     "antd": "^5.12.7",
+    "axios": "^1.6.5",
     "koa": "^2.15.0",
     "umi": "^4.1.0"
   },
@@ -20,6 +22,7 @@
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2",
     "typescript": "^5.0.3"
   }
 }

@@ -9,6 +9,12 @@ export default defineConfig({
   define: { 'process.env.KNOSYS_APP': appConfig },
   npmClient: 'npm',
   routes,
+  proxy: {
+    '/api': {
+      target: 'http://127.0.0.1:8001',
+      changeOrigin: true,
+    },
+  },
   // chainWebpack: memo => {
   //   memo.module.rule('json').test(/\.json$/).type('json');
   // },
