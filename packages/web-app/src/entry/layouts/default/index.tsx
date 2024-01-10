@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAppData, history, Outlet } from 'umi';
+import { useAppData, useRouteProps, history, Outlet } from 'umi';
 import { ConfigProvider, Layout, Menu } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import { HomeOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons'
@@ -13,17 +13,23 @@ const routeIconMap: Record<string, any> = {
   settings: SettingOutlined,
 };
 
-function resolveMenuItems(routes = []) {
-  const items = [];
+const HOME_PATH = '/';
 
-  routes.forEach(route => {
+function isHomePage(routePath: string): boolean {
+  return [HOME_PATH, ''].includes(routePath)
+}
+
+function resolveMenuItems(routes: any[] = []) {
+  const items: any[] = [];
+
+  routes.forEach((route: any) => {
     if (route.redirect || !route.name || route.meta && route.meta.hide) {
       return;
     }
 
-    const resolved = {
+    const resolved: any = {
       label: route.meta && route.meta.text || route.name,
-      key: ['/', ''].includes(route.path) ? '/' : route.path,
+      key: isHomePage(route.path) ? HOME_PATH : route.path,
     };
     const children = resolveMenuItems(route.routes);
 
@@ -44,11 +50,40 @@ function resolveMenuItems(routes = []) {
   return items;
 }
 
+function resolveCurrentPaths({ id, path, parentId }: any, routes: any[]): string[] {
+  if (isHomePage(path)) {
+    return [HOME_PATH];
+  }
+
+  let currentRoute: any;
+  let parentRoute: any;
+
+  routes.forEach(route => {
+    if (route.id === id) {
+      currentRoute = route;
+    } else if (route.id === parentId) {
+      parentRoute = route;
+    }
+  });
+
+  if (!parentRoute) {
+    return [path];
+  }
+
+  currentRoute = parentRoute.routes.find((route: any) => route.id === id);
+
+  return currentRoute ? [parentRoute.path, currentRoute.path] : [];
+}
+
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(true);
-  const [menuKeys, setMenuKeys] = useState(['home']);
 
+  const routeProps = useRouteProps();
   const { clientRoutes } = useAppData();
+
+  const { routes = [] } = clientRoutes[0]
+  const menuKeys = resolveCurrentPaths(routeProps, routes);
+
   const { title } = process.env.KNOSYS_APP as any;
 
   return (
@@ -59,13 +94,11 @@ export default function AppLayout() {
           <div className={style['DefaultLayout-navMenu']}>
             <Menu
               theme="dark"
-              selectedKeys={menuKeys}
+              defaultSelectedKeys={menuKeys}
+              defaultOpenKeys={!collapsed && menuKeys.length > 1 ? [menuKeys[0]] : undefined}
               mode="inline"
-              items={resolveMenuItems(clientRoutes[0].routes)}
-              onClick={({ key }) => {
-                setMenuKeys([key]);
-                history.push(key);
-              }}
+              items={resolveMenuItems(routes)}
+              onSelect={({ key }) => history.push(key)}
             />
           </div>
         </Sider>
