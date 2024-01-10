@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { useAppData, useRouteProps, history, Outlet } from 'umi';
-import { ConfigProvider, Layout, Menu } from 'antd';
+import { HomeOutlined, FileTextOutlined, SettingOutlined, EllipsisOutlined } from '@ant-design/icons'
+import { ConfigProvider, Layout, Menu, Breadcrumb, Avatar } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
-import { HomeOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons'
 
 import style from './style.scss';
 
-const { Header, Content, Footer, Sider } = Layout
+const { Header, Content, Sider } = Layout
 
 const routeIconMap: Record<string, any> = {
   home: HomeOutlined,
   settings: SettingOutlined,
+  more: EllipsisOutlined,
 };
 
 const HOME_PATH = '/';
@@ -19,42 +20,62 @@ function isHomePage(routePath: string): boolean {
   return [HOME_PATH, ''].includes(routePath)
 }
 
-function resolveMenuItems(routes: any[] = []) {
-  const items: any[] = [];
+function resolveMenuItem(route: any, children: any[] = []) {
+  const resolved: any = {
+    label: route.meta && route.meta.text || route.name,
+    key: isHomePage(route.path) ? HOME_PATH : route.path,
+  };
 
-  routes.forEach((route: any) => {
+  if (children.length > 0) {
+    resolved.children = children;
+    resolved.icon = <FileTextOutlined />
+  }
+
+  const RouteIcon = routeIconMap[route.name];
+
+  if (RouteIcon) {
+    resolved.icon = <RouteIcon />;
+  }
+
+  return resolved;
+}
+
+function resolveMenuItems(routes: any[] = [], level: number = 1) {
+  const items: any[] = [];
+  const others: any[] = level === 1 ? [] : routes;
+
+  let moreRoute: any;
+
+  const childrenOfMore: any[] = [];
+
+  if (level === 1) {
+    routes.forEach(route => {
+      if (route.name === 'more') {
+        moreRoute = route;
+      } else if (['about'].includes(route.name)) {
+        childrenOfMore.push(route);
+      } else {
+        others.push(route);
+      }
+    });
+  }
+
+  others.forEach((route: any) => {
     if (route.redirect || !route.name || route.meta && route.meta.hide) {
       return;
     }
 
-    const resolved: any = {
-      label: route.meta && route.meta.text || route.name,
-      key: isHomePage(route.path) ? HOME_PATH : route.path,
-    };
-    const children = resolveMenuItems(route.routes);
-
-    if (children.length > 0) {
-      resolved.children = children;
-      resolved.icon = <FileTextOutlined />
-    }
-
-    const RouteIcon = routeIconMap[route.name];
-
-    if (RouteIcon) {
-      resolved.icon = <RouteIcon />;
-    }
-
-    items.push(resolved);
+    items.push(resolveMenuItem(route, resolveMenuItems(route.routes, level + 1)));
   })
+
+  if (moreRoute) {
+    items.push(resolveMenuItem(moreRoute, resolveMenuItems(childrenOfMore, level + 1)));
+  }
 
   return items;
 }
 
-function resolveCurrentPaths({ id, path, parentId }: any, routes: any[]): string[] {
-  if (isHomePage(path)) {
-    return [HOME_PATH];
-  }
-
+function resolveCurrentPaths({ id, path, parentId }: any, routes: any[]): any[] {
   let currentRoute: any;
   let parentRoute: any;
 
@@ -67,12 +88,12 @@ function resolveCurrentPaths({ id, path, parentId }: any, routes: any[]): string
   });
 
   if (!parentRoute) {
-    return [path];
+    return [{ ...currentRoute, path: isHomePage(path) ? HOME_PATH : path }];
   }
 
   currentRoute = parentRoute.routes.find((route: any) => route.id === id);
 
-  return currentRoute ? [parentRoute.path, currentRoute.path] : [];
+  return currentRoute ? [parentRoute, currentRoute] : [];
 }
 
 export default function AppLayout() {
@@ -82,7 +103,15 @@ export default function AppLayout() {
   const { clientRoutes } = useAppData();
 
   const { routes = [] } = clientRoutes[0]
-  const menuKeys = resolveCurrentPaths(routeProps, routes);
+  const paths = resolveCurrentPaths(routeProps, routes);
+
+  const menuKeys: string[] = [];
+  const breadcrumbItems: any[] = [];
+
+  paths.forEach(route => {
+    menuKeys.push(route.path);
+    breadcrumbItems.push({ title: route.meta && route.meta.text });
+  });
 
   const { title } = process.env.KNOSYS_APP as any;
 
@@ -103,15 +132,15 @@ export default function AppLayout() {
           </div>
         </Sider>
         <Layout className={style['DefaultLayout-main']}>
-          <Header className={style['DefaultLayout-header']}></Header>
+          <Header className={style['DefaultLayout-header']}>
+            <Breadcrumb items={breadcrumbItems} />
+            <Avatar src={require('@/shared/images/avatar.jpg')} size="large" />
+          </Header>
           <Content className={style['DefaultLayout-body']}>
             <div className={style['DefaultLayout-content']}>
               <Outlet />
             </div>
           </Content>
-          <Footer className={style['DefaultLayout-footer']}>
-            KnoSys ©{new Date().getFullYear()} Created by Ourai L.
-          </Footer>
         </Layout>
       </Layout>
     </ConfigProvider>

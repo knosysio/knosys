@@ -1,13 +1,28 @@
 import { useRouteProps, history } from 'umi';
-import { Row, Col, Card, Pagination } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Row, Col, Card, Pagination, Modal } from 'antd';
 
 import type { ListViewWidgetProps } from './typing';
 import style from './style.scss';
 
 function CardListViewWidget({ dataSource = [], pagination }: ListViewWidgetProps) {
   const routeProps = useRouteProps();
-  const gotoDetail = (item: any) => history.push(`${routeProps.path}/${item.id}`);
   const defaultBanner = require('./default-banner.jpg');
+
+  const gotoDetail = (item: any) => history.push(`${routeProps.path}/${item.id}`);
+  const gotoEdit = (evt: any, item: any) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    history.push(`${routeProps.path}/${item.id}/edit`);
+  };
+  const removeEntity = (evt: any, item: any) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    Modal.confirm({
+      title: `确定要删除${routeProps.meta && routeProps.meta.text || ''}《${item.title || item.key}》？`,
+      onOk: () => console.log('remove', item),
+    });
+  };
 
   return (
     <div className={style.CardListViewWidget}>
@@ -16,6 +31,10 @@ function CardListViewWidget({ dataSource = [], pagination }: ListViewWidgetProps
           <Card
             cover={<img src={defaultBanner} />}
             hoverable
+            actions={[
+              <EditOutlined key="edit" onClick={evt => gotoEdit(evt, item)} />,
+              <DeleteOutlined key="delete" onClick={evt => removeEntity(evt, item)} />
+            ]}
             onClick={() => gotoDetail(item)}
           >
             <Card.Meta title={item.title} description={item.description || '暂无'} />

@@ -21,7 +21,6 @@
   }
 
   &-header,
-  &-footer,
   &-logo,
   :global(.ant-layout-sider-trigger) {
     flex-shrink: 0;
@@ -33,16 +32,26 @@
   }
 
   &-header {
-    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
     background-color: #fff;
+
+    :global {
+      .ant-breadcrumb {
+        font-size: 16px;
+      }
+
+      .ant-avatar {
+        padding: 2px;
+        border: 1px solid #ccc;
+      }
+    }
   }
 
   &-body {
-    margin: 24px 16px 0;
-  }
-
-  &-footer {
-    text-align: center;
+    margin: 24px 16px;
   }
 
   &-logo {

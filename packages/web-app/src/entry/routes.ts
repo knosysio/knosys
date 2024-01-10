@@ -76,6 +76,18 @@ export default [
         component: '@/domain/settings/views/config',
         meta: { text: '设置' },
       },
+      {
+        name: 'more',
+        path: '/more',
+        meta: { text: '更多' },
+        redirect: '/about',
+      },
+      {
+        name: 'about',
+        path: '/about',
+        component: '@/domain/more/views/about',
+        meta: { text: '关于' },
+      },
     ],
   },
 ];

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouteProps } from 'umi';
-import { Flex } from 'antd';
 
 import { getList } from '../../repository';
 
@@ -29,9 +28,6 @@ export default function QiiList() {
 
   return (
     <div className={style.QiiList}>
-      <Flex className={style['QiiList-meta']} align="center" justify="space-between">
-        <h3 className={style['QiiList-title']}>{routeProps.meta && routeProps.meta.text || routeProps.name}</h3>
-      </Flex>
       <CardListViewWidget dataSource={list} pagination={paginationProps} />
     </div>
   );
