@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouteProps, useParams } from 'umi';
 
-import httpClient from '@/shared/utils/http';
+import { getOne } from '../../repository';
 
-export default function Qii() {
+export default function QiiDetail() {
   const [fetched, setFetched] = useState(false);
   const [entity, setEntity] = useState(null);
 
@@ -15,9 +15,7 @@ export default function Qii() {
       return;
     }
 
-    httpClient.get('/api/qii/get', {
-      params: { collection: meta.collection, id }
-    }).then(res => {
+    getOne({ collection: meta.collection, id }).then(res => {
       setEntity(res.data);
       setFetched(true);
     });

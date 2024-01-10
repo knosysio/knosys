@@ -3,7 +3,8 @@
   &-sidebar,
   &-main,
   &-body,
-  &-navMenu {
+  &-navMenu,
+  &-content {
     height: 100%;
   }
 
@@ -57,8 +58,6 @@
   }
 
   &-content {
-    min-height: 360px;
-    padding: 24px;
     border-radius: 8px;
     background-color: #fff;
   }
