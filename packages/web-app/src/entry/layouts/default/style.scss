@@ -1,4 +1,49 @@
-.AppLayout {
+.DefaultLayout {
+  &,
+  &-sidebar,
+  &-main,
+  &-body,
+  &-navMenu {
+    height: 100%;
+  }
+
+  &-sidebar,
+  :global(.ant-layout-sider-children) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-body,
+  &-navMenu,
+  :global(.ant-layout-sider-children) {
+    flex-grow: 1;
+  }
+
+  &-header,
+  &-footer,
+  &-logo,
+  :global(.ant-layout-sider-trigger) {
+    flex-shrink: 0;
+  }
+
+  &-body,
+  &-navMenu {
+    overflow: auto;
+  }
+
+  &-header {
+    padding: 0;
+    background-color: #fff;
+  }
+
+  &-body {
+    margin: 24px 16px 0;
+  }
+
+  &-footer {
+    text-align: center;
+  }
+
   &-logo {
     height: 40px;
     margin: 16px;
@@ -9,5 +54,12 @@
     text-align: center;
     border-radius: 6px;
     background-color: rgba(255, 255, 255, .2);
+  }
+
+  &-content {
+    min-height: 360px;
+    padding: 24px;
+    border-radius: 8px;
+    background-color: #fff;
   }
 }
