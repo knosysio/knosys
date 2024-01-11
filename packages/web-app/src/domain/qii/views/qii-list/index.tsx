@@ -1,25 +1,45 @@
 import { useState, useEffect } from 'react';
 import { useRouteProps } from 'umi';
-import { message } from 'antd';
+import { Spin, message } from 'antd';
 
 import { getList, deleteOne } from '../../repository';
 
 import CardListViewWidget from './CardListViewWidget';
 import style from './style.scss';
 
+function resolveListItem<R = Record<string, any>>(record: R): R {
+  const cover = record.banner || record.cover;
+  const item = {
+    id: record.id,
+    key: record.path,
+    title: record.title || record.path,
+    description: record.description,
+  } as R;
+
+  if (cover) {
+    item.cover = `data:image/png;base64,${cover}`;
+  }
+
+  return item;
+}
+
 export default function QiiList() {
   const [list, setList] = useState([]);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
+  const [loading, setLoading] = useState(false);
+  const [fetchedAt, setFetchedAt] = useState(Date.now());
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 24, total: 0 });
 
   const { name: collection } = useRouteProps();
 
   useEffect(() => {
+    setLoading(true);
     getList({ collection, pageSize: pagination.pageSize, pageNum: pagination.current })
-      .then(({ data, extra }) => {
-        setList(data.map((item: any) => ({ id: item.id, key: item.path, title: item.title || item.path, description: item.description })));
-        setPagination({ ...pagination, total: extra.total });
-      });
-  }, [pagination.current, pagination.pageSize]);
+      .then(res => {
+        setList(res.data.map((item: any) => resolveListItem(item)));
+        setPagination({ ...pagination, total: res.extra.total });
+      })
+      .finally(() => setLoading(false));
+  }, [pagination.current, pagination.pageSize, fetchedAt]);
 
   const paginationProps = {
     ...pagination,
@@ -27,11 +47,20 @@ export default function QiiList() {
     onChange: (page: number, pageSize: number) => setPagination({ ...pagination, pageSize, current: page }),
   };
 
-  const onDelete = (item: Record<string, any>) => deleteOne({ collection, id: item.id }).then(res => res.success ? message.success('删除成功') : message.error(res.message))
+  const onDelete = (item: Record<string, any>) => deleteOne({ collection, id: item.id }).then(res => {
+    if (res.success) {
+      message.success('删除成功');
+      setFetchedAt(Date.now());
+    } else {
+      message.error(res.message);
+    }
+  });
 
   return (
     <div className={style.QiiList}>
-      <CardListViewWidget dataSource={list} pagination={paginationProps} onDelete={onDelete} />
+      <Spin size="large" spinning={loading}>
+        <CardListViewWidget dataSource={list} pagination={paginationProps} onDelete={onDelete} />
+      </Spin>
     </div>
   );
 }

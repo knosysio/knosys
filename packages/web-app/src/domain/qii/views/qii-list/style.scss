@@ -17,6 +17,19 @@
     margin: 0;
     font-size: 18px;
   }
+
+  > :global(.ant-spin-nested-loading) {
+    flex-grow: 1;
+  }
+
+  > :global(.ant-spin-nested-loading > div > .ant-spin) {
+    max-height: none;
+  }
+
+  > :global(.ant-spin-nested-loading > .ant-spin-container) {
+    display: flex;
+    height: 100%;
+  }
 }
 
 .CardListViewWidget {
@@ -33,6 +46,51 @@
   &-list {
     height: 0;
     overflow: auto;
+
+    :global {
+      .ant-row {
+        margin: {
+          top: -8px;
+          bottom: -8px;
+        }
+      }
+
+      .ant-col {
+        padding: {
+          top: 8px;
+          bottom: 8px;
+        }
+      }
+    }
+  }
+
+  &-cover {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+
+    &:after {
+      content: "\0020";
+      display: block;
+      position: relative;
+      z-index: -999999999;
+      padding-top: 100% * 9 / 16;
+    }
+
+    img {
+      display: none;
+    }
+
+    div {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      background: none transparent 50% 50% no-repeat;
+      background-size: cover;
+    }
   }
 
   &-pagination {

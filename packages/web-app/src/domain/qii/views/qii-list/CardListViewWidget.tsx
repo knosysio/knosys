@@ -28,21 +28,28 @@ function CardListViewWidget({ dataSource = [], pagination, onDelete }: ListViewW
 
   return (
     <div className={style.CardListViewWidget}>
-      <Row className={style['CardListViewWidget-list']} gutter={16}>
-        {dataSource.map((item: any) => (<Col span={6} key={item.key} style={{paddingTop: '8px', paddingBottom: '8px'}}>
-          <Card
-            cover={<img src={defaultBanner} />}
-            hoverable
-            actions={[
-              <EditOutlined key="edit" onClick={createActionHandler(item, gotoEdit)} />,
-              <DeleteOutlined key="delete" onClick={createActionHandler(item, removeEntity)} />
-            ]}
-            onClick={createActionHandler(item, gotoDetail)}
-          >
-            <Card.Meta title={item.title} description={item.description || '暂无'} />
-          </Card>
-        </Col>))}
-      </Row>
+      <div className={style['CardListViewWidget-list']}>
+        <Row gutter={16}>
+          {dataSource.map((item: any) => (<Col span={6} xxl={4} key={item.key}>
+            <Card
+              cover={(
+                <div className={style['CardListViewWidget-cover']}>
+                  <img src={item.cover || defaultBanner} object-fit="cover" />
+                  <div style={{ backgroundImage: `url("${item.cover || defaultBanner}")` }}></div>
+                </div>
+              )}
+              hoverable
+              actions={[
+                <EditOutlined key="edit" onClick={createActionHandler(item, gotoEdit)} />,
+                <DeleteOutlined key="delete" onClick={createActionHandler(item, removeEntity)} />
+              ]}
+              onClick={createActionHandler(item, gotoDetail)}
+            >
+              <Card.Meta title={item.title} description={item.description || '暂无'} />
+            </Card>
+          </Col>))}
+        </Row>
+      </div>
       {pagination && pagination.total && pagination.total > pagination.pageSize! ? (
         <div className={style['CardListViewWidget-pagination']}><Pagination {...pagination} /></div>
       ) : null}

@@ -1,4 +1,5 @@
 const { resolve: resolvePath } = require('path');
+const { readFileSync } = require('fs');
 const { execSync } = require('child_process');
 
 const { isPlainObject, isString, isFunction, capitalize, pick } = require('@ntks/toolbox');
@@ -8,7 +9,7 @@ const {
   generateIdFromDate,
   resolvePathFromRootRelative, resolvePathFromParams,
   getConfig, getGlobalConfigDirPath,
-  readDirDeeply, readMeta, readEntity, readData, saveData, ensureDirExists,
+  getImageFileNames, readDirDeeply, readMeta, readEntity, readData, saveData, ensureDirExists,
 } = require('../utils')
 
 const appTempPath = `${getGlobalConfigDirPath()}/apps`;
@@ -139,12 +140,23 @@ function resolveRecords(collectionPath, paramArr, parentParams) {
 
   readDirDeeply(collectionPath, paramArr, parentParams, (_, params) => {
     const recordPath = resolvePathFromParams(paramArr.join('/'), params);
-    const { content, ...others } = readEntity(`${collectionPath}/${recordPath}`) || {};
+    const distPath = `${collectionPath}/${recordPath}`;
+    const { content, ...others } = readEntity(distPath) || {};
+    const imageMap = {};
+
+    getImageFileNames(distPath).forEach(fileName => {
+      const baseName = fileName.split('.').slice(0, -1).join('.');
+
+      if (['cover', 'banner'].includes(baseName)) {
+        imageMap[baseName] = readFileSync(`${distPath}/${fileName}`).toString('base64');
+      }
+    });
 
     records.push({
       id: generateRecordId(others.date),
       path: recordPath,
       ...pick(others, ['title', 'description', 'date', 'tags']),
+      ...imageMap,
     });
   });
 

@@ -2,7 +2,7 @@ const { existsSync } = require('fs');
 const { isNumeric } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
-const { readData, readEntity } = require('../../../backend-core/utils');
+const { readEntity, readData, saveData } = require('../../../backend-core/utils');
 const { rm } = require('../../../backend-core/wrappers/fs');
 
 function getDataSourcePath(ctx) {
@@ -41,8 +41,16 @@ function paginate(records, pageNum, pageSize) {
   };
 }
 
+function readDb(ctx) {
+  return readData(ctx.state.KNOSYS_DB_PATH) || {};
+}
+
+function updateDb(ctx, data) {
+  return saveData(ctx.state.KNOSYS_DB_PATH, data);
+}
+
 function resolveData(ctx, callback) {
-  const db = readData(ctx.state.KNOSYS_DB_PATH) || {};
+  const db = readDb(ctx);
   const { collection } = ctx.query;
 
   if (db[collection]) {
@@ -92,6 +100,13 @@ router.get('/get', ctx => resolveRecord(ctx, record => ({ success: true, data: r
 
 router.delete('/remove', ctx => resolveRecord(ctx, record => {
   rm(record.path);
+
+  const db = readDb(ctx);
+  const { collection, id } = ctx.query;
+
+  db[collection].records = db[collection].records.filter(item => item.id !== id);
+
+  updateDb(ctx, db);
 
   return { success: true, data: record.data }
 }));
