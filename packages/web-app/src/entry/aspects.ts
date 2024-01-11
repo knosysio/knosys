@@ -12,6 +12,8 @@ function setInterceptorsForHttpClient() {
       },
     } as AxiosRequestConfig;
   });
+
+  httpClient.interceptors.response.use(res => res.status === 200 ? { success: true, ...res.data } : { success: false, message: res.data });
 }
 
 export { setInterceptorsForHttpClient };

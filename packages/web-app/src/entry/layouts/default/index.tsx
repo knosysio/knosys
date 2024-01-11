@@ -60,16 +60,27 @@ function resolveMenuItems(routes: any[] = [], level: number = 1) {
     });
   }
 
+  const nextLevel = level + 1;
+  const dividerItem = { type: 'divider' };
+
   others.forEach((route: any) => {
     if (route.redirect || !route.name || route.meta && route.meta.hide) {
       return;
     }
 
-    items.push(resolveMenuItem(route, resolveMenuItems(route.routes, level + 1)));
+    if (route.name === 'settings') {
+      items.push(dividerItem);
+    }
+
+    items.push(resolveMenuItem(route, resolveMenuItems(route.routes, nextLevel)));
+
+    if (isHomePage(route.path)) {
+      items.push(dividerItem);
+    }
   })
 
   if (moreRoute) {
-    items.push(resolveMenuItem(moreRoute, resolveMenuItems(childrenOfMore, level + 1)));
+    items.push(resolveMenuItem(moreRoute, resolveMenuItems(childrenOfMore, nextLevel)));
   }
 
   return items;

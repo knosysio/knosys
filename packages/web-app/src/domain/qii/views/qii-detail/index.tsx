@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouteProps, useParams } from 'umi';
+import { message } from 'antd';
 
 import { getOne } from '../../repository';
 
@@ -15,10 +16,9 @@ export default function QiiDetail() {
       return;
     }
 
-    getOne({ collection: meta.collection, id }).then(res => {
-      setEntity(res.data);
-      setFetched(true);
-    });
+    getOne({ collection: meta.collection, id })
+      .then(res => res.success ? setEntity(res.data) : message.error(res.message))
+      .finally(() => setFetched(true));
   });
 
   return (

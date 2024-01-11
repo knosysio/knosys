@@ -8,4 +8,8 @@ function getOne(params: { collection: string; id?: string; }) {
   return httpClient.get('/qii/get', { params });
 }
 
-export { getList, getOne };
+function deleteOne(params: { collection: string; id?: string; }) {
+  return httpClient.delete('/qii/remove', { params });
+}
+
+export { getList, getOne, deleteOne };
