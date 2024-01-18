@@ -243,7 +243,7 @@ function serveApp({ name }) {
   const encodedPath = encodeURIComponent(`${appTempPath}/${name}`);
   const cmds = ['"npm run serve"', `"KNOSYS_APP_PATH=${encodedPath} npm run dev"`];
 
-  execSync(`npm run corun ${cmds.join(' ')}`, { stdio: 'inherit', cwd: resolvePath(__dirname, '../../web-app') });
+  execSync(`npm run corun ${cmds.join(' ')}`, { stdio: 'inherit', cwd: resolvePath(__dirname, '../../app-web') });
 }
 
 module.exports = {
