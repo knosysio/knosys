@@ -1,15 +1,13 @@
 const { existsSync } = require('fs');
 
-const { getGlobalConfigDirPath } = require('../../../backend-core/utils');
-
-const appTempPath = `${getGlobalConfigDirPath()}/apps`;
+const { getGlobalAppDirPath } = require('../../../backend-app');
 
 function getAppName(ctx) {
   return ctx.headers['x-knosys-app'];
 }
 
 function getAppPath(ctx) {
-  const appPath = `${appTempPath}/${getAppName(ctx)}`;
+  const appPath = getGlobalAppDirPath(getAppName(ctx));
 
   return existsSync(appPath) ? appPath : '';
 }

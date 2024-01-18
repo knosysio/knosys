@@ -1,4 +1,1 @@
-module.exports = {
-  ...require('./constants'),
-  // ...require('./utils'),
-};
+module.exports = { ...require('./constants'), ...require('./utils') };

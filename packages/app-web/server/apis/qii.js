@@ -2,8 +2,7 @@ const { existsSync } = require('fs');
 const { isNumeric } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
-const { readEntity, readData, saveData } = require('../../../backend-core/utils');
-const { rm } = require('../../../backend-core/wrappers/fs');
+const { readEntity, readData, saveData, rm } = require('../../../backend-core');
 
 function getDataSourcePath(ctx) {
   return (readData(`${ctx.state.KNOSYS_APP_PATH}/app.json`) || {}).source || '';
