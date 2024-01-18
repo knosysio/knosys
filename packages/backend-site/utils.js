@@ -2,10 +2,12 @@ const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
 
-const { DEFAULT_PATH_SCHEMA } = require('../constants');
-const { resolvePathFromParams } = require('./path');
-const { ensureDirExists, readDirDeeply, readMeta, readEntity, saveData } = require('./fs');
-const { getGlobalConfigDirPath } = require('./cwd');
+const { DEFAULT_PATH_SCHEMA } = require('../backend-core/constants');
+const {
+  resolvePathFromParams,
+  ensureDirExists, readDirDeeply, readMeta, readEntity, saveData,
+  getGlobalConfigDirPath,
+} = require('../backend-core');
 
 function resolvePermalink(schema, params) {
   return schema.split('/').map(seg => {

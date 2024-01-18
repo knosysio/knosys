@@ -1,1 +1,4 @@
-module.exports = { ...require('./packages/backend-core'), ...require('./packages/backend-core/bin') };
+module.exports = {
+  ...require('./packages/backend-core'),
+  ...require('./packages/app-cli/bin'),
+};

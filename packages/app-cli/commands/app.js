@@ -4,13 +4,14 @@ const { execSync } = require('child_process');
 
 const { isPlainObject, isString, isFunction, capitalize, pick } = require('@ntks/toolbox');
 
-const { META_DIR_NAME, DEFAULT_PATH_SCHEMA, DEFAULT_APP_TITLE } = require('../constants');
 const {
+  META_DIR_NAME, DEFAULT_PATH_SCHEMA,
   generateIdFromDate,
   resolvePathFromRootRelative, resolvePathFromParams,
   getConfig, getGlobalConfigDirPath,
   getImageFileNames, readDirDeeply, readMeta, readEntity, readData, saveData, ensureDirExists,
-} = require('../utils')
+} = require('../../backend-core');
+const { DEFAULT_APP_TITLE } = require('../../backend-app');
 
 const appTempPath = `${getGlobalConfigDirPath()}/apps`;
 

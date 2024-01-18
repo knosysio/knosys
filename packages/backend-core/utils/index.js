@@ -4,5 +4,4 @@ module.exports = {
   ...require('./path'),
   ...require('./fs'),
   ...require('./cwd'),
-  ...require('./site'),
 };

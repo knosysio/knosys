@@ -1,9 +1,9 @@
 const { isPlainObject } = require('@ntks/toolbox');
 
-const { DEFAULT_SITE_NAME, DEFAULT_SSG_TYPE } = require('../constants');
-const { resolvePathFromRootRelative, getConfig } = require('../utils');
-const { generateJekyllData } = require('../generators/jekyll');
-const { generateHexoData } = require('../generators/hexo');
+const { resolvePathFromRootRelative, getConfig } = require('../../backend-core');
+const { DEFAULT_SITE_NAME, DEFAULT_SSG_TYPE } = require('../../backend-site');
+const { generateJekyllData } = require('../../backend-site/generators/jekyll');
+const { generateHexoData } = require('../../backend-site/generators/hexo');
 
 const generatorMap = {
   jekyll: generateJekyllData,
