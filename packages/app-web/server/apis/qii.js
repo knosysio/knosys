@@ -82,7 +82,15 @@ function resolveRecord(ctx, callback) {
     }
 
     try {
-      return callback({ path: recordFullPath, data: readEntity(recordFullPath) });
+      const entity = readEntity(recordFullPath);
+
+      ['banner', 'cover'].forEach(k => {
+        if (found[k]) {
+          entity[k] = found[k];
+        }
+      });
+
+      return callback({ path: recordFullPath, data: entity });
     } catch (err) {
       return { success: false, message: JSON.stringify(err, null, 2) };
     }

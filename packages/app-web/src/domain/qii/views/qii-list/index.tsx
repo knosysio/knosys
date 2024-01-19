@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouteProps } from 'umi';
 import { Spin, message } from 'antd';
 
+import { resolveBannerUrl } from '../../helper';
 import { getList, deleteOne } from '../../repository';
 
 import CardListViewWidget from './CardListViewWidget';
@@ -17,7 +18,7 @@ function resolveListItem<R = Record<string, any>>(record: R): R {
   } as R;
 
   if (cover) {
-    item.cover = `data:image/png;base64,${cover}`;
+    item.cover = resolveBannerUrl(cover);
   }
 
   return item;

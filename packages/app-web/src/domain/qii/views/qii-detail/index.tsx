@@ -20,7 +20,7 @@ export default function QiiDetail() {
   const { id } = useParams();
 
   useEffect(() => {
-    if (fetched) {
+    if (loading || fetched) {
       return;
     }
 
@@ -35,15 +35,15 @@ export default function QiiDetail() {
         }
       })
       .finally(() => {
-        setLoading(false);
         setFetched(true);
+        setLoading(false);
       });
   });
 
   return (
     <div className={style.QiiDetail}>
       <Spin size="large" spinning={loading}>
-        { entity ? <ArticleViewWidget dataSource={entity} /> : '暂无数据' }
+        { entity ? <ArticleViewWidget dataSource={entity} /> : null }
       </Spin>
     </div>
   );
