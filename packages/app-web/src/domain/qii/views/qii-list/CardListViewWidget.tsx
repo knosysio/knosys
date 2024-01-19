@@ -5,6 +5,8 @@ import { Row, Col, Card, Pagination, Modal } from 'antd';
 import type { ListViewWidgetProps } from './typing';
 import style from './style.scss';
 
+const defaultBanner = require('@/shared/images/default-banner.jpg');
+
 function createActionHandler<R = Record<string, any>>(record: R, callback: (record: R) => void) {
   return (evt: any) => {
     evt.preventDefault();
@@ -15,7 +17,6 @@ function createActionHandler<R = Record<string, any>>(record: R, callback: (reco
 
 function CardListViewWidget({ dataSource = [], pagination, onDelete }: ListViewWidgetProps) {
   const routeProps = useRouteProps();
-  const defaultBanner = require('./default-banner.jpg');
 
   const gotoDetail = (item: any) => history.push(`${routeProps.path}/${item.id}`);
   const gotoEdit = (item: any) => history.push(`${routeProps.path}/${item.id}/edit`);

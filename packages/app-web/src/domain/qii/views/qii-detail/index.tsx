@@ -1,14 +1,18 @@
 import { useContext, useState, useEffect } from 'react';
 import { useRouteProps, useParams } from 'umi';
-import { message } from 'antd';
+import { Spin, message } from 'antd';
 
 import LayoutContext from '@/shared/contexts/layout';
 
 import { getOne } from '../../repository';
 
+import ArticleViewWidget from './ArticleViewWidget';
+import style from './style.scss';
+
 export default function QiiDetail() {
   const { setPage } = useContext(LayoutContext);
 
+  const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
   const [entity, setEntity] = useState(null);
 
@@ -20,6 +24,7 @@ export default function QiiDetail() {
       return;
     }
 
+    setLoading(true);
     getOne({ collection: meta.collection, id })
       .then(res => {
         if (res.success) {
@@ -29,15 +34,17 @@ export default function QiiDetail() {
           message.error(res.message);
         }
       })
-      .finally(() => setFetched(true));
+      .finally(() => {
+        setLoading(false);
+        setFetched(true);
+      });
   });
 
   return (
-    <div>{ entity ? (
-      <>
-        <h3>{ entity.title }</h3>
-        <p>{ entity.description }</p>
-      </>
-    ) : '暂无数据' }</div>
+    <div className={style.QiiDetail}>
+      <Spin size="large" spinning={loading}>
+        { entity ? <ArticleViewWidget dataSource={entity} /> : '暂无数据' }
+      </Spin>
+    </div>
   );
 }

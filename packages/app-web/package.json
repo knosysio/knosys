@@ -16,6 +16,7 @@
     "antd": "^5.12.7",
     "axios": "^1.6.5",
     "koa": "^2.15.0",
+    "markdown-it": "^14.0.0",
     "umi": "^4.1.0"
   },
   "devDependencies": {
