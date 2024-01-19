@@ -1,0 +1,93 @@
+.QiiForm {
+  height: 100%;
+
+  > :global(.ant-spin-nested-loading),
+  > :global(.ant-spin-nested-loading > .ant-spin-container) {
+    height: 100%;
+  }
+
+  > :global(.ant-spin-nested-loading > div > .ant-spin) {
+    max-height: none;
+  }
+}
+
+.ArticlePreviewer {
+  height: 100%;
+  padding: 24px;
+  overflow: auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Pingfang SC", "Microsoft Yahei", Sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #333;
+
+  h2,
+  h3 {
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  h2 {
+    margin: 1em 0 .5em;
+    padding-bottom: 10px;
+    font-size: 1.8em;
+    border-bottom: 1px solid #eee;
+  }
+
+  h3 {
+    margin: 24px 0 12px;
+    font-size: 1.4em;
+  }
+
+  p {
+    margin: 0 0 1.5em;
+    line-height: 1.8;
+    word-break: break-all;
+  }
+}
+
+.ArticleEditor {
+  height: 100% !important;
+  padding: 24px;
+  resize: none !important;
+  font-family: monospace;
+  border-style: none;
+  box-shadow: none !important;
+}
+
+.EditorViewWidget {
+  display: flex;
+  flex-direction: column;
+
+  &,
+  &-editor,
+  &-previewer {
+    height: 100%;
+  }
+
+  &-title {
+    flex-shrink: 0;
+    border-bottom: 1px solid #eee;
+
+    :global(.ant-input) {
+      padding: 24px;
+      font-size: 24px;
+      border-style: none;
+      box-shadow: none !important;
+    }
+  }
+
+  &-content {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  &-editor,
+  &-previewer {
+    width: 50%;
+    float: left;
+  }
+
+  &-editor {
+    border-right: 1px solid #eee;
+  }
+}

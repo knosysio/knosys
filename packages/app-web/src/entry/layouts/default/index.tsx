@@ -27,7 +27,9 @@ export default function AppLayout() {
       <LayoutContext.Provider value={{ setPage }}>
         <Layout className={style.DefaultLayout}>
           <Sider className={style['DefaultLayout-sidebar']} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-            <div className={style['DefaultLayout-logo']}>{ collapsed ? title.slice(0, 2) : title }</div>
+            <div className={style['DefaultLayout-logo']}>
+              {collapsed ? <Avatar src={require('@/shared/images/avatar.jpg')} size="large" /> : <span className={style['DefaultLayout-logoText']}>{title}</span>}
+            </div>
             <div className={style['DefaultLayout-navMenu']}>
               <Menu
                 theme="dark"
@@ -42,7 +44,6 @@ export default function AppLayout() {
           <Layout className={style['DefaultLayout-main']}>
             <Header className={style['DefaultLayout-header']}>
               <Breadcrumb items={breadcrumb} />
-              <Avatar src={require('@/shared/images/avatar.jpg')} size="large" />
             </Header>
             <Content className={style['DefaultLayout-body']}>
               <div className={style['DefaultLayout-content']}>

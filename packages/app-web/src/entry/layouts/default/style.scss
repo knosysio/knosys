@@ -38,15 +38,8 @@
     padding: 0 16px;
     background-color: #fff;
 
-    :global {
-      .ant-breadcrumb {
-        font-size: 16px;
-      }
-
-      .ant-avatar {
-        padding: 2px;
-        border: 1px solid #ccc;
-      }
+    :global(.ant-breadcrumb) {
+      font-size: 16px;
     }
   }
 
@@ -55,13 +48,17 @@
   }
 
   &-logo {
-    height: 40px;
     margin: 16px;
+    text-align: center;
+  }
+
+  &-logoText {
+    display: block;
+    height: 40px;
     font-size: 16px;
     font-weight: bold;
     color: #fff;
     line-height: 40px;
-    text-align: center;
     border-radius: 6px;
     background-color: rgba(255, 255, 255, .2);
   }

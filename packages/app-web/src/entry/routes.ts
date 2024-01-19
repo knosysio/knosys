@@ -30,7 +30,7 @@ function resolveCollectionRoutes(route: any) {
     ...['create', 'update', 'read'].map(action => ({
       name: `${baseRoute.name}${capitalize(action)}`,
       path: `${baseRoute.path}/${resolveActionRoutePathPart(action)}`,
-      component: '@/domain/qii/views/qii-detail',
+      component: `@/domain/qii/views/${action === 'read' ? 'qii-detail' : 'qii-form'}`,
       meta: { hide: true, collection: baseRoute.name },
     })),
   ];
