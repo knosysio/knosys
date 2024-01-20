@@ -48,7 +48,7 @@ function resolveRoutes() {
     });
 
     if (children.length > 0) {
-      children.unshift({ path: route.path, redirect: children[0].path });
+      children.unshift({ path: resolved.path, redirect: children[0].path });
 
       resolved.routes = children;
     }
@@ -73,8 +73,28 @@ export default [
       {
         name: 'settings',
         path: '/settings',
-        component: '@/domain/settings/views/config',
         meta: { text: '设置' },
+        routes: [
+          { path: '/settings', redirect: '/settings/system' },
+          {
+            name: 'systemConfig',
+            path: '/settings/system',
+            component: '@/domain/settings/views/system-config',
+            meta: { text: '系统' },
+          },
+          {
+            name: 'collectionList',
+            path: '/settings/collections',
+            component: '@/domain/settings/views/collection-list',
+            meta: { text: '集合' },
+          },
+          {
+            name: 'collectionModel',
+            path: '/settings/collections/:collection/design',
+            component: '@/domain/settings/views/collection-model',
+            meta: { hide: true },
+          },
+        ],
       },
       {
         name: 'more',

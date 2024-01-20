@@ -24,17 +24,23 @@ export default function QiiForm() {
       execute: () => history.push(`${path.replace(':id/edit', id)}`),
       primary: true
     }]);
-    setLoading(true);
-    getOne({ collection: meta.collection, id })
-      .then(res => {
-        if (res.success) {
-          setPage(res.data);
-          setEntity(res.data);
-        } else {
-          message.error(res.message);
-        }
-      })
-      .finally(() => setLoading(false));
+
+    if (id) {
+      setLoading(true);
+      getOne({ collection: meta.collection, id })
+        .then(res => {
+          if (res.success) {
+            setPage(res.data);
+            setEntity(res.data);
+          } else {
+            message.error(res.message);
+          }
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setPage({ title: '新建' });
+      setEntity({} as any);
+    }
   }, [meta.collection, id]);
 
   return (

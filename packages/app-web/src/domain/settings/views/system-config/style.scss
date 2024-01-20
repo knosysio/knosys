@@ -1,0 +1,14 @@
+.ConfigSettings {
+  height: 100%;
+  padding: 24px;
+
+  :global {
+    .ant-tabs {
+      height: 100%;
+    }
+
+    .ant-tabs-content-holder {
+      flex-grow: 1;
+    }
+  }
+}
