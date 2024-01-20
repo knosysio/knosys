@@ -5,6 +5,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 import LayoutContext from '@/shared/contexts/layout';
 
+import HeaderActionBar from './HeaderActionBar';
 import { resolveMenuItems, resolvePathStuff } from './helper';
 import style from './style.scss';
 
@@ -13,6 +14,7 @@ const { Header, Content, Sider } = Layout
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(true);
   const [page, setPage] = useState(null);
+  const [headerActions, setHeaderActions] = useState([]);
 
   const routeProps = useRouteProps();
   const { clientRoutes } = useAppData();
@@ -23,8 +25,8 @@ export default function AppLayout() {
   const { title } = process.env.KNOSYS_APP as any;
 
   return (
-    <ConfigProvider locale={zhCN}>
-      <LayoutContext.Provider value={{ setPage }}>
+    <ConfigProvider locale={zhCN} autoInsertSpaceInButton={false}>
+      <LayoutContext.Provider value={{ setPage, setHeaderActions }}>
         <Layout className={style.DefaultLayout}>
           <Sider className={style['DefaultLayout-sidebar']} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
             <div className={style['DefaultLayout-logo']}>
@@ -44,6 +46,7 @@ export default function AppLayout() {
           <Layout className={style['DefaultLayout-main']}>
             <Header className={style['DefaultLayout-header']}>
               <Breadcrumb items={breadcrumb} />
+              {headerActions.length > 0 ? <HeaderActionBar actions={headerActions} /> : null}
             </Header>
             <Content className={style['DefaultLayout-body']}>
               <div className={style['DefaultLayout-content']}>

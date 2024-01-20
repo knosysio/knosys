@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useRouteProps } from 'umi';
+import { useContext, useState, useEffect } from 'react';
+import { useRouteProps, history } from 'umi';
 import { Spin, message } from 'antd';
+
+import LayoutContext from '@/shared/contexts/layout';
 
 import { resolveBannerUrl } from '../../helper';
 import { getList, deleteOne } from '../../repository';
@@ -24,15 +26,24 @@ function resolveListItem<R = Record<string, any>>(record: R): R {
   return item;
 }
 
+const loadTime = Date.now();
+
 export default function QiiList() {
+  const { setHeaderActions } = useContext(LayoutContext);
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fetchedAt, setFetchedAt] = useState(Date.now());
+  const [fetchedAt, setFetchedAt] = useState(loadTime);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 24, total: 0 });
 
-  const { name: collection } = useRouteProps();
+  const { name: collection, path } = useRouteProps();
 
   useEffect(() => {
+    setHeaderActions([{
+      text: '新建',
+      execute: () => history.push(`${path}/new`),
+      primary: true
+    }]);
+
     setLoading(true);
     getList({ collection, pageSize: pagination.pageSize, pageNum: pagination.current })
       .then(res => {
@@ -40,6 +51,8 @@ export default function QiiList() {
         setPagination({ ...pagination, total: res.extra.total });
       })
       .finally(() => setLoading(false));
+
+    return () => setHeaderActions([]);
   }, [pagination.current, pagination.pageSize, fetchedAt]);
 
   const paginationProps = {

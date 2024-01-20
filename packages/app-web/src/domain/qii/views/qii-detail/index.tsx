@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { useRouteProps, useParams } from 'umi';
+import { useRouteProps, useParams, history } from 'umi';
 import { Spin, message } from 'antd';
 
 import LayoutContext from '@/shared/contexts/layout';
@@ -10,20 +10,20 @@ import ArticleViewWidget from './ArticleViewWidget';
 import style from './style.scss';
 
 export default function QiiDetail() {
-  const { setPage } = useContext(LayoutContext);
+  const { setPage, setHeaderActions } = useContext(LayoutContext);
 
   const [loading, setLoading] = useState(false);
-  const [fetched, setFetched] = useState(false);
   const [entity, setEntity] = useState(null);
 
-  const { meta } = useRouteProps();
+  const { meta, path } = useRouteProps();
   const { id } = useParams();
 
   useEffect(() => {
-    if (loading || fetched) {
-      return;
-    }
-
+    setHeaderActions([{
+      text: '编辑',
+      execute: () => history.push(`${path.replace(':id', id)}/edit`),
+      primary: true
+    }]);
     setLoading(true);
     getOne({ collection: meta.collection, id })
       .then(res => {
@@ -34,11 +34,10 @@ export default function QiiDetail() {
           message.error(res.message);
         }
       })
-      .finally(() => {
-        setFetched(true);
-        setLoading(false);
-      });
-  });
+      .finally(() => setLoading(false));
+
+    return () => setHeaderActions([])
+  }, [meta.collection, id]);
 
   return (
     <div className={style.QiiDetail}>
