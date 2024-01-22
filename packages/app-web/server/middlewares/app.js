@@ -1,6 +1,11 @@
 const { existsSync } = require('fs');
 
 const { getGlobalAppDirPath } = require('../../../backend-app');
+const { API_PREFIX } = require('../constants');
+
+function isSkipped(url) {
+  return ['/app/query'].includes(url.replace(new RegExp(`^${API_PREFIX}`, 'i'), ''));
+}
 
 function getAppName(ctx) {
   return ctx.headers['x-knosys-app'];
@@ -27,20 +32,24 @@ function getDbPath(ctx) {
 }
 
 async function checkAppConfig(ctx, next) {
-  const dbPath = getDbPath(ctx);
-
-  let message;
-
-  if (dbPath) {
-    ctx.state.KNOSYS_DB_PATH = dbPath;
-  } else {
-    message = `应用 \`${getAppName(ctx)}\` 的数据文件不存在`;
-  }
-
-  if (message) {
-    ctx.body = { success: false, message };
-  } else {
+  if (isSkipped(ctx.url)) {
     await next();
+  } else {
+    const dbPath = getDbPath(ctx);
+
+    let message;
+
+    if (dbPath) {
+      ctx.state.KNOSYS_DB_PATH = dbPath;
+    } else {
+      message = `应用 \`${getAppName(ctx)}\` 的数据文件不存在`;
+    }
+
+    if (message) {
+      ctx.body = { success: false, message };
+    } else {
+      await next();
+    }
   }
 }
 

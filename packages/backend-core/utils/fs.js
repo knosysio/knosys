@@ -1,6 +1,6 @@
 const { existsSync, statSync, readdirSync, readFileSync, writeFileSync } = require('fs');
 const { safeLoad, safeDump } = require('js-yaml');
-const { isPlainObject, omit } = require('@ntks/toolbox');
+const { isPlainObject, omit, mixin } = require('@ntks/toolbox');
 
 const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME, META_DIR_NAME } = require('../constants');
 const { rm, cp, mkdir, touch } = require('../wrappers/fs');
@@ -172,6 +172,22 @@ function saveData(distPath, data, ...others) {
   }
 }
 
+function updateData(distPath, data, override = false) {
+  if (override === true) {
+    return saveData(distPath, data);
+  }
+
+  let oldData = readData(distPath);
+
+  if (typeof oldData === 'string') {
+    try {
+      oldData = JSON.parse(oldData);
+    } catch {}
+  }
+
+  return saveData(distPath, isPlainObject(oldData) && isPlainObject(data) ? mixin(true, {}, oldData, data) : data);
+}
+
 function readReadMe(dirPath) {
   return readData(`${dirPath}/${ENTITY_CONTENT_NAME}`) || '';
 }
@@ -297,5 +313,5 @@ module.exports = {
   ensureDirExists, ensureFileExists,
   isDirectory, isLocalRelative,
   scanAndSortByAsc, getImageFileNames, readDirDeeply, copyFileDeeply,
-  readData, saveData, readReadMe, readMetadata, readLocalizedData, readMeta, readEntity,
+  readData, saveData, updateData, readReadMe, readMetadata, readLocalizedData, readMeta, readEntity,
 };

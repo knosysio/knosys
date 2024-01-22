@@ -1,5 +1,9 @@
 const Koa = require('koa');
-const router = require('@koa/router')({ prefix: '/api' });
+const bodyParser = require('koa-bodyparser');
+
+const { API_PREFIX } = require('./constants');
+
+const router = require('@koa/router')({ prefix: API_PREFIX });
 
 const { checkAppConfig } = require('./middlewares/app');
 const appRouter = require('./apis/app');
@@ -10,6 +14,7 @@ const app = new Koa();
 router.use('/app', appRouter.routes());
 router.use('/qii', qiiRouter.routes());
 
+app.use(bodyParser());
 app.use(checkAppConfig);
 app.use(router.routes()).use(router.allowedMethods());
 

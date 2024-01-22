@@ -1,9 +1,9 @@
 const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
-const { retrieveData } = require('@ntks/toolbox');
+const { retrieveData, mixin } = require('@ntks/toolbox');
 
 const { GLOBAL_DIR_NAME, CONFIG_FILE_NAME } = require('../constants');
-const { readData } = require('./fs');
+const { readData, saveData } = require('./fs');
 
 function getGlobalConfigDirPath() {
   return resolvePath(process.env.HOME || process.env.USERPROFILE, GLOBAL_DIR_NAME);
@@ -64,4 +64,10 @@ function getConfig(key, rootPath) {
   return key ? retrieveData(config, key) : config;
 }
 
-module.exports = { getGlobalConfigDirPath, getConfigFilePath, resolveRootPath, resolvePathFromRootRelative, getConfig };
+function updateConfig(config, rootPath) {
+  const resolvedRoot = rootPath || resolveRootPath()
+
+  saveData(getConfigFilePath(resolvedRoot), JSON.stringify(mixin(true, {}, getConfig(null, resolvedRoot), config), null, 2));
+}
+
+module.exports = { getGlobalConfigDirPath, getConfigFilePath, resolveRootPath, resolvePathFromRootRelative, getConfig, updateConfig };

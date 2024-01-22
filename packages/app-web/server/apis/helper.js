@@ -1,14 +1,14 @@
 const { readData } = require('../../../backend-core');
 
-function getAppData(ctx) {
-  return readData(`${ctx.state.KNOSYS_APP_PATH}/app.json`) || {};
+function getAppDataPath(ctx) {
+  return `${ctx.state.KNOSYS_APP_PATH}/app.json`;
 }
 
 function getDataSourcePath(ctx) {
-  return getAppData(ctx).source || '';
+  return (readData(getAppDataPath(ctx)) || {}).source || '';
 }
 
 module.exports = {
-  getAppData,
+  getAppDataPath,
   getDataSourcePath,
 };
