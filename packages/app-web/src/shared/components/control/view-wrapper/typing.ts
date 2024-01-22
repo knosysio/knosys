@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react';
 
 type ViewWrapperControlProps = PropsWithChildren<{
-  className?: string;
-  loading?: boolean;
+  readonly className?: string;
+  readonly loading?: boolean;
 }>;
 
 export type { ViewWrapperControlProps };

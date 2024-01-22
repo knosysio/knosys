@@ -1,24 +1,44 @@
-import { Form, Input, Button } from 'antd';
+import { useState, useEffect } from 'react';
+import { message } from 'antd';
+
+import ViewWrapper from '@/shared/components/control/view-wrapper';
+import FormViewWidget from '@/shared/components/widget/view/form-view';
+
+import type { AppConfig } from '../../typing';
+import { getAppConfig } from '../../repository';
 
 const fields = [
-  { label: '名称', name: 'name' },
-  { label: '标题', name: 'title' },
+  { label: '名称', name: 'name', required: true },
+  { label: '标题', name: 'title', required: true },
+  { label: '默认路径', name: 'path', required: true },
   { label: 'LOGO', name: 'logo' },
-  { label: '默认路径', name: 'path' },
 ];
 
 function AppConfigViewWidget() {
+  const [loading, setLoading] = useState(false);
+  const [config, setConfig] = useState<AppConfig | null>(null);
+
+  useEffect(() => {
+    if (!config && !loading) {
+      setLoading(true);
+      getAppConfig()
+        .then(res => {
+          if (res.success) {
+            setConfig(res.data);
+          } else {
+            message.error(res.message);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [config]);
+
   return (
-    <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 720 }}>
-      {fields.map(field => (
-        <Form.Item key={field.name} label={field.label} name={field.name}>
-          <Input placeholder={`请输入${field.label}`} />
-        </Form.Item>
-      ))}
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary">提交</Button>
-      </Form.Item>
-    </Form>
+    <ViewWrapper loading={loading}>
+      {config ? (
+        <FormViewWidget fields={fields} value={config} />
+      ) : null}
+    </ViewWrapper>
   );
 }
 

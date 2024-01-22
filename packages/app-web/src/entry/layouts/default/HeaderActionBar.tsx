@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Space, Button } from 'antd';
 
 function resolveButtonProps(action: Record<string, any>) {
   const resolved: Record<string, any> = {};
@@ -12,11 +12,11 @@ function resolveButtonProps(action: Record<string, any>) {
 
 function HeaderActionBar({ actions }: { actions: Record<string, any>[] }) {
   return (
-    <div>
+    <Space>
       {actions.map(action => (
         <Button key={action.text} {...resolveButtonProps(action)} onClick={action.execute}>{action.text}</Button>
       ))}
-    </div>
+    </Space>
   );
 }
 
