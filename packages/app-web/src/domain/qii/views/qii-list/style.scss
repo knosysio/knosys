@@ -5,8 +5,6 @@
 }
 
 .QiiList {
-  height: 100%;
-
   &-meta {
     flex-shrink: 0;
     padding: 24px;
@@ -22,13 +20,8 @@
     flex-grow: 1;
   }
 
-  > :global(.ant-spin-nested-loading > div > .ant-spin) {
-    max-height: none;
-  }
-
   > :global(.ant-spin-nested-loading > .ant-spin-container) {
     display: flex;
-    height: 100%;
   }
 }
 

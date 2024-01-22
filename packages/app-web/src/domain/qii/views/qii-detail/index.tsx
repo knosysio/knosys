@@ -1,13 +1,13 @@
 import { useContext, useState, useEffect } from 'react';
 import { useRouteProps, useParams, history } from 'umi';
-import { Spin, message } from 'antd';
+import { message } from 'antd';
 
 import LayoutContext from '@/shared/contexts/layout';
+import ViewWrapper from '@/shared/components/control/view-wrapper';
 
 import { getOne } from '../../repository';
 
 import ArticleViewWidget from './ArticleViewWidget';
-import style from './style.scss';
 
 export default function QiiDetail() {
   const { setPage, setHeaderActions } = useContext(LayoutContext);
@@ -40,10 +40,8 @@ export default function QiiDetail() {
   }, [meta.collection, id]);
 
   return (
-    <div className={style.QiiDetail}>
-      <Spin size="large" spinning={loading}>
-        { entity ? <ArticleViewWidget dataSource={entity} /> : null }
-      </Spin>
-    </div>
+    <ViewWrapper loading={loading}>
+      { entity ? <ArticleViewWidget dataSource={entity} /> : null }
+    </ViewWrapper>
   );
 }

@@ -1,8 +1,9 @@
 import { useContext, useState, useEffect } from 'react';
 import { useRouteProps, history } from 'umi';
-import { Spin, message } from 'antd';
+import { message } from 'antd';
 
 import LayoutContext from '@/shared/contexts/layout';
+import ViewWrapper from '@/shared/components/control/view-wrapper';
 
 import { resolveBannerUrl } from '../../helper';
 import { getList, deleteOne } from '../../repository';
@@ -71,10 +72,8 @@ export default function QiiList() {
   });
 
   return (
-    <div className={style.QiiList}>
-      <Spin size="large" spinning={loading}>
-        <CardListViewWidget dataSource={list} pagination={paginationProps} onDelete={onDelete} />
-      </Spin>
-    </div>
+    <ViewWrapper className={style.QiiList} loading={loading}>
+      <CardListViewWidget dataSource={list} pagination={paginationProps} onDelete={onDelete} />
+    </ViewWrapper>
   );
 }
