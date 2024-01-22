@@ -1,12 +1,16 @@
+import ViewWrapper from '@/shared/components/control/view-wrapper';
+
 import CollectionListViewWidget from './CollectionListViewWidget';
 
 import style from './style.scss';
 
 function CollectionList() {
   return (
-    <div className={style.CollectionList}>
-      <CollectionListViewWidget />
-    </div>
+    <ViewWrapper>
+      <div className={style.CollectionList}>
+        <CollectionListViewWidget />
+      </div>
+    </ViewWrapper>
   );
 }
 

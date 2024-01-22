@@ -3,6 +3,7 @@ interface FieldDescriptor {
   readonly label: string;
   readonly type?: string;
   readonly required?: boolean;
+  readonly disabled?: boolean;
 }
 
 export type { FieldDescriptor };

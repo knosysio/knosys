@@ -6,4 +6,8 @@ function getAppConfig() {
   return httpClient.get<AppConfig>('/app/get');
 }
 
-export { getAppConfig };
+function updateAppConfig(config: Partial<AppConfig>) {
+  return httpClient.put('/app/update', config);
+}
+
+export { getAppConfig, updateAppConfig };
