@@ -2,11 +2,13 @@ const Koa = require('koa');
 const router = require('@koa/router')({ prefix: '/api' });
 
 const { checkAppConfig } = require('./middlewares/app');
-const qii = require('./apis/qii');
+const appRouter = require('./apis/app');
+const qiiRouter = require('./apis/qii');
 
 const app = new Koa();
 
-router.use('/qii', qii.routes());
+router.use('/app', appRouter.routes());
+router.use('/qii', qiiRouter.routes());
 
 app.use(checkAppConfig);
 app.use(router.routes()).use(router.allowedMethods());

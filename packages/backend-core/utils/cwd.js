@@ -50,8 +50,8 @@ function resolvePathFromRootRelative(relativePath) {
   return resolvePath(resolveRootPath(), relativePath);
 }
 
-function getConfig(key) {
-  const configFilePath = getConfigFilePath(resolveRootPath());
+function getConfig(key, rootPath) {
+  const configFilePath = getConfigFilePath(rootPath || resolveRootPath());
 
   let config = {};
 

@@ -41,6 +41,8 @@ export default function QiiForm() {
       setPage({ title: '新建' });
       setEntity({} as any);
     }
+
+    return () => setHeaderActions([])
   }, [meta.collection, id]);
 
   return (

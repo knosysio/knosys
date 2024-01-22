@@ -1,5 +1,5 @@
 const { readFileSync } = require('fs');
-const { isPlainObject, isString, isFunction, capitalize, pick } = require('@ntks/toolbox');
+const { isPlainObject, isString, capitalize, pick } = require('@ntks/toolbox');
 
 const {
   META_DIR_NAME, DEFAULT_PATH_SCHEMA,
@@ -17,8 +17,8 @@ function getGlobalAppDirPath(appName) {
   return `${getGlobalAppRootDirPath()}/${appName}`;
 }
 
-function getAppConfig() {
-  return getConfig('app');
+function getAppConfig(rootPath) {
+  return getConfig('app', rootPath);
 }
 
 function resolveMeta(dirPath) {
@@ -136,7 +136,7 @@ function resolveParamPathParts(pathSchema) {
   return pathSchema.split('/').map(part => part.slice(1));
 }
 
-function generateRecordId(date) {
+function generateId(date) {
   const randomStr = Array.from(new Array(8)).map(() => (Math.ceil(Math.random() * 36) - 1).toString(36)).join('');
 
   return `${generateIdFromDate(date)}-${randomStr}`;
@@ -160,7 +160,7 @@ function resolveRecords(collectionPath, paramArr, parentParams) {
     });
 
     records.push({
-      id: generateRecordId(others.date),
+      id: generateId(others.date),
       path: recordPath,
       ...pick(others, ['title', 'description', 'date', 'tags']),
       ...imageMap,
@@ -214,6 +214,7 @@ function resolveAppInfo(config) {
     const resolvedRecordParamPathArr = meta.collection && meta.collection.path ? resolveParamPathParts(meta.collection.path) : recordParamPathArr;
 
     collectionMap[mapKey] = {
+      id: generateId(),
       title: meta.collection && meta.collection.title,
       path: collectionPath,
       records: resolveRecords(`${dataSourcePath}/${collectionPath}`, resolvedRecordParamPathArr, params),

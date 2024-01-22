@@ -3,10 +3,7 @@ const { isNumeric } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
 const { readEntity, readData, saveData, rm } = require('../../../backend-core');
-
-function getDataSourcePath(ctx) {
-  return (readData(`${ctx.state.KNOSYS_APP_PATH}/app.json`) || {}).source || '';
-}
+const { getDataSourcePath } = require('./helper');
 
 const defaultSize = 20;
 const defaultNum = 1;

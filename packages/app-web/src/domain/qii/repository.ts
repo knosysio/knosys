@@ -1,14 +1,16 @@
 import httpClient from '@/shared/utils/http';
 
-function getList(params: { collection: string; pageSize?: number; pageNum?: number; }) {
+import type { ListRequestParams, ObjectRequestParams } from './typing';
+
+function getList(params: ListRequestParams) {
   return httpClient.get('/qii/query', { params });
 }
 
-function getOne(params: { collection: string; id?: string; }) {
+function getOne(params: ObjectRequestParams) {
   return httpClient.get('/qii/get', { params });
 }
 
-function deleteOne(params: { collection: string; id?: string; }) {
+function deleteOne(params: ObjectRequestParams) {
   return httpClient.delete('/qii/remove', { params });
 }
 
