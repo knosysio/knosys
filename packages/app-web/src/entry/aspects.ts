@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
+import { getCachedAppName } from '@/shared/utils/cache';
 import httpClient from "@/shared/utils/http";
 
 function setInterceptorsForHttpClient() {
@@ -8,7 +9,7 @@ function setInterceptorsForHttpClient() {
       ...config,
       headers: {
         ...config.headers,
-        'X-Knosys-App': (process.env.KNOSYS_APP as any).name,
+        'X-Knosys-App': getCachedAppName(),
       },
     } as AxiosRequestConfig;
   });

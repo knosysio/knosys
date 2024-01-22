@@ -9,6 +9,12 @@ body {
 
 html,
 body,
-#root {
+#root,
+#root > .ant-spin-nested-loading,
+#root > .ant-spin-nested-loading > .ant-spin-container {
   height: 100%;
+}
+
+#root > .ant-spin-nested-loading > div > .ant-spin {
+  max-height: none;
 }

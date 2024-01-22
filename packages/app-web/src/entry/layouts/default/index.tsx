@@ -1,61 +1,63 @@
-import { useState } from 'react'
-import { useAppData, useRouteProps, history, Outlet } from 'umi';
-import { ConfigProvider, Layout, Menu, Breadcrumb, Avatar } from 'antd';
+import { useState, useEffect } from 'react'
+import { ConfigProvider, Spin, message } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 
-import LayoutContext from '@/shared/contexts/layout';
+import { cacheAppName, getCachedAppName } from '@/shared/utils/cache';
+import httpClient from '@/shared/utils/http';
 
-import HeaderActionBar from './HeaderActionBar';
-import { resolveMenuItems, resolvePathStuff } from './helper';
-import style from './style.scss';
+import DefaultLayout from './DefaultLayout';
 
-const { Header, Content, Sider } = Layout
+function getAppList() {
+  return httpClient.get('/app/query')
+}
+
+function resolveCurrentApp(apps) {
+  const cachedApp = getCachedAppName();
+
+  let currentApp;
+
+  if (cachedApp) {
+    currentApp = apps.find(({ name }) => name === cachedApp);
+  }
+
+  if (!currentApp) {
+    currentApp = apps[0];
+  }
+
+  return currentApp;
+}
 
 export default function AppLayout() {
-  const [collapsed, setCollapsed] = useState(true);
-  const [page, setPage] = useState(null);
-  const [headerActions, setHeaderActions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [app, setApp] = useState(null);
 
-  const routeProps = useRouteProps();
-  const { clientRoutes } = useAppData();
+  useEffect(() => {
+    if (!app && !loading) {
+      setLoading(true);
+      getAppList()
+        .then(res => {
+          if (res.success) {
+            const currentApp = resolveCurrentApp(res.data);
 
-  const { routes = [] } = clientRoutes[0]
-  const { menu: menuKeys, breadcrumb } = resolvePathStuff(routeProps, routes, page);
-
-  const { title } = process.env.KNOSYS_APP as any;
+            if (currentApp) {
+              cacheAppName(currentApp.name);
+              setApp(currentApp);
+            } else {
+              message.warning('没有已初始化的应用');
+            }
+          } else {
+            message.error(res.message);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [app]);
 
   return (
     <ConfigProvider locale={zhCN} autoInsertSpaceInButton={false}>
-      <LayoutContext.Provider value={{ setPage, setHeaderActions }}>
-        <Layout className={style.DefaultLayout}>
-          <Sider className={style['DefaultLayout-sidebar']} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-            <div className={style['DefaultLayout-logo']}>
-              {collapsed ? <Avatar src={require('@/shared/images/avatar.jpg')} size="large" /> : <span className={style['DefaultLayout-logoText']}>{title}</span>}
-            </div>
-            <div className={style['DefaultLayout-navMenu']}>
-              <Menu
-                theme="dark"
-                defaultSelectedKeys={menuKeys}
-                defaultOpenKeys={!collapsed && menuKeys.length > 1 ? [menuKeys[0]] : undefined}
-                mode="inline"
-                items={resolveMenuItems(routes)}
-                onSelect={({ key }) => history.push(key)}
-              />
-            </div>
-          </Sider>
-          <Layout className={style['DefaultLayout-main']}>
-            <Header className={style['DefaultLayout-header']}>
-              <Breadcrumb items={breadcrumb} />
-              {headerActions.length > 0 ? <HeaderActionBar actions={headerActions} /> : null}
-            </Header>
-            <Content className={style['DefaultLayout-body']}>
-              <div className={style['DefaultLayout-content']}>
-                <Outlet />
-              </div>
-            </Content>
-          </Layout>
-        </Layout>
-      </LayoutContext.Provider>
+      <Spin size="large" spinning={loading}>
+        {app ? <DefaultLayout app={app} /> : null}
+      </Spin>
     </ConfigProvider>
   );
 }
