@@ -1,4 +1,4 @@
-const { readData } = require('../../../backend-core');
+const { readData } = require('../../../sdk-core');
 
 function getAppDataPath(ctx) {
   return `${ctx.state.KNOSYS_APP_PATH}/app.json`;

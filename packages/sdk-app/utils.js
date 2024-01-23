@@ -7,7 +7,7 @@ const {
   resolvePathFromRootRelative, resolvePathFromParams,
   getGlobalConfigDirPath, getConfig,
   getImageFileNames, readDirDeeply, readEntity, readMeta, readData, saveData, ensureDirExists,
-} = require('../backend-core');
+} = require('../sdk-core');
 
 function getGlobalAppRootDirPath() {
   return `${getGlobalConfigDirPath()}/apps`;

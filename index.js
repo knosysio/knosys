@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./packages/backend-core'),
+  ...require('./packages/sdk-core'),
   ...require('./packages/app-cli/bin'),
 };

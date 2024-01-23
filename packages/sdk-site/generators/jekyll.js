@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 
-const { ensureDirExists, copyFileDeeply } = require('../../backend-core');
+const { ensureDirExists, copyFileDeeply } = require('../../sdk-core');
 const { generateSiteData } = require('../utils');
 
 function copyJekyllTheme(srcPath, themePath) {

@@ -1,6 +1,6 @@
 const { existsSync } = require('fs');
 
-const { getGlobalAppDirPath } = require('../../../backend-app');
+const { getGlobalAppDirPath } = require('../../../sdk-app');
 const { API_PREFIX } = require('../constants');
 
 function isSkipped(url) {

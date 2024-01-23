@@ -1,7 +1,7 @@
 const { resolve: resolvePath } = require('path');
 const { execSync } = require('child_process');
 
-const { getGlobalAppDirPath, initApp } = require('../../backend-app');
+const { getGlobalAppDirPath, initApp } = require('../../sdk-app');
 
 function serveApp({ name }) {
   const encodedPath = encodeURIComponent(getGlobalAppDirPath(name));

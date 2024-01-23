@@ -2,8 +2,8 @@ const { resolve: resolvePath } = require('path');
 const { pick } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
-const { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } = require('../../../backend-core');
-const { getGlobalAppRootDirPath, getAppConfig } = require('../../../backend-app');
+const { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } = require('../../../sdk-core');
+const { getGlobalAppRootDirPath, getAppConfig } = require('../../../sdk-app');
 
 const { getAppDataPath, getDataSourcePath } = require('./helper');
 

@@ -1,6 +1,6 @@
-const { resolvePathFromRootRelative, getConfig } = require('../../backend-core');
-const { DEFAULT_SITE_NAME, DEFAULT_SSG_TYPE, deploySite } = require('../../backend-site');
-const { copyJekyllTheme, serveJekyllSite, generateJekyllSite } = require('../../backend-site/generators/jekyll');
+const { resolvePathFromRootRelative, getConfig } = require('../../sdk-core');
+const { DEFAULT_SITE_NAME, DEFAULT_SSG_TYPE, deploySite } = require('../../sdk-site');
+const { copyJekyllTheme, serveJekyllSite, generateJekyllSite } = require('../../sdk-site/generators/jekyll');
 
 module.exports = {
   execute: (subCmd, site = DEFAULT_SITE_NAME) => {
