@@ -3,15 +3,12 @@ import { ConfigProvider, Spin, message } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 
 import { cacheAppName, getCachedAppName } from '@/shared/utils/cache';
-import httpClient from '@/shared/utils/http';
 
+import type { AppConfig } from '../../../domain/app/typing';
+import { getList as getAppList } from '../../../domain/app/repository';
 import DefaultLayout from './DefaultLayout';
 
-function getAppList() {
-  return httpClient.get('/app/query')
-}
-
-function resolveCurrentApp(apps) {
+function resolveCurrentApp(apps: AppConfig[]): AppConfig | undefined {
   const cachedApp = getCachedAppName();
 
   let currentApp;
@@ -29,7 +26,7 @@ function resolveCurrentApp(apps) {
 
 export default function AppLayout() {
   const [loading, setLoading] = useState(false);
-  const [app, setApp] = useState(null);
+  const [app, setApp] = useState<AppConfig | undefined | null>(null);
 
   useEffect(() => {
     if (!app && !loading) {

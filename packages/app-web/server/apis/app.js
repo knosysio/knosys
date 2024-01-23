@@ -16,7 +16,7 @@ function getAppConfigFromSource(dataSourcePath) {
   };
 }
 
-router.get('/query', ctx => {
+router.get('/list', ctx => {
   const appRootPath = getGlobalAppRootDirPath();
   const apps = [];
 
@@ -31,7 +31,7 @@ router.get('/query', ctx => {
   ctx.body = { success: true, data: apps };
 });
 
-router.get('/get', ctx => {
+router.get('/one', ctx => {
   const { source: dataSourcePath, ...others } = readData(getAppDataPath(ctx)) || {};
 
   if (dataSourcePath) {
@@ -44,7 +44,7 @@ router.get('/get', ctx => {
   }
 });
 
-router.put('/update', ctx => {
+router.put('/one', ctx => {
   const dataSourcePath = getDataSourcePath(ctx);
 
   if (dataSourcePath) {

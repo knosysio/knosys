@@ -5,7 +5,7 @@ import ViewWrapper from '@/shared/components/control/view-wrapper';
 import FormViewWidget from '@/shared/components/widget/view/form-view';
 
 import type { AppConfig } from '../../typing';
-import { getAppConfig, updateAppConfig } from '../../repository';
+import { getOne, updateOne } from '../../repository';
 
 const fields = [
   { label: '名称', name: 'name', required: true, disabled: true },
@@ -20,7 +20,7 @@ function AppConfigViewWidget() {
 
   const handleSubmit = value => {
     setLoading(true);
-    updateAppConfig(value)
+    updateOne(value)
       .then(res => {
         if (res.success) {
           message.success('更新成功');
@@ -34,7 +34,7 @@ function AppConfigViewWidget() {
   useEffect(() => {
     if (!config && !loading) {
       setLoading(true);
-      getAppConfig()
+      getOne()
         .then(res => {
           if (res.success) {
             setConfig(res.data);

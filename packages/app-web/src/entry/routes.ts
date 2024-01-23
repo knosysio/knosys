@@ -85,13 +85,13 @@ export default [
           {
             name: 'collectionList',
             path: '/settings/collections',
-            component: '@/domain/settings/views/collection-list',
+            component: '@/domain/collection/views/collection-list',
             meta: { text: '集合' },
           },
           {
             name: 'collectionModel',
             path: '/settings/collections/:collection/design',
-            component: '@/domain/settings/views/collection-model',
+            component: '@/domain/collection/views/collection-model',
             meta: { hide: true },
           },
         ],

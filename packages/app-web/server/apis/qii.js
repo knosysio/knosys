@@ -94,15 +94,15 @@ function resolveRecord(ctx, callback) {
   });
 }
 
-router.get('/query', ctx => resolveData(ctx, collectionInfo => {
+router.get('/list', ctx => resolveData(ctx, collectionInfo => {
   const { pageSize = defaultSize, pageNum = defaultNum } = ctx.query;
 
   return { success: true, ...paginate((collectionInfo.records || []).slice().reverse(), pageNum, pageSize) };
 }));
 
-router.get('/get', ctx => resolveRecord(ctx, record => ({ success: true, data: record.data })));
+router.get('/one', ctx => resolveRecord(ctx, record => ({ success: true, data: record.data })));
 
-router.delete('/remove', ctx => resolveRecord(ctx, record => {
+router.delete('/one', ctx => resolveRecord(ctx, record => {
   rm(record.path);
 
   const db = readDb(ctx);

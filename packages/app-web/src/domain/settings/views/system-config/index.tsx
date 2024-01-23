@@ -1,10 +1,10 @@
 import { Tabs } from 'antd';
 
-import AppConfigViewWidget from './AppConfigViewWidget';
+import AppFormViewWidget from '../../../app/views/app-form';
 import style from './style.scss';
 
 const items = [
-  { key: 'app', label: '应用', children: <AppConfigViewWidget /> },
+  { key: 'app', label: '应用', children: <AppFormViewWidget /> },
 ];
 
 export default function ConfigSettings() {
