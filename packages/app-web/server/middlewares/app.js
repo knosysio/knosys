@@ -4,7 +4,7 @@ const { getGlobalAppDirPath } = require('../../../sdk-app');
 const { API_PREFIX } = require('../constants');
 
 function isSkipped(url) {
-  return ['/app/query'].includes(url.replace(new RegExp(`^${API_PREFIX}`, 'i'), ''));
+  return ['/app/list'].includes(url.replace(new RegExp(`^${API_PREFIX}`, 'i'), ''));
 }
 
 function getAppName(ctx) {

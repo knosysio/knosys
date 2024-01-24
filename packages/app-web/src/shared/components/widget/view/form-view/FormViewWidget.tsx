@@ -1,5 +1,5 @@
-import { Form, Input, Button, message } from 'antd';
 import type { FormRule } from 'antd/es';
+import { Form, Input, Button, message } from 'antd';
 
 import type { FieldDescriptor } from '../../../../types';
 import type { FormViewWidgetProps } from './typing';

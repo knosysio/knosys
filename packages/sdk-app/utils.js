@@ -230,13 +230,13 @@ function initApp() {
   const config = getAppConfig();
 
   if (!isPlainObject(config) || !config.name || !isString(config.name)) {
-    return;
+    return Promise.resolve();
   }
 
   const resolved = resolveAppInfo(config);
 
   if (resolved === false) {
-    return;
+    return Promise.resolve();
   }
 
   const distAppDirPath = getGlobalAppDirPath(config.name);

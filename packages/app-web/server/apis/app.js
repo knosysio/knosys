@@ -1,4 +1,5 @@
 const { resolve: resolvePath } = require('path');
+const { existsSync } = require('fs');
 const { pick } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
@@ -20,13 +21,15 @@ router.get('/list', ctx => {
   const appRootPath = getGlobalAppRootDirPath();
   const apps = [];
 
-  readDirDeeply(appRootPath, ['app'], {}, baseName => {
-    const appConfig = readData(`${appRootPath}/${baseName}/app.json`) || {};
+  if (existsSync(appRootPath)) {
+    readDirDeeply(appRootPath, ['app'], {}, baseName => {
+      const appConfig = readData(`${appRootPath}/${baseName}/app.json`) || {};
 
-    if (appConfig.source) {
-      apps.push({ ...getAppConfigFromSource(appConfig.source), ...appConfig });
-    }
-  });
+      if (appConfig.source) {
+        apps.push({ ...getAppConfigFromSource(appConfig.source), ...appConfig });
+      }
+    });
+  }
 
   ctx.body = { success: true, data: apps };
 });

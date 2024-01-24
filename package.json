@@ -10,7 +10,8 @@
     "clean": "rm -rf sites/*/.asset-cache",
     "start": "node scripts/bin site serve",
     "predeploy": "npm run clean",
-    "deploy": "node scripts/bin site deploy"
+    "deploy": "node scripts/bin site deploy",
+    "app": "node scripts/bin app"
   },
   "repository": {
     "type": "git",

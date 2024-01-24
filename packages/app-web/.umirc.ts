@@ -2,10 +2,19 @@ import { defineConfig } from 'umi';
 
 import routes from './src/entry/routes';
 
-const appConfig = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`);
+let appConfig;
+let title;
+
+if (process.env.KNOSYS_APP_PATH) {
+  appConfig = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`);
+  title = appConfig.title;
+} else {
+  appConfig = null;
+  title = require('../sdk-app').DEFAULT_APP_TITLE;
+}
 
 export default defineConfig({
-  title: appConfig.title,
+  title,
   define: { 'process.env.KNOSYS_APP': appConfig },
   npmClient: 'npm',
   conventionLayout: false,

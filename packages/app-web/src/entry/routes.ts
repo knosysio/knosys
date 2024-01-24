@@ -37,7 +37,13 @@ function resolveCollectionRoutes(route: any) {
 }
 
 function resolveRoutes() {
-  const generated = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`).routes;
+  let generated;
+
+  try {
+    generated = require(`${decodeURIComponent(process.env.KNOSYS_APP_PATH!)}/app.json`).routes;
+  } catch {
+    generated = [];
+  }
 
   return generated.map((route: any) => {
     const resolved: any = resolveRouteBase(route);
