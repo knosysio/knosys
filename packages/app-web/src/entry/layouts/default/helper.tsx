@@ -1,6 +1,26 @@
 import { Link } from 'umi';
 import { HomeOutlined, FileTextOutlined, SettingOutlined, EllipsisOutlined } from '@ant-design/icons'
 
+import { getCachedAppName } from '@/shared/utils/cache';
+
+import type { AppConfig } from '../../../domain/app/typing';
+
+function resolveCurrentApp(apps: AppConfig[]): AppConfig | undefined {
+  const cachedApp = getCachedAppName();
+
+  let currentApp;
+
+  if (cachedApp) {
+    currentApp = apps.find(({ name }) => name === cachedApp);
+  }
+
+  if (!currentApp) {
+    currentApp = apps[0];
+  }
+
+  return currentApp;
+}
+
 const routeIconMap: Record<string, any> = {
   home: HomeOutlined,
   settings: SettingOutlined,
@@ -124,4 +144,4 @@ function resolvePathStuff(routeProps: any, routes: any[], page: any): { menu: st
   return { menu, breadcrumb: resolveBreadcrumbItems(breadcrumb, paths, routeProps.meta && routeProps.meta.collection, page) };
 }
 
-export { resolveMenuItems, resolvePathStuff };
+export { resolveCurrentApp, resolveMenuItems, resolvePathStuff };

@@ -5,16 +5,15 @@ import ViewWrapper from '@/shared/components/control/view-wrapper';
 import FormViewWidget from '@/shared/components/widget/view/form-view';
 
 import type { AppConfig } from '../../typing';
+import { fields as modelFields } from '../../model';
 import { getOne, updateOne } from '../../repository';
 
-const fields = [
-  { label: '名称', name: 'name', required: true, disabled: true },
-  { label: '标题', name: 'title', required: true },
-  { label: '默认路径', name: 'path', required: true, disabled: true },
-  { label: 'LOGO', name: 'logo' },
-];
+const fields = modelFields.map(field => ({
+  ...field,
+  disabled: ['name', 'path'].includes(field.name),
+}));
 
-function AppConfigViewWidget() {
+function AppFormViewWidget() {
   const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState<AppConfig | null>(null);
 
@@ -55,4 +54,4 @@ function AppConfigViewWidget() {
   );
 }
 
-export default AppConfigViewWidget;
+export default AppFormViewWidget;

@@ -27,15 +27,12 @@ function resolveFieldNode(field: FieldDescriptor) {
 export default function FormViewWidget(props: FormViewWidgetProps) {
   let changedValue = {};
 
-  const handleClick = evt => {
+  const handleFinish = (values: Record<string, any>) => {
     if (Object.keys(changedValue || {}).length > 0) {
-      props.onSubmit && props.onSubmit(changedValue);
+      props.onSubmit && props.onSubmit(values);
     } else {
       message.warning('表单值没有任何改变');
     }
-
-    evt.preventDefault();
-    evt.stopPropagation();
   };
 
   return (
@@ -45,6 +42,7 @@ export default function FormViewWidget(props: FormViewWidgetProps) {
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 720 }}
       onValuesChange={changed => (changedValue = changed)}
+      onFinish={handleFinish}
     >
       {props.fields.map(field => (
         <Form.Item
@@ -57,7 +55,7 @@ export default function FormViewWidget(props: FormViewWidgetProps) {
         </Form.Item>
       ))}
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" onClick={handleClick}>提交</Button>
+        <Button type="primary" htmlType="submit">提交</Button>
       </Form.Item>
     </Form>
   );
