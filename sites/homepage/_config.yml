@@ -153,6 +153,8 @@ ksio:
     navs:
       - text: API
         url: /apis/config/
+      - text: 社区
+        url: /community/
       - text: 关于
         children:
           - text: 作者

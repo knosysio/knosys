@@ -182,7 +182,7 @@ function updateData(distPath, data, override = false) {
   if (typeof oldData === 'string') {
     try {
       oldData = JSON.parse(oldData);
-    } catch {}
+    } catch(err) {}
   }
 
   return saveData(distPath, isPlainObject(oldData) && isPlainObject(data) ? mixin(true, {}, oldData, data) : data);
