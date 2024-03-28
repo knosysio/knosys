@@ -2,7 +2,7 @@ const { resolve: resolvePath } = require('path');
 const { existsSync } = require('fs');
 const { retrieveData, mixin } = require('@ntks/toolbox');
 
-const { GLOBAL_DIR_NAME, CONFIG_FILE_NAME } = require('../constants');
+const { GLOBAL_DIR_NAME, LOCAL_DIR_NAME, CONFIG_FILE_NAME } = require('../constants');
 const { readData, saveData } = require('./fs');
 
 function getGlobalConfigDirPath() {
@@ -10,7 +10,9 @@ function getGlobalConfigDirPath() {
 }
 
 function getConfigFilePath(cwd) {
-  return `${cwd}/${CONFIG_FILE_NAME}`;
+  let configFilePath = `${cwd}/${CONFIG_FILE_NAME}`;
+
+  return existsSync(configFilePath) ? configFilePath : `${cwd}/${LOCAL_DIR_NAME}/config.json`;
 }
 
 /**
@@ -56,7 +58,7 @@ function getConfig(key, rootPath) {
   let config = {};
 
   try {
-    config = JSON.parse(readData(configFilePath));
+    config = JSON.parse(readData(configFilePath, true));
   } catch(err) {
     console.log('[ERROR] reading KnoSys config file error: ', err);
   }
