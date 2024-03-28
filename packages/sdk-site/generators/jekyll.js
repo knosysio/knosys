@@ -20,15 +20,25 @@ function copyJekyllTheme(srcPath, themePath) {
   });
 }
 
+function resolveLiquidImagePath(collectionDir, id, match, srcPath) {
+  return match.replace(srcPath, `{{ '${collectionDir}/${id}/${srcPath.replace(/.(jp(e)?g|png|gif|svg)/g, '')}' | asset_path }}`);
+}
+
+function resolveLink(raw) {
+  return raw.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, (match, _, link) => link.indexOf('http') === 0 ? `${match}{:target="_blank"}{:rel="external nofollow"}` : match);
+}
+
 function generateJekyllData(srcPath, dataSourcePath) {
   const langs = { vue: 'html', yml: 'yaml' };
 
   generateSiteData(srcPath, dataSourcePath, {
     dataDir: '_data',
     docDir: '_knosys',
-    formatter: content => content
-      .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}{% raw %}`)
-      .replace(/\`{3}/g, '{% endraw %}{% endhighlight %}'),
+    imageDir: '_assets/images',
+    formatter: (content, params) => content
+      .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}{% raw %}`).replace(/\`{3}/g, '{% endraw %}{% endhighlight %}')
+      .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params.imageDir, params.slug, match, srcPath) : resolveLink(match))
+      .replace(/(?:\<img (?:.+)?)src=\"([^\"]+)\"/g, resolveLiquidImagePath.bind(null, params.imageDir, params.slug))
   });
 }
 

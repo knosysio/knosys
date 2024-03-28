@@ -5,8 +5,8 @@ const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
 const { DEFAULT_PATH_SCHEMA } = require('../sdk-core/constants');
 const {
   resolvePathFromParams,
-  ensureDirExists, readDirDeeply, readMeta, readEntity, saveData,
-  getGlobalConfigDirPath,
+  ensureDirExists, getImageFileNames, readDirDeeply, readMeta, readEntity, saveData,
+  getGlobalConfigDirPath, cp,
 } = require('../sdk-core');
 
 function resolvePermalink(schema, params) {
@@ -40,35 +40,40 @@ function generateSiteData(srcPath, dataSourcePath, options = {}) {
   const categorized = paramArr[0] === 'category';
   const siteDataMap = {};
 
-  const { dataDir, docDir, formatter } = options;
+  const { dataDir, docDir, imageDir, formatter } = options;
 
-  const siteDataRootPath = `${srcPath}/${dataDir}`;
-  const generatedDataDirPath = `${siteDataRootPath}/knosys`;
+  const generatedDataDirPath = `${srcPath}/${dataDir}/knosys`;
   const generatedFileDirPath = `${srcPath}/${docDir}`;
+  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys`
 
-  ensureDirExists(siteDataRootPath);
   ensureDirExists(generatedDataDirPath, true);
   ensureDirExists(generatedFileDirPath, true);
+  ensureDirExists(generatedImageDirPath, true);
 
   readDirDeeply(dataSourcePath, paramArr, {}, (_, params) => {
-    const entity = readEntity(`${dataSourcePath}/${resolvePathFromParams(paramArr.join('/'), params)}`);
+    const entityDirPath = `${dataSourcePath}/${resolvePathFromParams(paramArr.join('/'), params)}`;
+    const entity = readEntity(entityDirPath);
 
     if (!entity) {
       return;
     }
 
     const { category = '__uncategorized', collection, slug } = params;
+    const entityImageNames = getImageFileNames(entityDirPath);
 
     let generatedCollectionDirPath;
+    let collectionDir;
 
     if (categorized) {
       const generatedCategoryDirPath = `${generatedFileDirPath}/${category}`;
 
       generatedCollectionDirPath = `${generatedCategoryDirPath}/${collection}`;
+      collectionDir = `${category}/${collection}`;
 
       ensureDirExists(generatedCategoryDirPath);
     } else {
       generatedCollectionDirPath = `${generatedFileDirPath}/${collection}`;
+      collectionDir = collection;
     }
 
     cacheData(siteDataMap, `${category}.${collection}.items.${slug}`, entity, true);
@@ -100,7 +105,14 @@ function generateSiteData(srcPath, dataSourcePath, options = {}) {
     }
 
     if (frontMatter.content && isFunction(formatter)) {
-      frontMatter.content = formatter(frontMatter.content);
+      frontMatter.content = formatter(frontMatter.content, { slug, imageDir: `knosys/${collectionDir}` });
+    }
+
+    if (entityImageNames.length > 0) {
+      const generatedEntityImageDirPath = `${generatedImageDirPath}/${collectionDir}/${slug}`;
+
+      ensureDirExists(generatedEntityImageDirPath, true);
+      entityImageNames.forEach(baseName => cp(`${entityDirPath}/${baseName}`, `${generatedEntityImageDirPath}/${baseName}`));
     }
 
     ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
