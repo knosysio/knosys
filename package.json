@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/ourai/knosys.git"
   },
-  "author": "Ourai Lin <ourairyu@gmail.com> (https://ourai.ws/)",
+  "author": "Ourai L. <ourairyu@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ourai/knosys/issues"
@@ -25,9 +25,8 @@
   "homepage": "https://knosysio.github.io/",
   "dependencies": {
     "@ntks/toolbox": "0.0.6",
-    "iniparser": "^1.0.5",
+    "gray-matter": "^4.0.3",
     "js-yaml": "^3.14.0",
-    "marked": "^2.0.0",
-    "striptags": "^3.1.1"
+    "markdown-it": "^14.1.0"
   }
 }

@@ -5,7 +5,7 @@ const { isPlainObject, omit, mixin } = require('@ntks/toolbox');
 const { LEGACY_ENTITY_NAME, ENTITY_MONO_NAME, ENTITY_MAIN_NAME, ENTITY_CONTENT_NAME, META_DIR_NAME } = require('../constants');
 const { rm, cp, mkdir, touch } = require('../wrappers/fs');
 const { sortByName } = require('./util');
-const { replaceRefDefsWith } = require('./md');
+const { normalizeFrontMatter, replaceRefDefsWith } = require('./md');
 
 function ensureDirOrFileExists(resolvedPath, type, removeWhenExists) {
   let targetExists = false;
@@ -155,7 +155,14 @@ function saveData(distPath, data, ...others) {
     let resolved;
 
     if (isMarkdownFile(distPath) && isPlainObject(others[0])) {
-      resolved = `---\n${safeDump(omit(others[0], ['content'])).trim()}\n---\n\n${data || others[0].content || ''}`;
+      const frontMatterData = omit(others[0], ['content']);
+      const content = data || others[0].content || '';
+
+      if (Object.keys(frontMatterData).length > 0) {
+        resolved = `---\n${safeDump(frontMatterData).trim()}\n---\n\n${content}`;
+      } else {
+        resolved = content;
+      }
     } else {
       resolved = data;
     }
@@ -217,7 +224,9 @@ function readMetadata(dirPath) {
   const contentData = readReadMe(dirPath);
 
   if (contentData) {
-    metadata = { ...(metadata || {}), content: contentData };
+    const normalized = normalizeFrontMatter(contentData);
+
+    metadata = { ...(metadata || {}), ...(normalized.data || {}), content: normalized.content };
   }
 
   if (!metadata) {
