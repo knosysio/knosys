@@ -1,6 +1,8 @@
+const { resolve: resolvePath } = require('path');
+const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 
-const { ensureDirExists, copyFileDeeply } = require('../../sdk-core');
+const { ENTITY_CONTENT_NAME, isLocalRelative, ensureDirExists, copyFileDeeply } = require('../../sdk-core');
 const { generateSiteData } = require('../utils');
 
 function copyJekyllTheme(srcPath, themePath) {
@@ -24,8 +26,39 @@ function resolveLiquidImagePath(collectionDir, id, match, srcPath) {
   return match.replace(srcPath, `{{ '${collectionDir}/${id}/${srcPath.replace(/.(jp(e)?g|png|gif|svg)/g, '')}' | asset_path }}`);
 }
 
-function resolveLink(raw) {
-  return raw.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, (match, _, link) => link.indexOf('http') === 0 ? `${match}{:target="_blank"}{:rel="external nofollow"}` : match);
+function isRelativeEntity(link, { entitySrc, pathSchema }) {
+  if (!isLocalRelative(link)) {
+    return false;
+  }
+
+  const relativeEntityPath = resolvePath(entitySrc, link);
+
+  if (!existsSync(relativeEntityPath)) {
+    return false;
+  }
+
+  return link.split('/').filter(part => part === '..').length <= pathSchema.split('/').length;
+}
+
+function resolveLink(raw, params) {
+  return raw.replace(/\[([^\[\]]+)\]\(([^\(\)]+)\)/g, (match, _, link) => {
+    // internal page of site
+    if (link.indexOf('/') === 0) {
+      return match;
+    }
+
+    // external link
+    if (link.indexOf('http') === 0) {
+      return `${match}{:target="_blank"}{:rel="external nofollow"}`;
+    }
+
+    // relative entity path
+    if (isRelativeEntity(link, params)) {
+      return match.replace(link, link.replace(ENTITY_CONTENT_NAME, ''));
+    }
+
+    return `\`[KNOSYS_ERR: invalid path in '${match}']\``;
+  });
 }
 
 function generateJekyllData(srcPath, dataSourcePath) {
@@ -37,7 +70,7 @@ function generateJekyllData(srcPath, dataSourcePath) {
     imageDir: '_assets/images',
     formatter: (content, params) => content
       .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}{% raw %}`).replace(/\`{3}/g, '{% endraw %}{% endhighlight %}')
-      .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params.imageDir, params.slug, match, srcPath) : resolveLink(match))
+      .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params.imageDir, params.slug, match, srcPath) : resolveLink(match, params))
       .replace(/(?:\<img (?:.+)?)src=\"([^\"]+)\"/g, resolveLiquidImagePath.bind(null, params.imageDir, params.slug))
   });
 }

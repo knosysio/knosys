@@ -105,14 +105,19 @@ function generateSiteData(srcPath, dataSourcePath, options = {}) {
     }
 
     if (frontMatter.content && isFunction(formatter)) {
-      frontMatter.content = formatter(frontMatter.content, { slug, imageDir: `knosys/${collectionDir}` });
+      frontMatter.content = formatter(frontMatter.content, {
+        pathSchema: path,
+        slug,
+        imageDir: `knosys/${collectionDir}`,
+        entitySrc: entityDirPath,
+      });
     }
 
     if (entityImageNames.length > 0) {
       const generatedEntityImageDirPath = `${generatedImageDirPath}/${collectionDir}/${slug}`;
 
       ensureDirExists(generatedEntityImageDirPath, true);
-      entityImageNames.forEach(baseName => cp(`${entityDirPath}/${baseName}`, `${generatedEntityImageDirPath}/${baseName}`));
+      entityImageNames.forEach(imageBaseName => cp(`${entityDirPath}/${imageBaseName}`, `${generatedEntityImageDirPath}/${imageBaseName}`));
     }
 
     ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
