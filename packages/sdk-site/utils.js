@@ -1,141 +1,26 @@
 const { existsSync } = require('fs');
 const { execSync } = require('child_process');
-const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
+const { isFunction } = require('@ntks/toolbox');
 
-const { DEFAULT_PATH_SCHEMA } = require('../sdk-core/constants');
-const {
-  resolvePathFromParams,
-  ensureDirExists, getImageFileNames, readDirDeeply, readMeta, readEntity, saveData,
-  getGlobalConfigDirPath, cp,
-} = require('../sdk-core');
+const { ensureDirExists, readMeta, getGlobalConfigDirPath } = require('../sdk-core');
 
-function resolvePermalink(schema, params) {
-  return schema.split('/').map(seg => {
-    if (seg === '' || !/^\:[0-9a-z-_]+$/i.test(seg)) {
-      return seg;
-    }
+const { DEFAULT_DDS_TYPE } = require('./constants');
+const { generateQiiDBSpecData, generateFileBasedSpecData } = require('./specs');
 
-    const param = seg.slice(1);
+const specs = {
+  qiidb: generateQiiDBSpecData,
+  file: generateFileBasedSpecData,
+};
 
-    return params[param === 'path' ? 'slug' : param];
-  }).join('/')
-}
+function generateSiteData(...args) {
+  const { spec = DEFAULT_DDS_TYPE } = readMeta(args[1]) || {};
+  const dataGen = specs[spec];
 
-function saveCollectionData(dirPath, collectionMap) {
-  Object.entries(collectionMap).forEach(([collection, data]) => {
-    delete data.__meta;
-
-    saveData(`${dirPath}/${collection}.yml`, data);
-  });
-}
-
-function generateSiteData(srcPath, dataSourcePath, options = {}) {
-  const { path = DEFAULT_PATH_SCHEMA, permalink } = readMeta(dataSourcePath) || {};
-  const paramArr = path.split('/').map(part => part.slice(1));
-
-  if (!['category', 'collection'].includes(paramArr[0])) {
+  if (!isFunction(dataGen)) {
     return;
   }
 
-  const categorized = paramArr[0] === 'category';
-  const siteDataMap = {};
-
-  const { dataDir, docDir, imageDir, formatter } = options;
-
-  const generatedDataDirPath = `${srcPath}/${dataDir}/knosys`;
-  const generatedFileDirPath = `${srcPath}/${docDir}`;
-  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys`
-
-  ensureDirExists(generatedDataDirPath, true);
-  ensureDirExists(generatedFileDirPath, true);
-  ensureDirExists(generatedImageDirPath, true);
-
-  readDirDeeply(dataSourcePath, paramArr, {}, (_, params) => {
-    const entityDirPath = `${dataSourcePath}/${resolvePathFromParams(paramArr.join('/'), params)}`;
-    const entity = readEntity(entityDirPath);
-
-    if (!entity) {
-      return;
-    }
-
-    const { category = '__uncategorized', collection, slug } = params;
-    const entityImageNames = getImageFileNames(entityDirPath);
-
-    let generatedCollectionDirPath;
-    let collectionDir;
-
-    if (categorized) {
-      const generatedCategoryDirPath = `${generatedFileDirPath}/${category}`;
-
-      generatedCollectionDirPath = `${generatedCategoryDirPath}/${collection}`;
-      collectionDir = `${category}/${collection}`;
-
-      ensureDirExists(generatedCategoryDirPath);
-    } else {
-      generatedCollectionDirPath = `${generatedFileDirPath}/${collection}`;
-      collectionDir = collection;
-    }
-
-    cacheData(siteDataMap, `${category}.${collection}.items.${slug}`, entity, true);
-    cacheData(siteDataMap, `${category}.${collection}.sequence`, [...(siteDataMap[category][collection].sequence || []), slug]);
-
-    let collectionSourceDirPath;
-
-    if (categorized) {
-      const categorySourceDirPath = `${dataSourcePath}/${category}`;
-
-      collectionSourceDirPath = `${categorySourceDirPath}/${collection}`;
-
-      if (!siteDataMap[category].__meta) {
-        siteDataMap[category].__meta = readMeta(categorySourceDirPath) || {};
-      }
-    } else {
-      collectionSourceDirPath = `${dataSourcePath}/${collection}`;
-    }
-
-    if (!siteDataMap[category][collection].__meta) {
-      siteDataMap[category][collection].__meta = readMeta(collectionSourceDirPath) || {};
-    }
-
-    const permalinkSchema = siteDataMap[category][collection].__meta.permalink || (siteDataMap[category].__meta || {}).permalink || permalink;
-    const frontMatter = { ...entity };
-
-    if (permalinkSchema && !frontMatter.permalink) {
-      frontMatter.permalink = resolvePermalink(permalinkSchema, params);
-    }
-
-    if (frontMatter.content && isFunction(formatter)) {
-      frontMatter.content = formatter(frontMatter.content, {
-        pathSchema: path,
-        slug,
-        imageDir: `knosys/${collectionDir}`,
-        entitySrc: entityDirPath,
-      });
-    }
-
-    if (entityImageNames.length > 0) {
-      const generatedEntityImageDirPath = `${generatedImageDirPath}/${collectionDir}/${slug}`;
-
-      ensureDirExists(generatedEntityImageDirPath, true);
-      entityImageNames.forEach(imageBaseName => cp(`${entityDirPath}/${imageBaseName}`, `${generatedEntityImageDirPath}/${imageBaseName}`));
-    }
-
-    ensureDirExists(generatedCollectionDirPath, siteDataMap[category][collection].sequence.length === 0);
-    saveData(`${generatedCollectionDirPath}/${slug}.md`, frontMatter.content || '', frontMatter);
-  });
-
-  if (categorized) {
-    Object.entries(siteDataMap).forEach(([category, collectionMap]) => {
-      const categoryDataDirPath = `${generatedDataDirPath}/${category}`;
-
-      delete collectionMap.__meta;
-
-      ensureDirExists(categoryDataDirPath);
-      saveCollectionData(categoryDataDirPath, collectionMap);
-    });
-  } else {
-    saveCollectionData(generatedDataDirPath, siteDataMap.__uncategorized);
-  }
+  dataGen(...args);
 }
 
 function deploySite(siteName, config, generator) {

@@ -3,7 +3,7 @@ const matter = require('gray-matter');
 const { last, pick } = require('@ntks/toolbox');
 
 function resolveTitle(content) {
-  const tokens = mdit.parse(content);
+  const tokens = mdit.parse(content, {});
   const found = [];
 
   let open = false;

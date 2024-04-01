@@ -4,7 +4,7 @@ const { copyJekyllTheme, serveJekyllSite, generateJekyllSite } = require('../../
 
 module.exports = {
   execute: (subCmd, site = DEFAULT_SITE_NAME) => {
-    const config = 'site' in getConfig() ? getConfig(`site.${site}`) : { alias: 'default', data: '.' };
+    const config = 'site' in getConfig() ? getConfig(`site.${site}`) : { alias: site, data: '.' };
     const { generator = DEFAULT_SSG_TYPE, source = `./${LOCAL_DIR_NAME}/sites/${site}`, theme } = config;
 
     let copier;

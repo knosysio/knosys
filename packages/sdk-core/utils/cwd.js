@@ -10,7 +10,7 @@ function getGlobalConfigDirPath() {
 }
 
 function getConfigFilePath(cwd) {
-  let configFilePath = `${cwd}/${CONFIG_FILE_NAME}`;
+  const configFilePath = `${cwd}/${CONFIG_FILE_NAME}`;
 
   return existsSync(configFilePath) ? configFilePath : `${cwd}/${LOCAL_DIR_NAME}/config.json`;
 }

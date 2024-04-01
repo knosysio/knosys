@@ -61,15 +61,22 @@ function resolveLink(raw, params) {
   });
 }
 
-function generateJekyllData(srcPath, dataSourcePath) {
+function replaceCodeBlock(raw) {
   const langs = { vue: 'html', yml: 'yaml' };
 
+  return raw
+    .replace(/(\`{3,}([^\n\`]+))\n+/g, '$1\n')
+    .replace(/^\`{3,}([^\n\`]+)$/gm, (_, lang) => `{% highlight ${langs[lang] || lang} %}{% raw %}`)
+    .replace(/\n+(\`{3,})/g, '\n$1')
+    .replace(/^\`{3,}$/gm, '{% endraw %}{% endhighlight %}');
+}
+
+function generateJekyllData(srcPath, dataSourcePath) {
   generateSiteData(srcPath, dataSourcePath, {
     dataDir: '_data',
     docDir: '_knosys',
     imageDir: '_assets/images',
-    formatter: (content, params) => content
-      .replace(/\n\`{3}([^\n]+)/g, (_, lang) => `\n{% highlight ${langs[lang] || lang} %}{% raw %}`).replace(/\`{3}/g, '{% endraw %}{% endhighlight %}')
+    formatter: (content, params) => replaceCodeBlock(content)
       .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params.imageDir, params.slug, match, srcPath) : resolveLink(match, params))
       .replace(/(?:\<img (?:.+)?)src=\"([^\"]+)\"/g, resolveLiquidImagePath.bind(null, params.imageDir, params.slug))
   });
