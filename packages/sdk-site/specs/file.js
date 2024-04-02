@@ -1,8 +1,9 @@
+const { resolve: resolvePath } = require('path');
 const { isFunction, saveData: cacheData } = require('@ntks/toolbox');
 
 const {
   normalizeFrontMatter,
-  isDirectory, scanAndSortByAsc, ensureDirExists, getImageFileNames,
+  isDirectory, scanAndSortByAsc, ensureDirExists,
   readMeta, readData, saveData, readEntity,
   cp,
 } = require('../../sdk-core');
@@ -34,6 +35,22 @@ function resolvePageSlug(baseName, paths) {
   return baseName === 'index.md' ? dirPath : `${dirPath}/${baseName.replace('.md', '')}`;
 }
 
+function copyRefImageFile(imgSrc, dataSrc, srcDir, distDir) {
+  if (imgSrc.indexOf('http') === 0 || imgSrc.indexOf('/') === 0) {
+    return;
+  }
+
+  const resolvedImgSrc = resolvePath(srcDir, imgSrc);
+  const resolvedImgPartial = resolvedImgSrc.replace(`${dataSrc}/`, '');
+  const dirNames = resolvedImgPartial.split('/').slice(0, -1);
+
+  if (dirNames.length > 0) {
+    ensureDirExists(`${distDir}/${dirNames.join('/')}`);
+  }
+
+  cp(resolvedImgSrc, `${distDir}/${resolvedImgPartial}`);
+}
+
 function generateFileBasedSpecData(srcPath, dataSourcePath, options = {}) {
   const { permalink = '/:path/' } = readMeta(dataSourcePath) || {};
   const { dataDir, docDir, imageDir, formatter } = options;
@@ -52,7 +69,6 @@ function generateFileBasedSpecData(srcPath, dataSourcePath, options = {}) {
 
     const srcDirPath = `${dataSourcePath}/${dirPaths.join('/')}`;
     const content = readData(`${srcDirPath}/${baseName}`);
-    const imageNames = getImageFileNames(srcDirPath);
     const slug = resolvePageSlug(baseName, dirPaths);
 
     let frontMatter = readEntity(distDirPath) || {};
@@ -67,20 +83,23 @@ function generateFileBasedSpecData(srcPath, dataSourcePath, options = {}) {
       frontMatter.permalink = resolvePermalink(permalink, { slug });
     }
 
-    if (frontMatter.content && isFunction(formatter)) {
-      frontMatter.content = formatter(frontMatter.content, {
-        pathSchema: '',
-        slug,
-        imageDir: 'knosys',
-        entitySrc: srcDirPath,
-      });
-    }
+    if (frontMatter.content) {
+      [].concat(
+          Array.from(frontMatter.content.matchAll(/!\[([^\[\]]+)?\]\(([^\(\)]+)\)/g)),
+          Array.from(frontMatter.content.matchAll(/<img([^>]+)src=["']([^"']*)["'][^>]*>/gi)),
+        )
+        .forEach((matched) => copyRefImageFile(matched[2], dataSourcePath, srcDirPath, generatedImageDirPath));
 
-    if (imageNames.length > 0) {
-      const distImageDirPath = dirPaths.length > 0 ? `${generatedImageDirPath}/${dirPaths.join('/')}` : generatedImageDirPath;
-
-      ensureDirExists(distImageDirPath, true);
-      imageNames.forEach(imageBaseName => cp(`${srcDirPath}/${imageBaseName}`, `${distImageDirPath}/${imageBaseName}`));
+      if (isFunction(formatter)) {
+        frontMatter.content = formatter(frontMatter.content, {
+          spec: 'file',
+          pathSchema: '',
+          slug,
+          imageDir: 'knosys',
+          entitySrc: srcDirPath,
+          entityBaseName: baseName,
+        });
+      }
     }
 
     ensureDirExists(distDirPath);

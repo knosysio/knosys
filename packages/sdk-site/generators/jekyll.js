@@ -1,4 +1,4 @@
-const { resolve: resolvePath } = require('path');
+const { resolve: resolvePath, join: joinPath } = require('path');
 const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 
@@ -22,8 +22,26 @@ function copyJekyllTheme(srcPath, themePath) {
   });
 }
 
-function resolveLiquidImagePath(collectionDir, id, match, srcPath) {
-  return match.replace(srcPath, `{{ '${collectionDir}/${id}/${srcPath.replace(/.(jp(e)?g|png|gif|svg)/g, '')}' | asset_path }}`);
+function resolveLiquidImagePath({ spec, imageDir, slug }, match, srcPath) {
+  if (srcPath.indexOf('http') === 0) {
+    return match;
+  }
+
+  let resolvedImgSrc;
+
+  if (spec === 'qiidb') {
+    resolvedImgSrc = `${slug}/${srcPath}`;
+  } else if (spec === 'file') {
+    const idParts = slug.split('/');
+
+    if (idParts.length > 1) {
+      resolvedImgSrc = joinPath(idParts.slice(0, -1).join('/'), srcPath.indexOf('./') === 0 ? srcPath.slice(2) : srcPath);
+    } else {
+      resolvedImgSrc = joinPath(slug, srcPath);
+    }
+  }
+
+  return match.replace(srcPath, `{{ '${imageDir}/${resolvedImgSrc.replace(/.(jp(e)?g|png|gif|svg)/g, '')}' | asset_path }}`);
 }
 
 function isRelativeEntity(link, { entitySrc, pathSchema }) {
@@ -52,8 +70,18 @@ function resolveLink(raw, params) {
       return `${match}{:target="_blank"}{:rel="external nofollow"}`;
     }
 
+    if (params.spec === 'file') {
+      let resolvedLink = link.startsWith('./') || link.startsWith('../') ? link : `./${link}`;
+
+      if (params.entityBaseName !== 'index.md') {
+        resolvedLink = resolvedLink.startsWith('./') ? `.${resolvedLink}` : `../${resolvedLink}`;
+      }
+
+      return match.replace(`(${link})`, `(${resolvedLink.replace(/(\/index)?\.md$/, '/')})`);
+    }
+
     // relative entity path
-    if (isRelativeEntity(link, params)) {
+    if (params.spec === 'qiidb' && isRelativeEntity(link, params)) {
       return match.replace(link, link.replace(ENTITY_CONTENT_NAME, ''));
     }
 
@@ -62,13 +90,12 @@ function resolveLink(raw, params) {
 }
 
 function replaceCodeBlock(raw) {
-  const langs = { vue: 'html', yml: 'yaml' };
+  const langs = {
+    vue: 'html', yml: 'yaml', json5: 'javascript',
+    csv: 'text', graphql: 'text', mermaid: 'text', xlang: 'text',
+  };
 
-  return raw
-    .replace(/(\`{3,}([^\n\`]+))\n+/g, '$1\n')
-    .replace(/^\`{3,}([^\n\`]+)$/gm, (_, lang) => `{% highlight ${langs[lang] || lang} %}{% raw %}`)
-    .replace(/\n+(\`{3,})/g, '\n$1')
-    .replace(/^\`{3,}$/gm, '{% endraw %}{% endhighlight %}');
+  return raw.replace(/```(.*?)\n([\s\S]*?)\n```/gm, (_, lang, code) => `{% highlight ${lang ? (langs[lang] || lang) : 'text'} %}{% raw %}\n${code.trim()}\n{% endraw %}{% endhighlight %}`);
 }
 
 function generateJekyllData(srcPath, dataSourcePath) {
@@ -77,8 +104,8 @@ function generateJekyllData(srcPath, dataSourcePath) {
     docDir: '_knosys',
     imageDir: '_assets/images',
     formatter: (content, params) => replaceCodeBlock(content)
-      .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params.imageDir, params.slug, match, srcPath) : resolveLink(match, params))
-      .replace(/(?:\<img (?:.+)?)src=\"([^\"]+)\"/g, resolveLiquidImagePath.bind(null, params.imageDir, params.slug))
+      .replace(/(!)?\[([^\[\]]+)?\]\(([^\(\)]+)\)/g, (match, hashbang, _, srcPath) => hashbang ? resolveLiquidImagePath(params, match, srcPath) : resolveLink(match, params))
+      .replace(/(?:\<img (?:.+)?)src=\"([^\"]+)\"/g, resolveLiquidImagePath.bind(null, params))
   });
 }
 

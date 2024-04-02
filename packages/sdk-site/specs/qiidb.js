@@ -38,7 +38,7 @@ function generateQiiDBSpecData(srcPath, dataSourcePath, options = {}) {
   ensureDirExists(generatedFileDirPath, true);
   ensureDirExists(generatedImageDirPath, true);
 
-  readDirDeeply(dataSourcePath, paramArr, {}, (_, params) => {
+  readDirDeeply(dataSourcePath, paramArr, {}, (baseName, params) => {
     const entityDirPath = `${dataSourcePath}/${resolvePathFromParams(paramArr.join('/'), params)}`;
     const entity = readEntity(entityDirPath);
 
@@ -94,10 +94,12 @@ function generateQiiDBSpecData(srcPath, dataSourcePath, options = {}) {
 
     if (frontMatter.content && isFunction(formatter)) {
       frontMatter.content = formatter(frontMatter.content, {
+        spec: 'qiidb',
         pathSchema: path,
         slug,
         imageDir: `knosys/${collectionDir}`,
         entitySrc: entityDirPath,
+        entityBaseName: baseName,
       });
     }
 
