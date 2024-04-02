@@ -98,8 +98,9 @@ function replaceCodeBlock(raw) {
   return raw.replace(/```(.*?)\n([\s\S]*?)\n```/gm, (_, lang, code) => `{% highlight ${lang ? (langs[lang] || lang) : 'text'} %}{% raw %}\n${code.trim()}\n{% endraw %}{% endhighlight %}`);
 }
 
-function generateJekyllData(srcPath, dataSourcePath) {
+function generateJekyllData(srcPath, dataSourcePath, sourceKey) {
   generateSiteData(srcPath, dataSourcePath, {
+    sourceKey,
     dataDir: '_data',
     docDir: '_knosys',
     imageDir: '_assets/images',

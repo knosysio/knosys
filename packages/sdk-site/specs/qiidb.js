@@ -28,11 +28,11 @@ function generateQiiDBSpecData(srcPath, dataSourcePath, options = {}) {
   const categorized = paramArr[0] === 'category';
   const siteDataMap = {};
 
-  const { dataDir, docDir, imageDir, formatter } = options;
+  const { sourceKey, dataDir, docDir, imageDir, formatter } = options;
 
-  const generatedDataDirPath = `${srcPath}/${dataDir}/knosys`;
-  const generatedFileDirPath = `${srcPath}/${docDir}`;
-  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys`
+  const generatedDataDirPath = `${srcPath}/${dataDir}/knosys/${sourceKey}`;
+  const generatedFileDirPath = `${srcPath}/${docDir}/${sourceKey}`;
+  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys/${sourceKey}`;
 
   ensureDirExists(generatedDataDirPath, true);
   ensureDirExists(generatedFileDirPath, true);
@@ -97,7 +97,7 @@ function generateQiiDBSpecData(srcPath, dataSourcePath, options = {}) {
         spec: 'qiidb',
         pathSchema: path,
         slug,
-        imageDir: `knosys/${collectionDir}`,
+        imageDir: `knosys/${sourceKey}/${collectionDir}`,
         entitySrc: entityDirPath,
         entityBaseName: baseName,
       });

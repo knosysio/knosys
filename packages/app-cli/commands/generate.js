@@ -17,7 +17,7 @@ module.exports = {
     const dataGen = generatorMap[generator];
 
     if (dataDir && dataGen) {
-      dataGen(resolvePathFromRootRelative(source), resolvePathFromRootRelative(dataDir));
+      dataGen(resolvePathFromRootRelative(source), resolvePathFromRootRelative(dataDir), sourceKey);
     }
   },
 };
