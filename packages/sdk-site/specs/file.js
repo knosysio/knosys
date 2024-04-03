@@ -77,7 +77,7 @@ function orderDocTree(docs) {
   return [].concat(childless, children);
 }
 
-function resolveDocData(docs) {
+function resolveDocData(docs, dataSrcPath) {
   const root = {};
 
   docs.forEach(doc => {
@@ -95,13 +95,10 @@ function resolveDocData(docs) {
       }
 
       if (!child) {
-        child = {};
-
-        if (i === pathParts.length - 1 && doc.title) {
-          child.title = doc.title;
-        }
-
-        child.uri = part;
+        child = {
+          title: i === pathParts.length - 1 && doc.title || (readMeta(`${dataSrcPath}/${part}`) || {}).title || part,
+          uri: part,
+        };
 
         if (currentNode.children) {
           currentNode.children.push(child);
@@ -176,7 +173,7 @@ function generateFileBasedSpecData(srcPath, dataSourcePath, options = {}) {
     saveData(`${distDirPath}/${baseName}`, frontMatter.content || '', frontMatter);
   });
 
-  saveData(`${generatedDataDirPath}/docs.yml`, resolveDocData(docs));
+  saveData(`${generatedDataDirPath}/docs.yml`, resolveDocData(docs, dataSourcePath));
 }
 
 module.exports = { generateFileBasedSpecData };
