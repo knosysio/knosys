@@ -15,18 +15,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ourai/knosys.git"
+    "url": "git+https://github.com/knosysio/knosys.git"
   },
   "author": "Ourai L. <ourairyu@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ourai/knosys/issues"
+    "url": "https://github.com/knosysio/knosys/issues"
   },
-  "homepage": "https://knosysio.github.io/",
-  "dependencies": {
-    "@ntks/toolbox": "0.0.6",
-    "gray-matter": "^4.0.3",
-    "js-yaml": "^3.14.0",
-    "markdown-it": "^14.1.0"
+  "homepage": "https://knosysio.github.io",
+  "devDependencies": {
+    "ksio": "0.0.0"
   }
 }

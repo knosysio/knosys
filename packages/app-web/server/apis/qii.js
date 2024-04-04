@@ -2,7 +2,7 @@ const { existsSync } = require('fs');
 const { isNumeric } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
-const { readEntity, readData, saveData, rm } = require('../../../sdk-core');
+const { readEntity, readData, saveData, rm } = require('@knosys/sdk');
 const { getDataSourcePath } = require('./helper');
 
 const defaultSize = 20;

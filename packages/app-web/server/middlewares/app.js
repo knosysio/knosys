@@ -1,6 +1,6 @@
 const { existsSync } = require('fs');
 
-const { getGlobalAppDirPath } = require('../../../sdk-app');
+const { getGlobalAppDirPath } = require('@knosys/sdk/src/app');
 const { API_PREFIX } = require('../constants');
 
 function isSkipped(url) {

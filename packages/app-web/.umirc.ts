@@ -10,7 +10,7 @@ if (process.env.KNOSYS_APP_PATH) {
   title = appConfig.title;
 } else {
   appConfig = null;
-  title = require('../sdk-app').DEFAULT_APP_TITLE;
+  title = require('@knosys/sdk/src/app').DEFAULT_APP_TITLE;
 }
 
 export default defineConfig({

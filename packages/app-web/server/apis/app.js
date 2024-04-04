@@ -3,8 +3,8 @@ const { existsSync } = require('fs');
 const { pick } = require('@ntks/toolbox');
 const router = require('@koa/router')();
 
-const { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } = require('../../../sdk-core');
-const { getGlobalAppRootDirPath, getAppConfig } = require('../../../sdk-app');
+const { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } = require('@knosys/sdk');
+const { getGlobalAppRootDirPath, getAppConfig } = require('@knosys/sdk/src/app');
 
 const { getAppDataPath, getDataSourcePath } = require('./helper');
 
