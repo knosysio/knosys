@@ -1,6 +1,7 @@
 const { LOCAL_DIR_NAME, resolvePathFromRootRelative, getConfig, ensureDirExists } = require('../../sdk-core');
 const { DEFAULT_SITE_NAME, DEFAULT_SSG_TYPE, deploySite } = require('../../sdk-site');
 const { copyJekyllTheme, serveJekyllSite, generateJekyllSite } = require('../../sdk-site/generators/jekyll');
+const { serveHexoSite } = require('../../sdk-site/generators/hexo');
 
 module.exports = {
   execute: (subCmd, site = DEFAULT_SITE_NAME) => {
@@ -15,6 +16,8 @@ module.exports = {
       copier = copyJekyllTheme;
       server = serveJekyllSite;
       deployer = generateJekyllSite;
+    } else if (generator === 'hexo') {
+      server = serveHexoSite;
     }
 
     const srcPath = resolvePathFromRootRelative(source);

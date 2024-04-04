@@ -32,7 +32,13 @@ function readDirDeeply(dirPath, paths, callback) {
 function resolvePageSlug(baseName, paths) {
   const dirPath = paths.join('/');
 
-  return baseName === 'index.md' ? dirPath : `${dirPath}/${baseName.replace('.md', '')}`;
+  if (baseName === 'index.md') {
+    return dirPath;
+  }
+
+  const purePath = baseName.replace('.md', '');
+
+  return dirPath === '' ? purePath : `${dirPath}/${purePath}`;
 }
 
 function copyRefImageFile(imgSrc, dataSrc, srcDir, distDir) {
@@ -120,7 +126,7 @@ function generateFileBasedSpecData(srcPath, dataSourcePath, options = {}) {
 
   const generatedDataDirPath = `${srcPath}/${dataDir}/knosys/${sourceKey}`;
   const generatedFileDirPath = `${srcPath}/${docDir}/${sourceKey}`;
-  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys/${sourceKey}`
+  const generatedImageDirPath = `${srcPath}/${imageDir}/knosys/${sourceKey}`;
 
   ensureDirExists(generatedDataDirPath, true);
   ensureDirExists(generatedFileDirPath, true);
