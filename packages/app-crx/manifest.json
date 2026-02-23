@@ -6,10 +6,16 @@
   "permissions": ["tabs", "scripting", "activeTab"],
   "host_permissions": ["http://localhost/*"],
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "background.ts",
     "type": "module"
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["index.ts"]
+    }
+  ]
 }

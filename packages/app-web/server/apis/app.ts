@@ -1,14 +1,14 @@
-const { resolve: resolvePath } = require('path');
-const { existsSync } = require('fs');
-const { pick } = require('@ntks/toolbox');
-const router = require('@koa/router')();
+import { resolve as resolvePath } from 'path';
+import { existsSync } from 'fs';
+import { pick } from '@ntks/toolbox';
+import Router from '@koa/router';
+import { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } from '@knosys/sdk';
+import { getGlobalAppRootDirPath, getAppConfig } from '@knosys/sdk/src/app';
+import { getAppDataPath, getDataSourcePath } from './helper';
 
-const { DEFAULT_PATH_SCHEMA, readDirDeeply, readData, updateData, readMeta, updateConfig } = require('@knosys/sdk');
-const { getGlobalAppRootDirPath, getAppConfig } = require('@knosys/sdk/src/app');
+const router = new Router();
 
-const { getAppDataPath, getDataSourcePath } = require('./helper');
-
-function getAppConfigFromSource(dataSourcePath) {
+function getAppConfigFromSource(dataSourcePath: string): any {
   return {
     path: DEFAULT_PATH_SCHEMA,
     logo: '',
@@ -17,12 +17,12 @@ function getAppConfigFromSource(dataSourcePath) {
   };
 }
 
-router.get('/list', ctx => {
+router.get('/list', (ctx: any) => {
   const appRootPath = getGlobalAppRootDirPath();
-  const apps = [];
+  const apps: any[] = [];
 
   if (existsSync(appRootPath)) {
-    readDirDeeply(appRootPath, ['app'], {}, baseName => {
+    readDirDeeply(appRootPath, ['app'], {}, (baseName: string) => {
       const appConfig = readData(`${appRootPath}/${baseName}/app.json`) || {};
 
       if (appConfig.source) {
@@ -34,7 +34,7 @@ router.get('/list', ctx => {
   ctx.body = { success: true, data: apps };
 });
 
-router.get('/one', ctx => {
+router.get('/one', (ctx: any) => {
   const { source: dataSourcePath, ...others } = readData(getAppDataPath(ctx)) || {};
 
   if (dataSourcePath) {
@@ -47,7 +47,7 @@ router.get('/one', ctx => {
   }
 });
 
-router.put('/one', ctx => {
+router.put('/one', (ctx: any) => {
   const dataSourcePath = getDataSourcePath(ctx);
 
   if (dataSourcePath) {
@@ -67,4 +67,4 @@ router.put('/one', ctx => {
   ctx.status = 200;
 });
 
-module.exports = router;
+export default router;

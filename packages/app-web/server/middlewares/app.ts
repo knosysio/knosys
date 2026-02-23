@@ -1,23 +1,21 @@
-const { existsSync } = require('fs');
+import { existsSync } from 'fs';
+import { getGlobalAppDirPath } from '@knosys/sdk/src/app';
+import { API_PREFIX } from '../constants';
 
-const { getGlobalAppDirPath } = require('@knosys/sdk/src/app');
-const { API_PREFIX } = require('../constants');
-
-function isSkipped(url) {
+function isSkipped(url: string): boolean {
   return ['/app/list'].includes(url.replace(new RegExp(`^${API_PREFIX}`, 'i'), ''));
 }
 
-function getAppName(ctx) {
+function getAppName(ctx: any): string {
   return ctx.headers['x-knosys-app'];
 }
 
-function getAppPath(ctx) {
+function getAppPath(ctx: any): string {
   const appPath = getGlobalAppDirPath(getAppName(ctx));
-
   return existsSync(appPath) ? appPath : '';
 }
 
-function getDbPath(ctx) {
+function getDbPath(ctx: any): string {
   const appPath = getAppPath(ctx);
 
   if (!appPath) {
@@ -31,12 +29,11 @@ function getDbPath(ctx) {
   return existsSync(dbPath) ? dbPath : '';
 }
 
-async function checkAppConfig(ctx, next) {
+export async function checkAppConfig(ctx: any, next: any): Promise<void> {
   if (isSkipped(ctx.url)) {
     await next();
   } else {
     const dbPath = getDbPath(ctx);
-
     let message;
 
     if (dbPath) {
@@ -52,5 +49,3 @@ async function checkAppConfig(ctx, next) {
     }
   }
 }
-
-module.exports = { checkAppConfig };

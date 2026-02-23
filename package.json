@@ -24,6 +24,8 @@
   },
   "homepage": "https://knosysio.github.io",
   "devDependencies": {
-    "ksio": "0.0.0"
+    "@types/node": "^25.3.0",
+    "ksio": "0.0.0",
+    "typescript": "^5.9.3"
   }
 }

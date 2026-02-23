@@ -1,16 +1,17 @@
-const { existsSync } = require('fs');
-const { isNumeric } = require('@ntks/toolbox');
-const router = require('@koa/router')();
+import { existsSync } from 'fs';
+import { isNumeric } from '@ntks/toolbox';
+import Router from '@koa/router';
+import { readEntity, readData, saveData, rm } from '@knosys/sdk';
+import { getDataSourcePath } from './helper';
 
-const { readEntity, readData, saveData, rm } = require('@knosys/sdk');
-const { getDataSourcePath } = require('./helper');
+const router = new Router();
 
 const defaultSize = 20;
 const defaultNum = 1;
 
-function paginate(records, pageNum, pageSize) {
-  let resolvedSize;
-  let resolvedNum;
+function paginate(records: any[], pageNum: any, pageSize: any): any {
+  let resolvedSize: number;
+  let resolvedNum: number;
 
   if (isNumeric(pageSize)) {
     resolvedSize = +pageSize > 0 ? Math.floor(+pageSize) : defaultSize;
@@ -37,15 +38,15 @@ function paginate(records, pageNum, pageSize) {
   };
 }
 
-function readDb(ctx) {
+function readDb(ctx: any): any {
   return readData(ctx.state.KNOSYS_DB_PATH) || {};
 }
 
-function updateDb(ctx, data) {
+function updateDb(ctx: any, data: any): any {
   return saveData(ctx.state.KNOSYS_DB_PATH, data);
 }
 
-function resolveData(ctx, callback) {
+function resolveData(ctx: any, callback: (collectionInfo: any) => any): void {
   const db = readDb(ctx);
   const { collection } = ctx.query;
 
@@ -56,10 +57,10 @@ function resolveData(ctx, callback) {
   }
 }
 
-function resolveRecord(ctx, callback) {
-  return resolveData(ctx, collectionInfo => {
+function resolveRecord(ctx: any, callback: (record: { path: string; data: any }) => any): void {
+  return resolveData(ctx, (collectionInfo: any) => {
     const { id } = ctx.query;
-    const found = (collectionInfo.records || []).find(record => record.id === id);
+    const found = (collectionInfo.records || []).find((record: any) => record.id === id);
 
     if (!found) {
       return { success: false, message: `记录 \`${id}\` 不存在` };
@@ -81,7 +82,7 @@ function resolveRecord(ctx, callback) {
     try {
       const entity = readEntity(recordFullPath);
 
-      ['banner', 'cover'].forEach(k => {
+      ['banner', 'cover'].forEach((k: string) => {
         if (found[k]) {
           entity[k] = found[k];
         }
@@ -94,25 +95,25 @@ function resolveRecord(ctx, callback) {
   });
 }
 
-router.get('/list', ctx => resolveData(ctx, collectionInfo => {
+router.get('/list', (ctx: any) => resolveData(ctx, (collectionInfo: any) => {
   const { pageSize = defaultSize, pageNum = defaultNum } = ctx.query;
 
   return { success: true, ...paginate((collectionInfo.records || []).slice().reverse(), pageNum, pageSize) };
 }));
 
-router.get('/one', ctx => resolveRecord(ctx, record => ({ success: true, data: record.data })));
+router.get('/one', (ctx: any) => resolveRecord(ctx, (record: any) => ({ success: true, data: record.data })));
 
-router.delete('/one', ctx => resolveRecord(ctx, record => {
+router.delete('/one', (ctx: any) => resolveRecord(ctx, (record: any) => {
   rm(record.path);
 
   const db = readDb(ctx);
   const { collection, id } = ctx.query;
 
-  db[collection].records = db[collection].records.filter(item => item.id !== id);
+  db[collection].records = db[collection].records.filter((item: any) => item.id !== id);
 
   updateDb(ctx, db);
 
-  return { success: true, data: record.data }
+  return { success: true, data: record.data };
 }));
 
-module.exports = router;
+export default router;

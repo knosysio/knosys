@@ -2,6 +2,7 @@
 sh.exe.stackdump
 
 node_modules/
+package-lock.json
 
 .cache/
 .asset-cache/
@@ -18,3 +19,8 @@ Thumbs.db
 db.json
 public/
 .deploy*/
+
+.trae/
+
+build/
+dist/
