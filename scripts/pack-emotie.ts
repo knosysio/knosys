@@ -1,0 +1,14 @@
+import { buildDistribution, validatePackage } from '@emotie/extension-tools';
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
+const root: string = path.resolve(import.meta.dirname, '..');
+const flag: number = process.argv.indexOf('--to');
+if (flag >= 0 && !process.argv[flag + 1]) throw new Error('--to requires an artifact library directory');
+const destination: string = path.resolve(flag >= 0 ? process.argv[flag + 1] : path.join(root, '.build/distribution'));
+const bytes: Buffer = await buildDistribution(root, path.join(root, 'apps/app-emotie'), 'official');
+const checked = validatePackage(bytes); const file: string = `knosys-${checked.manifest.version}-${checked.sha256.slice(0,16)}.tgz`;
+mkdirSync(destination, { recursive: true }); const target: string = path.join(destination, file);
+if (existsSync(target) && !readFileSync(target).equals(bytes)) throw new Error('Artifact filename already has different content');
+if (!existsSync(target)) writeFileSync(target, bytes, { flag: 'wx' });
+const artifact = { name: checked.manifest.packageName, version: checked.manifest.version, sha256: checked.sha256, file, source: 'local:' + file, manifest: { id: checked.manifest.id, version: checked.manifest.version } };
+writeFileSync(path.join(destination, 'knosys-artifact.json'), JSON.stringify(artifact, null, 2) + '\n'); console.info(JSON.stringify(artifact));

@@ -1,0 +1,33 @@
+{
+  "repositories": {
+    "emotie": {
+      "path": "${EMOTIE_ROOT}",
+      "head": "12542c782a6e72f11a61fb10d3662c2044703d58",
+      "branch": "master",
+      "status": ""
+    },
+    "knosys": {
+      "path": "${KNOSYS_ROOT}",
+      "head": "aecd48ed07ec0f82596441396920c3074c31c9aa",
+      "branch": "dev",
+      "status": ""
+    },
+    "ksdk": {
+      "path": "${KSDK_ROOT}",
+      "head": "be43e86274900ba510f9070dae717c7dd8f7578d",
+      "branch": "main",
+      "status": ""
+    },
+    "ksio": {
+      "path": "${KSIO_ROOT}",
+      "head": "e9e04dbbe74cacce90391751be677c0526804c0d",
+      "branch": "main",
+      "status": ""
+    }
+  },
+  "copiedPackages": {
+    "@knosys/sdk": "ksdk",
+    "ksio": "ksio"
+  },
+  "license": "MIT for source; LICENSE-docs governs copied documentation; original repositories remain independently maintained"
+}

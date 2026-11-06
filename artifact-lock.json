@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "artifacts": {
+    "extension-sdk": {
+      "name": "@emotie/extension-sdk",
+      "version": "1.0.1",
+      "file": "emotie-extension-sdk-1.0.1.tgz",
+      "sha256": "0476cb9a9bbdf06e891ee171dce8117b7568464b454b9e40d7c991f6d2699589",
+      "source": "local:emotie-extension-sdk-1.0.1.tgz"
+    },
+    "ui": {
+      "name": "@emotie/ui",
+      "version": "1.0.1",
+      "file": "emotie-ui-1.0.1.tgz",
+      "sha256": "3b69ddd3b720eb1a63a487d9ecda070328e07a82dbfe7b05b2f7e150edf45c11",
+      "source": "local:emotie-ui-1.0.1.tgz"
+    },
+    "marketplace-contracts": {
+      "name": "@emotie/marketplace-contracts",
+      "version": "0.1.1",
+      "file": "emotie-marketplace-contracts-0.1.1.tgz",
+      "sha256": "641c76a93ec24069770a9418a4d3ade959118e8359930a52b7de1af129b1dbbd",
+      "source": "local:emotie-marketplace-contracts-0.1.1.tgz"
+    },
+    "extension-tools": {
+      "name": "@emotie/extension-tools",
+      "version": "0.1.2",
+      "file": "emotie-extension-tools-0.1.2.tgz",
+      "sha256": "c0d4f96c011b9eb87bd6cf970c4548663b9266fb15d1e0da23776781e257a0f2",
+      "source": "local:emotie-extension-tools-0.1.2.tgz"
+    }
+  }
+}

@@ -6,12 +6,23 @@
   "main": "index.js",
   "scripts": {
     "copy": "node scripts/bin site copy",
-    "build": "node scripts/bin generate",
+    "build": "pnpm build:sdk && pnpm build:cli && pnpm --filter @knosys/web-core build && pnpm --filter @knosys/app-web build && pnpm --filter @emotie/app-knosys build && pnpm build:crx",
     "clean": "rm -rf sites/*/.asset-cache",
     "start": "node scripts/bin site serve",
-    "predeploy": "npm run clean",
+    "predeploy": "pnpm clean",
     "deploy": "node scripts/bin site deploy",
-    "app": "node scripts/bin app"
+    "app": "node scripts/bin app",
+    "build:sdk": "pnpm --filter @knosys/sdk build",
+    "build:cli": "pnpm --filter ksio build",
+    "build:crx": "pnpm --filter @knosys/app-crx build",
+    "typecheck": "pnpm build:sdk && pnpm --filter @knosys/web-core build && pnpm -r --if-present typecheck",
+    "restore-artifacts": "node scripts/restore-artifacts.ts",
+    "build:site": "node scripts/bin generate",
+    "test": "pnpm build:sdk && pnpm exec tsx --test packages/sdk/test/*.test.ts scripts/test/*.test.ts",
+    "test:production": "pnpm build:sdk && pnpm build:cli && node scripts/verify-production.ts",
+    "pack:emotie": "node scripts/pack-emotie.ts",
+    "ksio": "node apps/app-cli/dist/bin.cjs",
+    "test:bootstrap": "node scripts/verify-clean-checkout.ts"
   },
   "repository": {
     "type": "git",
@@ -24,8 +35,33 @@
   },
   "homepage": "https://knosysio.github.io",
   "devDependencies": {
-    "@types/node": "^25.3.0",
-    "ksio": "0.0.0",
-    "typescript": "^5.9.3"
+    "@types/node": "^24.0.0",
+    "ksio": "workspace:*",
+    "typescript": "^5.9.3",
+    "esbuild": "0.21.5",
+    "tsx": "^4.21.0",
+    "@tailwindcss/node": "4.2.4",
+    "@tailwindcss/oxide": "4.2.4",
+    "tailwindcss": "4.2.4",
+    "@emotie/extension-tools": "0.1.2"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "pnpm": {
+    "overrides": {
+      "@emotie/extension-sdk": "file:.build/artifacts/emotie-extension-sdk-1.0.1.tgz",
+      "@emotie/ui": "file:.build/artifacts/emotie-ui-1.0.1.tgz",
+      "@emotie/marketplace-contracts": "file:.build/artifacts/emotie-marketplace-contracts-0.1.1.tgz",
+      "@emotie/extension-tools": "file:.build/artifacts/emotie-extension-tools-0.1.2.tgz"
+    },
+    "packageExtensions": {
+      "markdown-it@12.3.2": {
+        "dependencies": {
+          "punycode": "2.3.1"
+        }
+      }
+    }
   }
 }

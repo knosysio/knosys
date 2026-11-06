@@ -1,0 +1,39 @@
+{
+  "name": "ksio",
+  "version": "0.1.0",
+  "description": "Using KnoSys via CLI",
+  "keywords": [
+    "knosys",
+    "qiidb",
+    "cli"
+  ],
+  "main": "./dist/index.cjs",
+  "bin": {
+    "ksio": "dist/bin.cjs"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "LICENSE-docs"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "Ourai L. <ourairyu@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://knosysio.github.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knosysio/ksio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/knosysio/ksio/issues"
+  },
+  "dependencies": {
+    "@knosys/sdk": "workspace:0.1.0"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-cli.ts",
+    "typecheck": "tsc --noEmit"
+  }
+}

@@ -1,0 +1,10 @@
+import { build } from 'esbuild';
+import { mkdirSync, writeFileSync, chmodSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+const directory: string = path.resolve(import.meta.dirname, '../apps/app-cli');
+await build({ entryPoints: [path.join(directory, 'src/index.ts')], outfile: path.join(directory, 'dist/index.cjs'), bundle: true, platform: 'node', target: 'node14', format: 'cjs', external: ['@knosys/sdk', '@knosys/sdk/*'] });
+const bin: string = path.join(directory, 'dist/bin.cjs');
+writeFileSync(bin, "#!/usr/bin/env node\nrequire('./index.cjs').execute().catch(error => { console.error(error.message); process.exitCode = 1; });\n");
+chmodSync(bin, 0o755);
+const pkg = JSON.parse(readFileSync(path.join(directory, 'package.json'), 'utf8'));
+writeFileSync(path.join(directory, 'dist/package.json'), JSON.stringify({ ...pkg, dependencies: { '@knosys/sdk': '0.1.0' } }, null, 2));

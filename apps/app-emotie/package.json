@@ -1,0 +1,50 @@
+{
+  "name": "@emotie/app-knosys",
+  "version": "0.3.2",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./manifest": "./manifest.json",
+    "./server": "./dist/server.js",
+    "./contracts": "./dist/contracts.js",
+    "./web": "./dist/web.js",
+    "./style": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "manifest.json",
+    "LICENSE",
+    "LICENSE-docs"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node ../../scripts/build-emotie.ts"
+  },
+  "dependencies": {
+    "@knosys/web-core": "workspace:*",
+    "@knosys/sdk": "workspace:*",
+    "@emotie/extension-sdk": "1.0.1",
+    "@emotie/ui": "1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/koa": "^2.15.0",
+    "@types/koa-bodyparser": "4.3.13",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "typescript": "^5.6.0",
+    "tsx": "^4.16.0",
+    "@emotie/extension-tools": "0.1.2"
+  },
+  "peerDependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "@heroui/react": "3.0.3",
+    "@heroicons/react": "2.2.0",
+    "react-router-dom": "^7.14.2"
+  },
+  "emotieBundledDependencies": [
+    "@knosys/sdk",
+    "@knosys/web-core"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "name": "@knosys/sdk",
+  "version": "0.1.0",
+  "description": "The development kit for KnoSys ecosystem",
+  "keywords": [
+    "knosys",
+    "qiidb",
+    "sdk"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "LICENSE-docs"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "Ourai L. <ourairyu@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://knosysio.github.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knosysio/ksdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/knosysio/ksdk/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "5.6.2",
+    "ts-node": "10.9.2",
+    "@types/node": "^24.0.0",
+    "gray-matter": "4.0.3",
+    "js-yaml": "3.14.1",
+    "markdown-it": "12.3.2",
+    "@types/js-yaml": "3.12.10",
+    "@types/markdown-it": "12.2.3"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build-sdk.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./app": {
+      "import": {
+        "types": "./dist/app/index.d.ts",
+        "default": "./dist/app/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/app/index.d.cts",
+        "default": "./dist/app/index.cjs"
+      }
+    },
+    "./site": {
+      "import": {
+        "types": "./dist/site/index.d.ts",
+        "default": "./dist/site/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/index.d.cts",
+        "default": "./dist/site/index.cjs"
+      }
+    },
+    "./site/generators/jekyll": {
+      "import": {
+        "types": "./dist/site/generators/jekyll.d.ts",
+        "default": "./dist/site/generators/jekyll.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/generators/jekyll.d.cts",
+        "default": "./dist/site/generators/jekyll.cjs"
+      }
+    },
+    "./site/generators/hexo": {
+      "import": {
+        "types": "./dist/site/generators/hexo.d.ts",
+        "default": "./dist/site/generators/hexo.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/generators/hexo.d.cts",
+        "default": "./dist/site/generators/hexo.cjs"
+      }
+    },
+    "./src/app": {
+      "import": {
+        "types": "./dist/app/index.d.ts",
+        "default": "./dist/app/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/app/index.d.cts",
+        "default": "./dist/app/index.cjs"
+      }
+    },
+    "./src/site": {
+      "import": {
+        "types": "./dist/site/index.d.ts",
+        "default": "./dist/site/index.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/index.d.cts",
+        "default": "./dist/site/index.cjs"
+      }
+    },
+    "./src/site/generators/jekyll": {
+      "import": {
+        "types": "./dist/site/generators/jekyll.d.ts",
+        "default": "./dist/site/generators/jekyll.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/generators/jekyll.d.cts",
+        "default": "./dist/site/generators/jekyll.cjs"
+      }
+    },
+    "./src/site/generators/hexo": {
+      "import": {
+        "types": "./dist/site/generators/hexo.d.ts",
+        "default": "./dist/site/generators/hexo.mjs"
+      },
+      "require": {
+        "types": "./dist/types-cjs/site/generators/hexo.d.cts",
+        "default": "./dist/site/generators/hexo.cjs"
+      }
+    }
+  }
+}

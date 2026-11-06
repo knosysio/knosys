@@ -1,0 +1,45 @@
+{
+  "name": "@knosys/web-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./browser": {
+      "types": "./dist/browser/index.d.ts",
+      "import": "./src/browser/index.tsx"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./src/server/index.ts"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "import": "./src/contracts/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit false --declaration --emitDeclarationOnly --outDir dist --rootDir src"
+  },
+  "dependencies": {
+    "@knosys/sdk": "workspace:*",
+    "@koa/router": "12.0.1",
+    "koa": "^3.2.0",
+    "markdown-it": "12.3.2"
+  },
+  "peerDependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-router-dom": "^7.14.2",
+    "@heroui/react": "3.0.3",
+    "@heroicons/react": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/koa": "^2.15.0",
+    "@types/koa__router": "^12.0.5",
+    "@types/markdown-it": "12.2.3",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17"
+  }
+}

@@ -24,3 +24,7 @@ public/
 
 build/
 dist/
+
+.build/
+*.tgz
+*.tsbuildinfo

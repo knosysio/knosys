@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "knosys",
+  "packageName": "@emotie/app-knosys",
+  "version": "0.3.2",
+  "hostApiVersion": "^1.0.0",
+  "kind": "application",
+  "display": {
+    "name": "知识库",
+    "description": "KnoSys 知识库管理"
+  },
+  "entries": {
+    "server": "./server",
+    "web": "./web"
+  },
+  "apiNamespaces": [
+    "/api/knosys"
+  ],
+  "requires": [],
+  "capabilities": [],
+  "webBasePath": "/apps/knosys"
+}

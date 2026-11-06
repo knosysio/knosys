@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "../../../packages/web-core/src/browser/style.css";
+@source "../../../packages/web-core/src/browser";
+body { margin: 0; background: #f7f9f8; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.knosys-shell { display: grid; grid-template-columns: 240px minmax(0,1fr); min-height: 100dvh; }
+.knosys-shell-sidebar { background: white; border-right: 1px solid #e7ece9; }
+.knosys-brand { display: flex; align-items: center; gap: .75rem; padding: 1.5rem 1.75rem; font-size: 1.25rem; font-weight: 650; color: #164d36; }
+.knosys-shell main { min-width: 0; padding: 2rem; }
+.knosys-toast { position: fixed; bottom: 1.5rem; right: 1.5rem; max-width: min(24rem,calc(100vw - 3rem)); display: flex; gap: 1rem; padding: 1rem 1.5rem; border-radius: .75rem; background: #e9f5ed; border: 1px solid #b6d8c1; z-index: 100000; }
+.knosys-toast.error { background: #fff0f0; border-color: #e9baba; }
+@media (max-width: 639px) { .knosys-shell { grid-template-columns: minmax(0,1fr); grid-template-rows: auto 1fr; } .knosys-shell-sidebar { border-right: 0; border-bottom: 1px solid #e7ece9; } .knosys-shell main { padding: 1.25rem; } .knosys-sidebar { display: flex; flex-wrap: wrap; padding-top: 0; } }

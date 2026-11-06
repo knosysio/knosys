@@ -1,0 +1,25 @@
+.knosys-core { min-width: 0; color: var(--color-foreground, #17201b); }
+.knosys-core h1 { font-size: 1.5rem; line-height: 2rem; font-weight: 650; }
+.knosys-core h2 { font-weight: 600; }
+.knosys-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.knosys-heading p { color: #6b7280; margin-top: .5rem; }
+.knosys-card { display: flex; flex-direction: column; gap: .75rem; padding: 1.5rem; border: 1px solid #e5e7eb; border-radius: .875rem; background: var(--color-surface, white); overflow-wrap: anywhere; }
+a.knosys-card:hover { border-color: #86b99a; box-shadow: 0 4px 14px #17201b08; }
+.knosys-create { justify-content: center; align-items: center; border-style: dashed; min-height: 180px; color: #4b5563; }
+.knosys-action { display: inline-flex; align-items: center; gap: .5rem; padding: .625rem 1rem; border-radius: .75rem; background: #164d36; color: white; }
+.knosys-core label { display: flex; flex-direction: column; gap: .5rem; font-size: .875rem; color: #4b5563; }
+.knosys-core input, .knosys-core textarea, .knosys-core select { width: 100%; padding: .75rem; border: 1px solid #d1d5db; border-radius: .65rem; background: var(--color-surface, white); color: var(--color-foreground, #17201b); }
+.knosys-core :is(input, textarea, select, a, button):focus-visible, .knosys-sidebar a:focus-visible { outline: 2px solid #4a8d6c; outline-offset: 3px; }
+.knosys-core th, .knosys-core td { padding: 1rem; border-bottom: 1px solid #e5e7eb; overflow-wrap: anywhere; }
+.knosys-core th { font-size: .875rem; color: #6b7280; }
+.knosys-form { max-width: 46rem; display: grid; gap: 1rem; }
+.knosys-sidebar { display: grid; gap: .25rem; padding: 1rem; }
+.knosys-sidebar a { display: flex; align-items: center; gap: .75rem; padding: .75rem; border-radius: .75rem; overflow-wrap: anywhere; }
+.knosys-sidebar a:hover { background: #eef5f0; }
+.knosys-markdown { line-height: 1.8; overflow-wrap: anywhere; }
+.knosys-markdown :is(h1,h2,h3,p,ul,ol,pre,blockquote) { margin-block: 1em; }
+.knosys-markdown :is(ul,ol) { padding-left: 1.5rem; list-style: revert; }
+.knosys-markdown pre { overflow: auto; padding: 1rem; background: #f3f5f4; border-radius: .75rem; }
+.knosys-markdown img { max-width: 100%; max-height: 36rem; border-radius: .5rem; }
+.knosys-markdown a { color: #2563eb; text-decoration: underline; }
+.knosys-markdown blockquote { border-left: 3px solid #86b99a; padding-left: 1rem; color: #6b7280; }
