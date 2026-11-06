@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback, type ReactElement, type ReactNode, type FormEvent } from 'react';
+import { useRef, useEffect, useState, useCallback, type ReactElement, type ReactNode, type FormEvent } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Modal, Spinner } from '@heroui/react';
 import { BookOpenIcon, FolderIcon, PlusIcon, Cog6ToothIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -6,9 +6,9 @@ import type { CoreEnvironment, Envelope, App, CollectionData, RecordData, MenuIt
 import { renderMarkdown } from './markdown';
 import { InformationPopover, HelpTooltip } from './overlays';
 
-const Environment = createContext<CoreEnvironment | null>(null);
-function useEnvironment(): CoreEnvironment { const value: CoreEnvironment | null = useContext(Environment); if (!value) throw new Error('KnoSys environment missing'); return value; }
-export function coreUrl(basePath: string, route: string, values: Record<string, string> = {}): string { const query: string = new URLSearchParams(values).toString(); return (basePath.replace(/\/$/, '') + (route === '/' ? '' : route) || '/') + (query ? '?' + query : ''); }
+import { Environment, useEnvironment } from './environment';
+import { coreUrl } from './urls';
+export { coreUrl } from './urls';
 async function request<T>(environment: CoreEnvironment, route: string, values: Record<string, string> = {}, input?: unknown, method: string = 'GET'): Promise<Envelope<T>> {
   const response: Response = await environment.fetch(environment.apiBase + route + '?' + new URLSearchParams(values), { method, ...(input === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) }) });
   const result: Envelope<T> = await response.json();
@@ -64,14 +64,15 @@ function fieldText(document: RecordData | null, name: string): string {
   return ['title', 'description'].includes(name) ? text.replace(/\r\n?/g, '\n') : text.replace(/[\r\n]/g, '');
 }
 function EditorPage(): ReactElement {
-  const environment: CoreEnvironment = useEnvironment(); const ids = useIds(); const navigate = useNavigate(); const [document, setDocument] = useState<RecordData | null>(null); const [parameters, setParameters] = useState<string[]>([]); const [error, setError] = useState<string>(''); const [loading, setLoading] = useState<boolean>(true); const [busy, setBusy] = useState<boolean>(false); const [content, setContent] = useState<string>('');
+  const environment: CoreEnvironment = useEnvironment(); const ids = useIds(); const navigate = useNavigate(); const [document, setDocument] = useState<RecordData | null>(null); const [parameters, setParameters] = useState<string[]>([]); const [error, setError] = useState<string>(''); const [loading, setLoading] = useState<boolean>(true); const [busy, setBusy] = useState<boolean>(false); const [content, setContent] = useState<string>(''); const initialized = useRef(false);
   useEffect((): (() => void) => {
+    if (initialized.current) return (): void => {};
     let active: boolean = true;
     const load = async (): Promise<void> => {
       try {
         if (ids.record) { const result = await request<RecordData>(environment, '/document', ids); if (active) { if (result.data.writable === false) throw new Error('请先使用本地 CLI 迁移或重新登记应用，再启用写入。'); setDocument(result.data); setContent(result.data.content); } }
         else { const result = await request<CollectionData[]>(environment, '/collections', { app: ids.app }); const collection = result.data.find((item: CollectionData): boolean => item.id === ids.collection); if (!collection) throw new Error('集合不存在'); if (collection.capabilities?.create === false) throw new Error('请先使用本地 CLI 迁移或重新登记应用，再启用写入。'); if (active) setParameters(collection.parameters); }
-      } catch (reason) { if (active) setError(reason instanceof Error ? reason.message : '加载失败'); } finally { if (active) setLoading(false); }
+      } catch (reason) { if (active) setError(reason instanceof Error ? reason.message : '加载失败'); } finally { if (active) { initialized.current = true; setLoading(false); } }
     }; void load(); return (): void => { active = false; };
   }, [environment, ids.app, ids.collection, ids.record]);
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {

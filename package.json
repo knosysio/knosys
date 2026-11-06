@@ -22,7 +22,9 @@
     "test:production": "pnpm build:sdk && pnpm build:cli && node scripts/verify-production.ts",
     "pack:emotie": "node scripts/pack-emotie.ts",
     "ksio": "node apps/app-cli/dist/bin.cjs",
-    "test:bootstrap": "node scripts/verify-clean-checkout.ts"
+    "test:bootstrap": "node scripts/verify-clean-checkout.ts",
+    "dev:emotie": "node apps/app-emotie/dev/start.ts",
+    "test:emotie:dev": "pnpm exec tsx --test scripts/test/emotie-dev.test.ts"
   },
   "repository": {
     "type": "git",

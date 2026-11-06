@@ -17,30 +17,37 @@
     "LICENSE-docs"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p dev/tsconfig.json",
     "build": "node ../../scripts/build-emotie.ts"
   },
   "dependencies": {
-    "@knosys/web-core": "workspace:*",
-    "@knosys/sdk": "workspace:*",
     "@emotie/extension-sdk": "1.0.1",
-    "@emotie/ui": "1.0.1"
+    "@emotie/ui": "1.0.1",
+    "@knosys/sdk": "workspace:*",
+    "@knosys/web-core": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@emotie/extension-tools": "0.1.2",
+    "@tailwindcss/vite": "4.2.4",
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "4.3.13",
+    "@types/koa__router": "12.0.5",
+    "@types/node": "^24.0.0",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
-    "typescript": "^5.6.0",
+    "@vitejs/plugin-react": "5.0.4",
     "tsx": "^4.16.0",
-    "@emotie/extension-tools": "0.1.2"
+    "typescript": "^5.6.0",
+    "vite": "7.3.1",
+    "koa": "3.2.0",
+    "@koa/router": "12.0.1",
+    "@koa/bodyparser": "6.1.0"
   },
   "peerDependencies": {
+    "@heroicons/react": "2.2.0",
+    "@heroui/react": "3.0.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "@heroui/react": "3.0.3",
-    "@heroicons/react": "2.2.0",
     "react-router-dom": "^7.14.2"
   },
   "emotieBundledDependencies": [

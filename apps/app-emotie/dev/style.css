@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "@heroui/react/styles";
+@import "../../../packages/web-core/src/browser/style.css";
+@source "../../../packages/web-core/src/browser";
+@source "../src";
+body { margin: 0; background: #f7f8fa; font-family: Inter, system-ui, sans-serif; }
+.development-shell { --sidebar-width: 248px; min-height: 100dvh; }
+.development-shell[data-sidebar-open="false"] { --sidebar-width: 0px; }
+.development-header { position: fixed; inset: 0 0 auto; height: 68px; z-index: 30; display: flex; justify-content: space-between; gap: 8px; padding: 12px 24px; pointer-events: none; }
+.development-header > div { pointer-events: auto; }
+.development-home { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: white; }
+.development-badge { font-size: 12px; color: #166534; white-space: nowrap; }
+.development-header select { padding: 8px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; max-width: 110px; }
+.development-sidebar { position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; width: 248px; padding-top: 80px; background: white; box-shadow: 5px 0 16px #17201b08; transition: transform 240ms, opacity 240ms; }
+[data-sidebar-open="false"] .development-sidebar { transform: translateX(-100%); opacity: 0; }
+.development-sidebar nav { display: grid; gap: 4px; padding: 12px; }
+.development-sidebar nav a { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; overflow-wrap: anywhere; }
+.development-sidebar nav a:hover, .development-sidebar a[aria-current="page"] { background: #eef5f0; }
+.development-settings { margin-top: auto; padding: 20px 24px; border-top: 1px solid #f3f4f6; }
+.development-main { margin-left: var(--sidebar-width); padding: 92px 24px 24px; min-width: 0; transition: margin-left 240ms; }
+.development-toast { position: fixed; bottom: 24px; right: 24px; z-index: 100000; display: flex; gap: 16px; max-width: calc(100vw - 48px); background: #e9f5ed; border: 1px solid #b6d8c1; border-radius: 12px; padding: 16px 24px; }
+.development-toast.error { background: #fff0f0; border-color: #e9baba; }
+@media (max-width: 639px) { .development-header { padding: 12px; } .development-main { padding: 88px 12px 12px; } .development-badge { display: none; } }
+@media (prefers-reduced-motion: reduce) { .development-sidebar, .development-main { transition: none; } }

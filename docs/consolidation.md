@@ -34,6 +34,10 @@ KNOSYS_APPS_ROOT=/absolute/registrations KNOSYS_ALLOWED_ROOTS='["/absolute/proje
 
 通过初始化向导登记已有源或创建新源。登记不会修改源数据；创建要求目标目录尚不存在。应用登记和可重建索引位于配置的应用根目录下，实际 QiiDB 内容、稳定身份表和恢复日志位于外部源中。普通配置更新不能修改应用标识、源绑定或路径模式。
 
+## Emotie 扩展本地调试
+
+在 KnoSys 仓库根目录运行 `pnpm dev:emotie`，即可启动纯本地调试壳，支持前端热更新和后端自动重启，无需 Emotie 源码、服务或 Docker。完整步骤、数据隔离和调试边界见[本地开发指南](emotie-development.md)。
+
 ## Emotie 发行包
 
 ```sh

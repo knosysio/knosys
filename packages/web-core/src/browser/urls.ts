@@ -1,0 +1,1 @@
+export function coreUrl(basePath: string, route: string, values: Record<string, string> = {}): string { const query: string = new URLSearchParams(values).toString(); return (basePath.replace(/\/$/, '') + (route === '/' ? '' : route) || '/') + (query ? '?' + query : ''); }
